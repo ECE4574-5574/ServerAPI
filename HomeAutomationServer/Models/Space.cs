@@ -41,9 +41,9 @@ namespace HomeAPI.Models
 
             set
             {
-                if (_type.ToLower() == "living room" || _type.ToLower() == "kitchen" || _type.ToLower() == "basement" || _type.ToLower() == "dining room"
-                    || _type.ToLower() == "bedroom" || _type.ToLower() == "bathroom" || _type.ToLower() == "office" || _type.ToLower() == "stairs" || _type.ToLower() == "walkway"
-                    || _type.ToLower() == "garage" || _type.ToLower() == "porch" || _type.ToLower() == "patio" || _type.ToLower() == "general" || _type.ToLower() == "other")
+                if (value.ToLower() == "living room" || value.ToLower() == "kitchen" || value.ToLower() == "basement" || value.ToLower() == "dining room"
+                    || value.ToLower() == "bedroom" || value.ToLower() == "bathroom" || value.ToLower() == "office" || value.ToLower() == "stairs" || value.ToLower() == "walkway"
+                    || value.ToLower() == "garage" || value.ToLower() == "porch" || value.ToLower() == "patio" || value.ToLower() == "general" || value.ToLower() == "other")
                 {
                     if (_permission)
                         _type = value;

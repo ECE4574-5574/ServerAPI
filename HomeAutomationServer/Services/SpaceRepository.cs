@@ -40,17 +40,16 @@ namespace HomeAPI.Services
             {
             new Space
                 {
-                    SpaceName = "PlaceHolder",
-                    MyDevices = new List<Device>()
+                    SpaceName = "PlaceHolder"
                 }
             };
         }
 
-        public Exception UpdateRoom()         // Updates the list of devices to add new devices that should be in list or delete ones that do not exist
+        public Exception UpdateSpace()         // Updates the list of devices to add new devices that should be in list or delete ones that do not exist
         {
             var ctx = HttpContext.Current;
 
-            if (ctx != null)
+            /*if (ctx != null)
             {
                 var currentData = ((Space[])ctx.Cache[CacheKey]).ToList(); //get a list of the current data
                 bool found = false;
@@ -102,15 +101,15 @@ namespace HomeAPI.Services
                             currentData.ElementAt(i).MyDevices[k] = null;
                 }
                 ctx.Cache[CacheKey] = currentData.ToArray();
-                if (noMatch || found || !found)
+                if (noMatch || found || !found)*/
                     return new Exception("updated");
-            }
-            return new Exception("No devices found for the spaces available");
+           /* }
+            return new Exception("No devices found for the spaces available");*/
         }
 
         public Exception SaveSpace(Space space)            // Creates and saves new space
         {
-            var ctx = HttpContext.Current;
+            /*var ctx = HttpContext.Current;
 
             if (ctx != null)
             {
@@ -156,13 +155,13 @@ namespace HomeAPI.Services
                     return ex;
                 }
             }
-
+            */
             return new Exception("none");
         }
 
         public Exception DeleteSpace(Space space)
         {
-            var ctx = HttpContext.Current;
+           /* var ctx = HttpContext.Current;
 
             if (ctx != null)
             {
@@ -190,7 +189,7 @@ namespace HomeAPI.Services
                     Console.WriteLine(ex.ToString());
                     return ex;
                 }
-            }
+            }*/
             return new Exception("none");
         }
     }

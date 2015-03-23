@@ -170,7 +170,6 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="Models\Device.cs" />
     <Compile Include="Models\HouseModel.cs" />
     <Compile Include="Models\Device.cs" />
     <Compile Include="Models\Space.cs" />
