@@ -10,7 +10,7 @@ namespace HomeAutomationServerAPI.Controllers
 {
     public class HouseController : ApiController
     {
-        // GET api/house
+        // GET api/house/
         public IEnumerable<HouseModel> Get()
         {
             return null;
