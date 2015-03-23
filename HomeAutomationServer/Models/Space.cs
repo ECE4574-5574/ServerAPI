@@ -98,6 +98,11 @@ namespace HomeAPI.Models
             return false;
         }
 
+        public int deviceCount()            // Return number of devices
+        {
+            return MyDevices.Count;
+        }
+
         private List<int> LocationMap = new List<int>();     // A location map
     }
 }
