@@ -8,7 +8,7 @@ using System.Web.Http;
 using System.Web.Http.Controllers;
 using System.Web.Http.Dispatcher;
 
-namespace HomeAPI.Controllers
+namespace HomeAutomationServerAPI.Controllers
 {
     public class LearningControllerSelector : DefaultHttpControllerSelector
     {

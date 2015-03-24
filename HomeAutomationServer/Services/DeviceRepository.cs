@@ -2,11 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
-using HomeAPI.Models;
+using HomeAutomationServerAPI.Models;
 
 //This class serves as the data storage space. It is just a list of Device items that are regenerated from the cache
 
-namespace HomeAPI.Services
+namespace HomeAutomationServerAPI.Services
 {
     public class DeviceRepository
     {

@@ -1,5 +1,5 @@
-﻿using HomeAPI.Models;
-using HomeAPI.Services;
+﻿using HomeAutomationServerAPI.Models;
+using HomeAutomationServerAPI.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,7 +9,7 @@ using System.Web.Http;
 
 //This is our controller. It will respond to GET, POST, DELETE...
 
-namespace HomeAPI.Controllers
+namespace HomeAutomationServerAPI.Controllers
 {
     public class DeviceV2Controller : ApiController
     {
