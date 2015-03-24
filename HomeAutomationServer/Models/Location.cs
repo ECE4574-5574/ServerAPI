@@ -12,36 +12,97 @@ namespace HomeAutomationServerAPI.Models
         private bool _permission = false;                                    // Permission to change the location information
         public bool Permission { get { return _permission; } set { _permission = value; } }
 
-        private List<int> Center = new List<int>();                     // The center of the space
-        public bool NewCenter(List<int> newCenter)                      // Specify a new center to the space
+        private int corner1, corner2, corner3, corner4;     // The four corners of the space
+        public int GetCorner1()                             // Get corner1
+        {
+            return corner1;
+        }
+
+        public bool ChangeCorner1(int newCorner)             // Change corner 1
         {
             if (_permission)
             {
-                Center = newCenter;
+                corner1 = newCorner;
                 return true;
             }
             else return false;
         }
 
-        public List<int> GetCenter()                            // Get the center of the space
+        public int GetCorner2()                     // Get corner 2
         {
-            return Center;
+            return corner2;
         }
 
-        private int Radius;                                     // The radius of the space
-        public bool NewRadius(int newRadius)                   // Specify a new radius to the space
+        public bool ChangeCorner2(int newCorner)     // Change corner 2
         {
             if (_permission)
             {
-                Radius = newRadius;
+                corner2 = newCorner;
                 return true;
             }
             else return false;
         }
 
-        public int GetRadius()                                  // Get the radius of the space
-        {  
-            return Radius;
+        public int GetCorner3()                     // Get corner 3
+        {
+            return corner3;
+        }
+
+        public bool ChangeCorner3(int newCorner)     // Change corner 3
+        {
+            if (_permission)
+            {
+                corner3 = newCorner;
+                return true;
+            }
+            else return false;
+        }
+
+        public int GetCorner4()                 // Get corner 4
+        {
+            return corner4;
+        }
+
+        public bool ChangeCorner4(int newCorner)        // Change corner 4
+        {
+            if (_permission)
+            {
+                corner4 = newCorner;
+                return true;
+            }
+            else return false;
+        }
+
+        public List<int> GetWall1()                 // A list of coordinates for the first wall
+        {
+            List<int> wall = new List<int>();
+            wall.Add(corner1);
+            wall.Add(corner2);
+            return wall;
+        }
+
+        public List<int> GetWall2()                 // A list of coordinates for the second wall
+        {
+            List<int> wall = new List<int>();
+            wall.Add(corner2);
+            wall.Add(corner3);
+            return wall;
+        }
+
+        public List<int> GetWall3()             // A list of coordinates for the third wall
+        {
+            List<int> wall = new List<int>();
+            wall.Add(corner3);
+            wall.Add(corner4);
+            return wall;
+        }
+
+        public List<int> GetWall4()             // A list of coordinates for the fourth wall
+        {
+            List<int> wall = new List<int>();
+            wall.Add(corner4);
+            wall.Add(corner1);
+            return wall;
         }
 
         private int floor = 0;                              // The floor of the space
