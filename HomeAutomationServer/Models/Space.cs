@@ -9,6 +9,8 @@ namespace HomeAutomationServerAPI.Models
 {
     public class Space
     {
+        int SpaceId;
+
         private bool _permission = true;                                                         // This indicates whether or not the user has access to the space
         public bool Permission { get { return _permission; } set { _permission = value; } }
 
@@ -103,6 +105,15 @@ namespace HomeAutomationServerAPI.Models
             return MyDevices.Count;
         }
 
-        private List<int> LocationMap = new List<int>();     // A location map
+        public Location SpaceLocation = new Location();    // A location map
+        public bool ChangeLocationPermission(bool permission)       // Change the permission of modifying the location
+        {
+            if (_permission)
+            {
+                SpaceLocation.Permission = permission;
+                return true;
+            }
+            else return false;
+        }
     }
 }
