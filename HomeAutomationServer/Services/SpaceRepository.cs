@@ -2,11 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
-using HomeAPI.Models;
+using HomeAutomationServerAPI.Models;
 
 // This class tells the controller how to process the HTTP commands
 
-namespace HomeAPI.Services
+namespace HomeAutomationServerAPI.Services
 {
     public class SpaceRepository
     {
