@@ -7,8 +7,9 @@ namespace HomeAPI.Models
 {
     public class Device
     {
-            public int DeviceId { get; set; }
-            public string DeviceName { get; set; }
-            public int RoomId { get; set; }
+        public int DeviceId { get; set; }
+        public string DeviceName { get; set; }
+        public int DeviceType { get; set; }
+        public int RoomId { get; set; }
     }
 }
