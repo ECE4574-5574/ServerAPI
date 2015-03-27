@@ -9,7 +9,7 @@ namespace HomeAutomationServerAPI.Models
 {
     public class Space
     {
-        int SpaceId;
+        public int SpaceId {get; set;}
 
         private bool _permission = true;                                                         // This indicates whether or not the user has access to the space
         public bool Permission { get { return _permission; } set { _permission = value; } }
