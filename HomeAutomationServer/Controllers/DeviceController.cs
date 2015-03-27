@@ -21,31 +21,31 @@ namespace HomeAutomationServerAPI.Controllers
             this.deviceRepository = new DeviceRepository();
         } 
 
+        // GET api/Device
         public Device[] Get()
         {
             return deviceRepository.GetAllDevices();
         }
 
+        // GET api/Device/id
         public Device Get(int id)
         {
             return null;
         }
 
+        // GET api/Device/name
         public Device Get(string name)
         {
             return null;
         }
 
-        public HttpResponseMessage Patch( int id, string name)
+        // PATCH api/Device/id, name, type, roomId
+        public HttpResponseMessage Patch( int id, string name = null, string type = null, int roomId = 0)
         {
             return null;
         }
 
-        public HttpResponseMessage Patch (int id, int roomId)
-        {
-            return null;
-        }
-
+        // POST api/Device
         public HttpResponseMessage Post(Device device)
         {
             this.deviceRepository.SaveDevice(device);
@@ -55,13 +55,15 @@ namespace HomeAutomationServerAPI.Controllers
             return response;
         }
 
-        public HttpResponseMessage Delete(Device device)
+        // DELETE api/Device/id
+        public HttpResponseMessage Delete(int id)
         {
-            this.deviceRepository.DeleteDevice(device);
+            /*this.deviceRepository.DeleteDevice(device);
 
             var response = Request.CreateResponse<Device>(System.Net.HttpStatusCode.OK, device);
 
-            return response;
+            return response;*/
+            return null;
         }
     }
 }

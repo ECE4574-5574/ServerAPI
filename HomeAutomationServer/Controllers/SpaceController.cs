@@ -20,21 +20,25 @@ namespace HomeAutomationServerAPI.Controllers
             this.spaceRepository = new SpaceRepository();
         }
 
+        // GET api/Space
         public Space[] Get()                             // HTTP GET - gets information about the space
         {
             return spaceRepository.GetAllSpaces();
         }
 
+        // GET api/Space/id
         public Space Get(int id)
         {
             return null;
         }
 
+        // GET api/Space/name
         public Space Get(string name)
         {
             return null;
         }
 
+        // PATCH api/Space/id, name, type, housename
         public HttpResponseMessage Patch(int id, string name = null, string type = null, string houseName = null)                      // HTTP PATCH - updates information about the space
         {
             /*Exception ex = this.spaceRepository.UpdateSpace();
@@ -46,6 +50,7 @@ namespace HomeAutomationServerAPI.Controllers
             return null;
         }
 
+        // PATCH api/Space/id, permission
         public HttpResponseMessage Patch(int id, bool permission)                      // HTTP PATCH - updates information about the space
         {
             /*Exception ex = this.spaceRepository.UpdateSpace();
@@ -57,6 +62,7 @@ namespace HomeAutomationServerAPI.Controllers
             return null;
         }
 
+        // POST api/Space
         public HttpResponseMessage Post(Space space)                  // HTTP POST - posts a new space
         {
             Exception ex = this.spaceRepository.SaveSpace(space);
@@ -68,6 +74,7 @@ namespace HomeAutomationServerAPI.Controllers
             return response;
         }
 
+        // DELETE api/Space/id
         public HttpResponseMessage Delete(int id)                // HTTP DELETE - deletes a space
         {
             /*Exception ex = this.spaceRepository.DeleteSpace(space);
