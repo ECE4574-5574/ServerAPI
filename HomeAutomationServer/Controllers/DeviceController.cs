@@ -26,6 +26,26 @@ namespace HomeAutomationServerAPI.Controllers
             return deviceRepository.GetAllDevices();
         }
 
+        public Device Get(int id)
+        {
+            return null;
+        }
+
+        public Device Get(string name)
+        {
+            return null;
+        }
+
+        public HttpResponseMessage Patch( int id, string name)
+        {
+            return null;
+        }
+
+        public HttpResponseMessage Patch (int id, int roomId)
+        {
+            return null;
+        }
+
         public HttpResponseMessage Post(Device device)
         {
             this.deviceRepository.SaveDevice(device);

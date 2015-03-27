@@ -43,18 +43,18 @@ namespace HomeAutomationServerAPI.Models
 
             set
             {
-                if (value.ToLower() == "living room" || value.ToLower() == "kitchen" || value.ToLower() == "basement" || value.ToLower() == "dining room"
+               /* if (value.ToLower() == "living room" || value.ToLower() == "kitchen" || value.ToLower() == "basement" || value.ToLower() == "dining room"
                     || value.ToLower() == "bedroom" || value.ToLower() == "bathroom" || value.ToLower() == "office" || value.ToLower() == "stairs" || value.ToLower() == "walkway"
                     || value.ToLower() == "garage" || value.ToLower() == "porch" || value.ToLower() == "patio" || value.ToLower() == "general" || value.ToLower() == "other")
-                {
+                {*/
                     if (_permission)
                         _type = value;
-                }
+               /* }
                 else
                 {
                     if (_permission)
                         _type = "Not Specified";
-                }
+                }*/
             }
         }
 
@@ -105,7 +105,7 @@ namespace HomeAutomationServerAPI.Models
             return MyDevices.Count;
         }
 
-        public Location SpaceLocation = new Location();    // A location map
+        /*public Location SpaceLocation = new Location();    // A location map
         public bool ChangeLocationPermission(bool permission)       // Change the permission of modifying the location
         {
             if (_permission)
@@ -114,6 +114,6 @@ namespace HomeAutomationServerAPI.Models
                 return true;
             }
             else return false;
-        }
+        }*/
     }
 }
