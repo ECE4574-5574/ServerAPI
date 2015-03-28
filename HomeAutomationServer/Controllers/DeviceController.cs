@@ -1,5 +1,5 @@
-﻿using HomeAutomationServerAPI.Models;
-using HomeAutomationServerAPI.Services;
+﻿using HomeAutomationServer.Models;
+using HomeAutomationServer.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;

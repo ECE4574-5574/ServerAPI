@@ -5,7 +5,7 @@ using System.Web;
 
 // Space class model
 
-namespace HomeAutomationServerAPI.Models
+namespace HomeAutomationServer.Models
 {
     public class Space
     {

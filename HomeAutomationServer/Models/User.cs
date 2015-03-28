@@ -5,7 +5,7 @@ using System.Web;
 
 // User Model
 
-namespace HomeAutomationServerAPI.Models 
+namespace HomeAutomationServer.Models 
 {
     public class User
     {

@@ -5,7 +5,7 @@ using System.Web;
 
 // House Model
 
-namespace HomeAutomationServerAPI.Models
+namespace HomeAutomationServer.Models
 {
     public class House
     {
