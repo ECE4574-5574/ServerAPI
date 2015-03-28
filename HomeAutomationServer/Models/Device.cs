@@ -10,6 +10,6 @@ namespace HomeAutomationServerAPI.Models
         public int DeviceId { get; set; }
         public string DeviceName { get; set; }
         public int DeviceType { get; set; }
-        public int RoomId { get; set; }
+        public int SpaceId { get; set; }
     }
 }
