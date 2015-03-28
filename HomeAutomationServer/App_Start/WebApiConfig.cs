@@ -1,7 +1,10 @@
 ﻿using HomeAutomationServerAPI.Controllers;
+using Newtonsoft.Json.Serialization;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http.Formatting;
+using System.Net.Http.Headers;
 using System.Web.Http;
 using System.Web.Http.Dispatcher;
 
@@ -11,6 +14,8 @@ namespace HomeAutomationServer
     {
         public static void Register(HttpConfiguration config)
         {
+            config.MapHttpAttributeRoutes();
+
             config.Routes.MapHttpRoute(
                 name: "DefaultApi",
                 routeTemplate: "api/{controller}/{id}",
@@ -25,7 +30,12 @@ namespace HomeAutomationServer
             // To disable tracing in your application, please comment out or remove the following line of code
             // For more information, refer to: http://www.asp.net/web-api
             config.EnableSystemDiagnosticsTracing();
-            config.Services.Replace(typeof(IHttpControllerSelector), new LearningControllerSelector((config)));
+            // config.Services.Replace(typeof(IHttpControllerSelector), new LearningControllerSelector((config)));
+
+            var jsonFormatter = config.Formatters.OfType<JsonMediaTypeFormatter>().FirstOrDefault();
+            jsonFormatter.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
+
+            config.Formatters.JsonFormatter.SupportedMediaTypes.Add(new MediaTypeHeaderValue("text/html"));
         }
     }
 }

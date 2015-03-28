@@ -11,5 +11,6 @@ namespace HomeAutomationServer.Models
         public string DeviceName { get; set; }
         public int DeviceType { get; set; }
         public int SpaceId { get; set; }
+        public bool State { get; set; }
     }
 }
