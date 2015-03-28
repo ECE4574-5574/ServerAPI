@@ -10,93 +10,69 @@ namespace HomeAutomationServerAPI.Services
 {
     public class DeviceRepository
     {
-        private const string CacheKey = "DeviceStore";
 
-        public DeviceRepository()
+        public IEnumerable<Device> GetAllDevices()
         {
-            var ctx = HttpContext.Current;
+            IEnumerable<Device> deviceEnumerable;
+            deviceEnumerable = getAllDevices();             // Persistent storage getAllDevices() method
+            return deviceEnumerable;
+        }
 
-            if (ctx != null)
+        public Device GetDevice(int id)
+        {
+            return getDevice(id);                       // Persistent storage getDevice() method
+        }
+
+        public Exception SaveDevice(Device device)
+        {
+            if (getDevice(device.DeviceId) != null)          // Persistent storage getDevice() method
+                return new Exception("Device with Device ID: " + device.DeviceId + " already exists");
+            
+            addDevice(device);                              // Persistent storage addDevice() method
+            return new Exception("saved");
+        }
+
+        public Exception UpdateDevice(int id, string name, int type, int spaceId)
+        {
+            Device device = new Device();
+            device = getDevice(id);                             // Persistent storage getDevice() method
+            
+            if (device == null)
+                return new Exception("Device with Device Id: " + id + " not found");
+
+            if (name != "")
+                device.DeviceName = name;
+
+            if (type != -1)
+                device.DeviceType = type;
+
+            if (spaceId != -1)
+                device.SpaceId = spaceId;
+
+            updateDevice(device);                                   // Persistent storage updateDevice() method
+            return new Exception("updated");
+        }
+
+        public Exception UpdateDevice(Device device)
+        {
+            if (getDevice(device.DeviceId) == null)                         // Persistent storage getDevice() method
+                return new Exception("Device with Device Id: " + device.DeviceId + " not found");
+            else
             {
-                if (ctx.Cache[CacheKey] == null)
-                {
-                    var devices = new Device[]{}; //Load the devices from the back end data structure??
-
-            ctx.Cache[CacheKey] = devices;
-                }
+                updateDevice(device);                                   // Persistent storage updateDevice() method
+                return new Exception("updated");
             }
         }
 
-        public Device[] GetAllDevices()
+        public Exception DeleteDevice(int id)
         {
-            var ctx = HttpContext.Current;
-
-            if (ctx != null)
+            if (getDevice(id) == null)                 // Persistent storage getDevice() method
+                return new Exception("Device with Device Id: " + id + " not found");
+            else
             {
-                return (Device[])ctx.Cache[CacheKey];
+                removeDevice(id);                      // Persistent storage removeDevice() method
+                return new Exception("deleted");
             }
-
-            return new Device[]
-            {
-            new Device
-                {
-                    DeviceId = 0,
-                    DeviceName = "Placeholder",
-                    RoomId = 0
-                }
-            };
-        }
-
-        public bool SaveDevice(Device device)
-        {
-            var ctx = HttpContext.Current;
-
-            if (ctx != null)
-            {
-                try
-                {
-                    var currentData = ((Device[])ctx.Cache[CacheKey]).ToList(); //get a list of the current data
-                    currentData.Add(device);                                    //add the new device
-                    ctx.Cache[CacheKey] = currentData.ToArray();                //recache the array
-
-                    return true;
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine(ex.ToString());
-                    return false;
-                }
-            }
-
-            return false;
-        }
-
-        public bool DeleteDevice(Device device)
-        {
-            var ctx = HttpContext.Current;
-
-            if (ctx != null)
-            {
-                try
-                {
-                    var currentData = ((Device[])ctx.Cache[CacheKey]).ToList();
-                    for (int i = 0; i < currentData.Count; i++)
-                        if (device.DeviceName == currentData.ElementAt(i).DeviceName && device.DeviceId == currentData.ElementAt(i).DeviceId) //search for the matching device to delete
-                            currentData.RemoveAt(i);
-                    for (int i = 0; i < currentData.Count; i++)
-                        System.Diagnostics.Debug.WriteLine(currentData.ElementAt(i).DeviceName);  //this serves as a check to see if the item was deleted
-                    ctx.Cache[CacheKey] = currentData.ToArray();
-
-                    return true;
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine(ex.ToString());
-                    return false;
-                }
-            }
-
-            return false;
         }
     }
 }

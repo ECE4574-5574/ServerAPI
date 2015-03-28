@@ -7,7 +7,7 @@ using System.Net;
 using System.Net.Http;
 using System.Web.Http;
 
-//This is our controller. It will respond to GET, POST, DELETE...
+//This is the device controller and will respond to GET, POST, PATCH, and DELETE
 
 namespace HomeAutomationServerAPI.Controllers
 {
@@ -18,11 +18,11 @@ namespace HomeAutomationServerAPI.Controllers
 
         public DeviceController()
         {
-            this.deviceRepository = new DeviceRepository();
+            deviceRepository = new DeviceRepository();
         } 
 
         // GET api/Device
-        public Device[] Get()
+        public IEnumerable<Device> Get()
         {
             return deviceRepository.GetAllDevices();
         }
@@ -30,40 +30,51 @@ namespace HomeAutomationServerAPI.Controllers
         // GET api/Device/id
         public Device Get(int id)
         {
-            return null;
-        }
-
-        // GET api/Device/name
-        public Device Get(string name)
-        {
-            return null;
+            return deviceRepository.GetDevice(id);
         }
 
         // PATCH api/Device/id, name, type, roomId
-        public HttpResponseMessage Patch( int id, string name = null, string type = null, int roomId = 0)
+        public HttpResponseMessage Patch( int id, string name = "", int type = -1, int spaceId = -1)
         {
-            return null;
+            Exception ex = deviceRepository.UpdateDevice(id, name, type, spaceId);
+            var response = Request.CreateErrorResponse(System.Net.HttpStatusCode.NotModified, ex);
+
+            if (ex.Message == "updated")
+                return Request.CreateResponse(System.Net.HttpStatusCode.OK);
+            else return response;
+        }
+
+        // PATCH api/Device
+        public HttpResponseMessage Patch(Device device)
+        {
+            Exception ex = deviceRepository.UpdateDevice(device);
+            var response = Request.CreateErrorResponse(System.Net.HttpStatusCode.NotModified, ex);
+
+            if (ex.Message == "updated")
+                return Request.CreateResponse<Device>(System.Net.HttpStatusCode.OK, device);
+            else return response;
         }
 
         // POST api/Device
         public HttpResponseMessage Post(Device device)
         {
-            this.deviceRepository.SaveDevice(device);
+            Exception ex = deviceRepository.SaveDevice(device);
+            var response = Request.CreateErrorResponse(System.Net.HttpStatusCode.NotAcceptable, ex);
 
-            var response = Request.CreateResponse<Device>(System.Net.HttpStatusCode.Created, device);
-
-            return response;
+            if (ex.Message == "saved")
+                return Request.CreateResponse<Device>(System.Net.HttpStatusCode.Created, device);
+            else return response;
         }
 
         // DELETE api/Device/id
         public HttpResponseMessage Delete(int id)
         {
-            /*this.deviceRepository.DeleteDevice(device);
+            Exception ex = deviceRepository.DeleteDevice(id);
+            var response = Request.CreateErrorResponse(System.Net.HttpStatusCode.NotModified, ex);
 
-            var response = Request.CreateResponse<Device>(System.Net.HttpStatusCode.OK, device);
-
-            return response;*/
-            return null;
+            if (ex.Message == "deleted")
+                return Request.CreateResponse(System.Net.HttpStatusCode.OK);
+            else return response;
         }
     }
 }
