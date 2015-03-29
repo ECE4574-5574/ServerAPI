@@ -9,11 +9,10 @@ namespace HomeAutomationServer.Models
 {
     public class User
     {
-        public int UserID { get; set;}
+        public string UserName { get; set;}
         public string FirstName { get; set; }
         public string LastName { get; set;}
         public List<House> MyHouses = new List<House>();
-
 
         /*public Person()
         {

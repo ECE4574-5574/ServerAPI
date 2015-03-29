@@ -27,13 +27,13 @@ namespace HomeAutomationServer.Controllers
         //}
 
         // GET api/User/id
-        public User Get(string id)
+        public User Get(string username)
         {
-            return userRepository.GetUser(id);
+            return userRepository.GetUser(username);
         }
 
         // PATCH api/User/id, first name, last name 
-        public HttpResponseMessage Patch(int id, string firstName = "", string lastName = "")                      // HTTP PATCH - updates information about the user
+        public HttpResponseMessage Patch(string username, string firstName = "", string lastName = "")                      // HTTP PATCH - updates information about the user
         {
             //Exception ex = userRepository.UpdateUser(id, firstName, lastName);
             //var response = Request.CreateErrorResponse(System.Net.HttpStatusCode.NotModified, ex);
@@ -68,12 +68,19 @@ namespace HomeAutomationServer.Controllers
             //    response = Request.CreateResponse<User>(System.Net.HttpStatusCode.Created, user);
 
             //return response;
-            return null;
-
+            HttpWebResponse response = userRepository.SaveUser(user);
+            if (response.StatusCode != HttpStatusCode.Created)
+            {
+                return Request.CreateErrorResponse(System.Net.HttpStatusCode.NotAcceptable, new Exception(String.Format(
+                "Server error (HTTP {0}: {1}).",
+                response.StatusCode,
+                response.StatusDescription)));
+            }
+            return Request.CreateResponse<User>(System.Net.HttpStatusCode.Created, user);
         }
 
         // DELETE api/User/id
-        public HttpResponseMessage Delete(int id)                // HTTP DELETE - deletes a user
+        public HttpResponseMessage Delete(string username)                // HTTP DELETE - deletes a user
         {
             //Exception ex = userRepository.DeleteUser(id);
             //var response = Request.CreateErrorResponse(System.Net.HttpStatusCode.NotAcceptable, ex);

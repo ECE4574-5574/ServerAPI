@@ -34,34 +34,25 @@ namespace HomeAutomationServer.Services
                 return user;
             }
         }
-
-        //Why do we need to get all users?
-
-        //public IEnumerable<User> GetAllUsers()
-        //{
-        //    IEnumerable<User> userEnumerable;
-        //    userEnumerable = getAllUsers();             // Persistent storage getAllUsers() method
-        //    return userEnumerable;
-        //}
-
-        //Do you really have a id to get the user?
-
-        //public User GetUser(int id)
-        //{
-        //    return getUser(id);                       // Persistent storage getUser() method
-        //}
-
-
         // The below code is good, but I commented it out because I could not build it.
 
-        //public Exception SaveUser(User user)
-        //{
-        //    if (getUser(user.UserId) != null)          // Persistent storage getUser() method
+        public HttpWebResponse SaveUser(User user)
+        {
+            
+            WebRequest request = WebRequest.Create("http://54.152.190.217:8080/U/" + user.UserName);
+            request.Method = "POST";
+
+            using (HttpWebResponse response = request.GetResponse() as HttpWebResponse)
+            {
+                return response;
+            }
+        
+        //  if (getUser(user.UserId) != null)          // Persistent storage getUser() method
         //        return new Exception("User with User ID: " + user.UserId + " already exists");
 
         //    addUser(user);                              // Persistent storage addUser() method
         //    return new Exception("saved");
-        //}
+        }
 
         //public Exception UpdateUser(int id, string firstName, string lastName)
         //{
