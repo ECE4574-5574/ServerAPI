@@ -33,8 +33,6 @@ namespace HomeAutomationServer.Services
                 User user = JsonConvert.DeserializeObject<User>(reader.ReadToEnd());
                 return user;
             }
-
-            return null;
         }
 
         //Why do we need to get all users?
