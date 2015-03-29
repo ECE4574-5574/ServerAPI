@@ -17,7 +17,7 @@ namespace HomeAutomationServer.Services
 
         public User GetUser(string username)
         {
-            WebRequest request = WebRequest.Create("http://54.152.190.217/UI/" + username);
+            WebRequest request = WebRequest.Create("http://54.152.190.217:8080/UI/" + username);
             request.Method = "GET";
 
             using (HttpWebResponse response = request.GetResponse() as HttpWebResponse)
