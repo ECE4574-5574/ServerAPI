@@ -45,7 +45,8 @@ namespace HomeAutomationServer.Controllers
             return Ok(model);
         }
 
-        public object LocalTime()
+        [Route("locatltime")]
+        public object PostLocalTime([FromBody] JObject model)
         {
             return Ok();
         }
