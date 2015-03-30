@@ -39,8 +39,8 @@ namespace HomeAutomationServer.Services
                 var stream = response.GetResponseStream();
                 var reader = new StreamReader(stream);
 
-                string houseString = JsonConvert.DeserializeObject<string>(reader.ReadToEnd());
-                return JObject.Parse(@"{user: 'test', password: 'bla'}");
+                string houseString = reader.ReadToEnd();
+                return JObject.Parse(houseString);
             }
         }
 
@@ -60,7 +60,7 @@ namespace HomeAutomationServer.Services
             }
 
             HttpWebResponse response = request.GetResponse() as HttpWebResponse;
-            if (response.StatusCode != HttpStatusCode.Created)
+            if (response.StatusCode != HttpStatusCode.OK)
                 throw new Exception(String.Format(
                 "Server error (HTTP {0}: {1}).",
                 response.StatusCode,
