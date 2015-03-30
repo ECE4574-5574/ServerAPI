@@ -7,6 +7,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
+using Newtonsoft.Json.Linq;
 
 //This is the device controller and will respond to GET, POST, PATCH, and DELETE
 
@@ -18,65 +19,59 @@ namespace HomeAutomationServerAPI.Controllers
 
         private DeviceRepository deviceRepository = new DeviceRepository();
 
-        public DeviceController()
+        // GET api/device/houseid/spaceid/deviceid
+        [Route("api/device/{houseid}/{spaceid}/{deviceid}")]
+        public JObject Get(string houseid, string spaceid, string deviceid)
         {
-            deviceRepository = new DeviceRepository();
-        } 
-
-        // GET api/Device
-        public IEnumerable<Device> Get()
-        {
-            return deviceRepository.GetAllDevices();
+            return null;
         }
 
-        // GET api/Device/id
-        public Device Get(int id)
+        // GET api/device/houseid/spaceid
+        [Route("api/device/{houseid}/{spaceid}")]
+        public JObject Get(string houseid, string spaceid)
         {
-            return deviceRepository.GetDevice(id);
+            return null;
         }
 
-        // PATCH api/Device/id, name, type, roomId
-        public HttpResponseMessage Patch( int id, string name = "", int type = -1, int spaceId = -1)
+        // GET api/device/houseid/spaceid/type
+        [Route("api/device/{houseid}/{spaceid}/{type}")]
+        public JObject Get(string houseid, string spaceid, int type)
         {
-            Exception ex = deviceRepository.UpdateDevice(id, name, type, spaceId);
-            var response = Request.CreateErrorResponse(System.Net.HttpStatusCode.NotModified, ex);
-
-            if (ex.Message == "updated")
-                return Request.CreateResponse(System.Net.HttpStatusCode.OK);
-            else return response;
+            return null;
         }
 
-        // PATCH api/Device
-        public HttpResponseMessage Patch(Device device)
+        // GET api/device/houseid
+        [Route("api/device/{houseid}")]
+        public JObject Get(string houseid)
         {
-            Exception ex = deviceRepository.UpdateDevice(device);
-            var response = Request.CreateErrorResponse(System.Net.HttpStatusCode.NotModified, ex);
-
-            if (ex.Message == "updated")
-                return Request.CreateResponse<Device>(System.Net.HttpStatusCode.OK, device);
-            else return response;
+            return null;
         }
 
-        // POST api/Device
-        public HttpResponseMessage Post(Device device)
+        // GET api/device/houseid/type
+        [Route("api/device/{houseid}/{type}")]
+        public JObject Get(string houseid, int type)
         {
-            Exception ex = deviceRepository.SaveDevice(device);
-            var response = Request.CreateErrorResponse(System.Net.HttpStatusCode.NotAcceptable, ex);
-
-            if (ex.Message == "saved")
-                return Request.CreateResponse<Device>(System.Net.HttpStatusCode.Created, device);
-            else return response;
+            return null;
         }
 
-        // DELETE api/Device/id
-        public HttpResponseMessage Delete(int id)
+       /* // PATCH api/Device/housid, spaceid, deviceid, name, type, newSpaceId
+        public JObject Patch(string houseid, string spaceid, string deviceid, string name = "", int type = -1, string newSpaceId = "")
         {
-            Exception ex = deviceRepository.DeleteDevice(id);
-            var response = Request.CreateErrorResponse(System.Net.HttpStatusCode.NotModified, ex);
+            return null;
+        }*/
 
-            if (ex.Message == "deleted")
-                return Request.CreateResponse(System.Net.HttpStatusCode.OK);
-            else return response;
+        // POST api/device/houseid, spaceid, deviceid, model
+        [Route("api/device/{houseid}/{spaceid}/{deviceid}")]
+        public JToken Post(string houseid, string spaceid, string deviceid, [FromBody] JToken model)
+        {
+            return null;
+        }
+
+        // DELETE api/device/id
+        [Route("api/device/{houseid}/{spaceid}/{deviceid}")]
+        public JObject Delete(string houseid, string spaceid, string deviceid)
+        {
+            return null;
         }
     }
 }

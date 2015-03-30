@@ -1,8 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
+﻿using HomeAutomationServer.Services;
 using HomeAutomationServer.Models;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Net;
+using System.Web;
 
 //This class serves as the data storage space. It is just a list of Device items that are regenerated from the cache
 
@@ -10,17 +15,7 @@ namespace HomeAutomationServer.Services
 {
     public class DeviceRepository
     {
-
-        public IEnumerable<Device> GetAllDevices()
-        {
-            //IEnumerable<Device> deviceEnumerable;
-            //deviceEnumerable = getAllDevices();             // Persistent storage getAllDevices() method
-            //return deviceEnumerable;
-            return null;
-
-        }
-
-        public Device GetDevice(int id)
+        public JObject GetDevice(string houseid, string spaceid, int id)
         {
             //return getDevice(id);                       // Persistent storage getDevice() method
             return null;
