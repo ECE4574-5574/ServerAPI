@@ -1,4 +1,6 @@
-﻿using System;
+﻿using HomeAutomationServer.Services;
+using Newtonsoft.Json.Linq;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
@@ -10,9 +12,11 @@ namespace HomeAutomationServer.Controllers
     [RoutePrefix("api/events")]
     public class EventsController : ApiController
     {
+        private EventsRepository eventsRepository;
+
         public EventsController()
         {
-
+            this.eventsRepository = new EventsRepository();
         }
 
         [Route("weather")]
@@ -31,6 +35,14 @@ namespace HomeAutomationServer.Controllers
         public object Command()
         {
             return Ok();
+        }
+
+        [Route("locationchange/{userid}")]
+        public object UpdatePosition(int userid, [FromBody] JToken model)
+        {
+
+            eventsRepository.OnUpdatePosition("stub");
+            return Ok(model);
         }
 
         public object LocalTime()
