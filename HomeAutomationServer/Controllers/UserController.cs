@@ -29,7 +29,7 @@ namespace HomeAutomationServer.Controllers
         //}
 
         // GET api/User/id
-        public User Get(string username)
+        public JObject Get(string username)
         {
             return userRepository.GetUser(username);
         }
@@ -63,14 +63,14 @@ namespace HomeAutomationServer.Controllers
         // POST api/User
         public HttpResponseMessage Post(/*User user*/ string username, [FromBody] JToken model)                  // HTTP POST - posts a new user
         {
-            HttpWebResponse response = userRepository.SaveUser(username, model);
-            if (response.StatusCode != HttpStatusCode.Created)
-            {
-                return Request.CreateErrorResponse(System.Net.HttpStatusCode.NotAcceptable, new Exception(String.Format(
-                "Server error (HTTP {0}: {1}).",
-                response.StatusCode,
-                response.StatusDescription)));
-            }
+            //JToken res = userRepository.SaveUser(username, model);
+            //if (response.StatusCode != HttpStatusCode.Created)
+            //{
+            //    return Request.CreateErrorResponse(System.Net.HttpStatusCode.NotAcceptable, new Exception(String.Format(
+            //    "Server error (HTTP {0}: {1}).",
+            //    response.StatusCode,
+            //    response.StatusDescription)));
+            //}
             return Request.CreateResponse(System.Net.HttpStatusCode.Created);
         }
 

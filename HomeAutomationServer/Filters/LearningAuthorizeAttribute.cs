@@ -18,8 +18,7 @@ namespace HomeAutomationServer.Filters
     public class LearningAuthorizeAttribute : AuthorizationFilterAttribute
     {
 
-        [Inject]
-        public UserRepository TheRepository { get; set; }
+        private UserRepository TheRepository = new UserRepository();
 
         public override void OnAuthorization(System.Web.Http.Controllers.HttpActionContext actionContext)
         {

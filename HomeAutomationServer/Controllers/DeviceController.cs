@@ -1,4 +1,5 @@
-﻿using HomeAutomationServer.Models;
+﻿using HomeAutomationServer.Filters;
+using HomeAutomationServer.Models;
 using HomeAutomationServer.Services;
 using System;
 using System.Collections.Generic;
@@ -11,6 +12,7 @@ using System.Web.Http;
 
 namespace HomeAutomationServerAPI.Controllers
 {
+    [LearningAuthorizeAttribute]
     public class DeviceController : ApiController
     {
 

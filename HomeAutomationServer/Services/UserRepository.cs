@@ -38,29 +38,30 @@ namespace HomeAutomationServer.Services
 
         public JToken SaveUser(/*User user*/string username, JToken model)
         {
-            WebRequest request = WebRequest.Create("http://54.152.190.217:8080/U/" + username);
-            request.ContentType = "text/json";
-            request.Method = "POST";
+            //WebRequest request = WebRequest.Create("http://54.152.190.217:8080/U/" + username);
+            //request.ContentType = "text/json";
+            //request.Method = "POST";
 
-            using (var streamWriter = new StreamWriter(request.GetRequestStream()))
-            {
-                /*string json = "{\"username\":\"" + user.UserName + "\"," +
-                  "\"firstname\":\"" + user.FirstName + "\"," + "\"lastname\":\"" + user.LastName + "\"," + 
-                  "\"houses\":\"" + user.MyHouses.ToString() + "\"}";*/
+            //using (var streamWriter = new StreamWriter(request.GetRequestStream()))
+            //{
+            //    /*string json = "{\"username\":\"" + user.UserName + "\"," +
+            //      "\"firstname\":\"" + user.FirstName + "\"," + "\"lastname\":\"" + user.LastName + "\"," + 
+            //      "\"houses\":\"" + user.MyHouses.ToString() + "\"}";*/
 
-                streamWriter.Write(model.ToString());
-            }
+            //    streamWriter.Write(model.ToString());
+            //}
 
-            using (HttpWebResponse response = request.GetResponse() as HttpWebResponse)
-            {
-                if (response.StatusCode != HttpStatusCode.OK)
-                    throw new Exception(String.Format(
-                    "Server error (HTTP {0}: {1}).",
-                    response.StatusCode,
-                    response.StatusDescription));
+            //using (HttpWebResponse response = request.GetResponse() as HttpWebResponse)
+            //{
+            //    if (response.StatusCode != HttpStatusCode.OK)
+            //        throw new Exception(String.Format(
+            //        "Server error (HTTP {0}: {1}).",
+            //        response.StatusCode,
+            //        response.StatusDescription));
 
-                return model;
-            }
+            //    return model;
+            //}
+            return null;
         }
 
 
