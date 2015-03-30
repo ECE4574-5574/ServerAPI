@@ -186,6 +186,8 @@
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\HouseController.cs" />
     <Compile Include="Controllers\LearningControllerSelector.cs" />
+    <Compile Include="Filters\ForceHttpsAttribute.cs" />
+    <Compile Include="Filters\LearningAuthorizeAttribute.cs" />
     <Compile Include="Services\DataContractJsonSerializer.cs" />
     <Compile Include="Services\ServerIdentityService.cs" />
     <Compile Include="Controllers\SpaceController.cs" />
