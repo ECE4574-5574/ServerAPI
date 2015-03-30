@@ -27,7 +27,7 @@ namespace HomeAutomationServerAPI.Controllers
 
         // GET api/device/houseid/spaceid
         [Route("api/device/{houseid}/{spaceid}")]
-        public JObject Get(string houseid, string spaceid)
+        public JArray Get(string houseid, string spaceid)
         {
             return deviceRepository.GetDevice(houseid, spaceid);
         }
@@ -41,14 +41,14 @@ namespace HomeAutomationServerAPI.Controllers
 
         // GET api/device/houseid
         [Route("api/device/{houseid}")]
-        public JObject Get(string houseid)
+        public JArray Get(string houseid)
         {
             return deviceRepository.GetDevice(houseid);
         }
 
         // GET api/device/houseid/type
         [Route("api/device/{houseid}/{type}")]
-        public JObject Get(string houseid, int type)
+        public JArray Get(string houseid, int type)
         {
             return deviceRepository.GetDevice(houseid, type);
         }

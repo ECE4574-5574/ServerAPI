@@ -36,7 +36,7 @@ namespace HomeAutomationServer.Services
             return null;
         }
 
-        public JObject GetDevice(string houseid, string spaceid)            // Return devices in space
+        public JArray GetDevice(string houseid, string spaceid)            // Return devices in space
         {
             WebRequest request = WebRequest.Create("http://54.152.190.217:8080/RD/" + houseid + "/" + spaceid);
            request.Method = "GET";
@@ -52,7 +52,7 @@ namespace HomeAutomationServer.Services
                var reader = new StreamReader(stream);
 
                string deviceString = reader.ReadToEnd();
-               return JObject.Parse(deviceString);
+               return JArray.Parse(deviceString);
            }
         }
 
@@ -76,7 +76,7 @@ namespace HomeAutomationServer.Services
             }
         }
 
-        public JObject GetDevice(string houseid)            // Return devices in house
+        public JArray GetDevice(string houseid)            // Return devices in house
         {
             WebRequest request = WebRequest.Create("http://54.152.190.217:8080/HD/" + houseid);
             request.Method = "GET";
@@ -92,11 +92,11 @@ namespace HomeAutomationServer.Services
                 var reader = new StreamReader(stream);
 
                 string deviceString = reader.ReadToEnd();
-                return JObject.Parse(deviceString);
+                return JArray.Parse(deviceString);
             }
         }
 
-        public JObject GetDevice(string houseid, int type)          // Return devices in house by type
+        public JArray GetDevice(string houseid, int type)          // Return devices in house by type
         {
             WebRequest request = WebRequest.Create("http://54.152.190.217:8080/HT/" + houseid + "/" + type);
             request.Method = "GET";
@@ -112,7 +112,7 @@ namespace HomeAutomationServer.Services
                 var reader = new StreamReader(stream);
 
                 string deviceString = reader.ReadToEnd();
-                return JObject.Parse(deviceString);
+                return JArray.Parse(deviceString);
             }
         }
 
