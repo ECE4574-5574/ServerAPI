@@ -37,19 +37,19 @@ namespace HomeAutomationServer.Services
         }
         // The below code is good, but I commented it out because I could not build it.
 
-        public HttpWebResponse SaveUser(User user)
+        public HttpWebResponse SaveUser(/*User user*/string username, JToken model)
         {
-            WebRequest request = WebRequest.Create("http://54.152.190.217:8080/U/" + user.UserName);
+            WebRequest request = WebRequest.Create("http://54.152.190.217:8080/U/" + username);
             request.ContentType = "text/json";
             request.Method = "POST";
 
             using (var streamWriter = new StreamWriter(request.GetRequestStream()))
             {
-                string json = "{\"username\":\"" + user.UserName + "\"," +
+                /*string json = "{\"username\":\"" + user.UserName + "\"," +
                   "\"firstname\":\"" + user.FirstName + "\"," + "\"lastname\":\"" + user.LastName + "\"," + 
-                  "\"houses\":\"" + user.MyHouses.ToString() + "\"}";
+                  "\"houses\":\"" + user.MyHouses.ToString() + "\"}";*/
 
-                streamWriter.Write(json);
+                streamWriter.Write(model.ToString());
             }
 
             HttpWebResponse response = request.GetResponse() as HttpWebResponse;

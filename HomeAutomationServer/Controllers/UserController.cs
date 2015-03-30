@@ -61,16 +61,9 @@ namespace HomeAutomationServer.Controllers
         }
 
         // POST api/User
-        public HttpResponseMessage Post(User user)                  // HTTP POST - posts a new user
+        public HttpResponseMessage Post(/*User user*/ string username, [FromBody] JToken model)                  // HTTP POST - posts a new user
         {
-            //Exception ex = userRepository.SaveUser(user);
-            //var response = Request.CreateErrorResponse(System.Net.HttpStatusCode.NotAcceptable, ex);
-
-            //if (ex.Message == "saved")
-            //    response = Request.CreateResponse<User>(System.Net.HttpStatusCode.Created, user);
-
-            //return response;
-            HttpWebResponse response = userRepository.SaveUser(user);
+            HttpWebResponse response = userRepository.SaveUser(username, model);
             if (response.StatusCode != HttpStatusCode.Created)
             {
                 return Request.CreateErrorResponse(System.Net.HttpStatusCode.NotAcceptable, new Exception(String.Format(
@@ -78,7 +71,7 @@ namespace HomeAutomationServer.Controllers
                 response.StatusCode,
                 response.StatusDescription)));
             }
-            return Request.CreateResponse<User>(System.Net.HttpStatusCode.Created, user);
+            return Request.CreateResponse(System.Net.HttpStatusCode.Created);
         }
 
         // DELETE api/User/id
