@@ -1,5 +1,6 @@
 ﻿using HomeAutomationServer.Models;
 using HomeAutomationServer.Services;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -35,9 +36,9 @@ namespace HomeAutomationServer.Controllers
         }
 
         [Route("state/{deviceid}")]
-        public IHttpActionResult PostDeviceState(int deviceid, [FromBody] Device model)
+        public object PostDeviceState(int deviceid, [FromBody] JToken model)
         {
-            return Ok();
+            return Ok(model);
         }
 
     }
