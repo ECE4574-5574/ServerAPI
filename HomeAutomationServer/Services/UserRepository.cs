@@ -1,6 +1,7 @@
 ﻿using HomeAutomationServer.Services;
 using HomeAutomationServer.Models;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -38,20 +39,21 @@ namespace HomeAutomationServer.Services
 
         public HttpWebResponse SaveUser(User user)
         {
-            
             WebRequest request = WebRequest.Create("http://54.152.190.217:8080/U/" + user.UserName);
+            request.ContentType = "text/json";
             request.Method = "POST";
 
-            using (HttpWebResponse response = request.GetResponse() as HttpWebResponse)
+            using (var streamWriter = new StreamWriter(request.GetRequestStream()))
             {
-                return response;
-            }
-        
-        //  if (getUser(user.UserId) != null)          // Persistent storage getUser() method
-        //        return new Exception("User with User ID: " + user.UserId + " already exists");
+                string json = "{\"username\":\"" + user.UserName + "\"," +
+                  "\"firstname\":\"" + user.FirstName + "\"," + "\"lastname\":\"" + user.LastName + "\"," + 
+                  "\"houses\":\"" + user.MyHouses.ToString() + "\"}";
 
-        //    addUser(user);                              // Persistent storage addUser() method
-        //    return new Exception("saved");
+                streamWriter.Write(json);
+            }
+
+            HttpWebResponse response = request.GetResponse() as HttpWebResponse;
+            return response;
         }
 
 
