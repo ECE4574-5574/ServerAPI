@@ -194,12 +194,13 @@
     <Compile Include="Areas\HelpPage\SampleGeneration\SampleDirection.cs" />
     <Compile Include="Areas\HelpPage\SampleGeneration\TextSample.cs" />
     <Compile Include="Areas\HelpPage\XmlDocumentationProvider.cs" />
-    <Compile Include="Controllers\DecisionController.cs" />
+    <Compile Include="Controllers\EventsController.cs" />
     <Compile Include="Controllers\DeviceController.cs" />
     <Compile Include="Controllers\DeviceMgrController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\HouseController.cs" />
     <Compile Include="Controllers\LearningControllerSelector.cs" />
+    <Compile Include="Controllers\SimController.cs" />
     <Compile Include="Filters\ForceHttpsAttribute.cs" />
     <Compile Include="Filters\LearningAuthorizeAttribute.cs" />
     <Compile Include="Services\DataContractJsonSerializer.cs" />
