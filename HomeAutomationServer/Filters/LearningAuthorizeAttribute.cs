@@ -41,7 +41,7 @@ namespace HomeAutomationServer.Filters
                     var password = credArray[1];
 
                     if (TheRepository.GetUser(userName) != null &&
-                        TheRepository.GetUser(userName)["password"].ToString() == (password))
+                        TheRepository.GetUser(userName)["password"].ToString().Equals(password))
                     {
                         var currentPrincipal = new GenericPrincipal(new GenericIdentity(userName), null);
                         Thread.CurrentPrincipal = currentPrincipal;
