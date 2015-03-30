@@ -15,7 +15,7 @@ namespace HomeAutomationServer.Services
     public class UserRepository
     {
 
-        public User GetUser(string username, string password) //Password is stubbed
+        public User GetUser(string username)
         {
             WebRequest request = WebRequest.Create("http://54.152.190.217:8080/UI/" + username);
             request.Method = "GET";

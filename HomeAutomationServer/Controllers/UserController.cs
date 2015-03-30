@@ -29,9 +29,9 @@ namespace HomeAutomationServer.Controllers
         //}
 
         // GET api/User/id
-        public User Get(string username, string password)
+        public User Get(string username)
         {
-            return userRepository.GetUser(username,password);
+            return userRepository.GetUser(username);
         }
 
         // PATCH api/User/id, first name, last name 

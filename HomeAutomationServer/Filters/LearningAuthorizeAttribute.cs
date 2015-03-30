@@ -41,16 +41,12 @@ namespace HomeAutomationServer.Filters
                     var userName = credArray[0];
                     var password = credArray[1];
 
-                    if (IsResourceOwner(userName, actionContext))
+                    if (TheRepository.GetUser(userName) != null &&
+                        TheRepository.GetUser(userName).Password == (password))
                     {
-                        //You can use Websecurity or asp.net memebrship provider to login, for
-                        //for he sake of keeping example simple, we used out own login functionality
-                        if (TheRepository.GetUser(userName, password) != null)
-                        {
-                            var currentPrincipal = new GenericPrincipal(new GenericIdentity(userName), null);
-                            Thread.CurrentPrincipal = currentPrincipal;
-                            return;
-                        }
+                        var currentPrincipal = new GenericPrincipal(new GenericIdentity(userName), null);
+                        Thread.CurrentPrincipal = currentPrincipal;
+                        return;
                     }
                 }
             }
@@ -69,23 +65,6 @@ namespace HomeAutomationServer.Filters
             var credArray = cred.Split(':');
 
             return credArray;
-        }
-
-        private bool IsResourceOwner(string userName, System.Web.Http.Controllers.HttpActionContext actionContext)
-        {
-            WebRequest request = WebRequest.Create("http://54.152.190.217:8080/UI/" + userName);
-            request.Method = "GET";
-            return true;
-            /*
-            var routeData = actionContext.Request.GetRouteData();
-            var resourceUserName = routeData.Values["userName"] as string;
-
-            if (resourceUserName == userName)
-            {
-                return true;
-            }
-            return false;
-             */
         }
 
         private void HandleUnauthorizedRequest(System.Web.Http.Controllers.HttpActionContext actionContext)
