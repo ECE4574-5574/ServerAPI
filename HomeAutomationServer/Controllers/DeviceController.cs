@@ -13,14 +13,13 @@ using Newtonsoft.Json.Linq;
 
 namespace HomeAutomationServerAPI.Controllers
 {
-    [LearningAuthorizeAttribute]
     public class DeviceController : ApiController
     {
 
         private DeviceRepository deviceRepository = new DeviceRepository();
 
         // GET api/device/houseid/spaceid/deviceid
-        [Route("api/device/{houseid}/{spaceid}/{deviceid}")]
+        [Route("api/device/{houseid}/{spaceid}/{deviceid:alpha}")]
         public JObject Get(string houseid, string spaceid, string deviceid)
         {
             return deviceRepository.GetDevice(houseid, spaceid, deviceid);
@@ -34,8 +33,8 @@ namespace HomeAutomationServerAPI.Controllers
         }
 
         // GET api/device/houseid/spaceid/type
-        [Route("api/device/{houseid}/{spaceid}/{type}")]
-        public JObject Get(string houseid, string spaceid, int type)
+        [Route("api/device/{houseid}/{spaceid}/{type:int}")]
+        public JArray Get(string houseid, string spaceid, int type)
         {
             return deviceRepository.GetDevice(houseid, spaceid, type);
         }

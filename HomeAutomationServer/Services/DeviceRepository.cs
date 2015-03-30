@@ -56,7 +56,7 @@ namespace HomeAutomationServer.Services
            }
         }
 
-        public JObject GetDevice(string houseid, string spaceid, int type)      // Return devices in space by type
+        public JArray GetDevice(string houseid, string spaceid, int type)      // Return devices in space by type
         {
             WebRequest request = WebRequest.Create("http://54.152.190.217:8080/RT/" + houseid + "/" + spaceid + "/" + type);
             request.Method = "GET";
@@ -72,7 +72,7 @@ namespace HomeAutomationServer.Services
                 var reader = new StreamReader(stream);
 
                 string deviceString = reader.ReadToEnd();
-                return JObject.Parse(deviceString);
+                return JArray.Parse(deviceString);
             }
         }
 
