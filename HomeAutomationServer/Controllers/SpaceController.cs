@@ -13,7 +13,7 @@ namespace HomeAutomationServerAPI.Controllers
 {
     public class SpaceController : ApiController
     {
-        private SpaceRepository spaceRepository;
+        private SpaceRepository spaceRepository = new SpaceRepository();
 
         public SpaceController()
         {

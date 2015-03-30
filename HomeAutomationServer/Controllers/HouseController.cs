@@ -1,11 +1,12 @@
-﻿using HomeAutomationServer.Models;
+﻿using HomeAutomationServer.Services;
+using HomeAutomationServer.Models;
 using System;
 using System.Collections.Generic;
-using HomeAutomationServer.Services;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
+using Newtonsoft.Json.Linq;
 
 // This is the house controller and will respond to GET, POST, PATCH, and DELETE
 
@@ -13,7 +14,7 @@ namespace HomeAutomationServerAPI.Controllers
 {
     public class HouseController : ApiController
     {
-        private HouseRepository houseRepository;
+        private HouseRepository houseRepository = new HouseRepository();
 
         // GET api/house
         public IEnumerable<House> Get()
@@ -22,20 +23,16 @@ namespace HomeAutomationServerAPI.Controllers
         }
 
         // GET api/house/id
-        public House Get(int id)
+        public JObject Get(string houseid)
         {
-            return houseRepository.GetHouse(id);
+            return houseRepository.GetHouse(houseid);
         }
 
-        // POST api/house
-        public HttpResponseMessage Post(House house)
-        {
-            Exception ex = houseRepository.SaveHouse(house);
-            var response = Request.CreateErrorResponse(System.Net.HttpStatusCode.NotAcceptable, ex);
 
-            if (ex.Message == "saved")
-                return Request.CreateResponse<House>(System.Net.HttpStatusCode.Created, house);
-            else return response;
+        // POST api/house
+        public JToken Post(/*User user*/ string houseid, [FromBody] JToken model)                  // HTTP POST - posts a new user
+        {
+            return houseRepository.SaveHouse(houseid, model);
         }
 
         // PATCH api/house

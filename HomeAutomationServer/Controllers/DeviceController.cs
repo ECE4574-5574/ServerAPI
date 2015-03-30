@@ -14,7 +14,7 @@ namespace HomeAutomationServerAPI.Controllers
     public class DeviceController : ApiController
     {
 
-        private DeviceRepository deviceRepository;
+        private DeviceRepository deviceRepository = new DeviceRepository();
 
         public DeviceController()
         {
