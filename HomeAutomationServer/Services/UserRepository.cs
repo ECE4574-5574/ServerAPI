@@ -54,6 +54,27 @@ namespace HomeAutomationServer.Services
         //    return new Exception("saved");
         }
 
+
+        public User UpdateUserPosition(string username)
+        {
+            WebRequest request = WebRequest.Create("http://54.152.190.217:8080/UI/" + username);
+            request.Method = "GET";
+
+            using (HttpWebResponse response = request.GetResponse() as HttpWebResponse)
+            {
+                if (response.StatusCode != HttpStatusCode.OK)
+                    throw new Exception(String.Format(
+                    "Server error (HTTP {0}: {1}).",
+                    response.StatusCode,
+                    response.StatusDescription));
+                var stream = response.GetResponseStream();
+                var reader = new StreamReader(stream);
+
+                User user = JsonConvert.DeserializeObject<User>(reader.ReadToEnd());
+                return user;
+            }
+        }
+
         //public Exception UpdateUser(int id, string firstName, string lastName)
         //{
         //    User user = new User();

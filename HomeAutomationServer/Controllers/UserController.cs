@@ -6,11 +6,13 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
+using Newtonsoft.Json.Linq;
 
 // User controller class
 
 namespace HomeAutomationServer.Controllers
 {
+    [RoutePrefix("api/user")]
     public class UserController : ApiController
     {
         private UserRepository userRepository;
@@ -91,6 +93,13 @@ namespace HomeAutomationServer.Controllers
             //return response;
             return null;
 
+        }
+
+        // POST api/User/updateposition
+        [Route("updateposition/{userid}")]
+        public object UpdatePosition(int userid, [FromBody] JToken model)
+        {
+            return Ok(model);
         }
     }
 }
