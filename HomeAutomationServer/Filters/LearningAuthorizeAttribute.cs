@@ -10,6 +10,7 @@ using System.Net.Http;
 using System.Threading;
 using System.Security.Principal;
 using System.Text;
+using Ninject;
 using HomeAutomationServer.Services;
 
 namespace HomeAutomationServer.Filters
@@ -74,6 +75,7 @@ namespace HomeAutomationServer.Filters
         {
             WebRequest request = WebRequest.Create("http://54.152.190.217:8080/UI/" + userName);
             request.Method = "GET";
+            return true;
             /*
             var routeData = actionContext.Request.GetRouteData();
             var resourceUserName = routeData.Values["userName"] as string;
