@@ -68,8 +68,8 @@ namespace HomeAutomationServer.Services
                 var stream = response.GetResponseStream();
                 var reader = new StreamReader(stream);
 
-                string userString = reader.ReadToEnd();
-                return JObject.Parse(userString);
+                string houseString = reader.ReadToEnd();
+                return JObject.Parse(houseString);
             }*/
             return null;
         }
@@ -89,8 +89,8 @@ namespace HomeAutomationServer.Services
                var stream = response.GetResponseStream();
                var reader = new StreamReader(stream);
 
-               string userString = reader.ReadToEnd();
-               return JObject.Parse(userString);
+               string houseString = reader.ReadToEnd();
+               return JObject.Parse(houseString);
            }*/
 
             return null;

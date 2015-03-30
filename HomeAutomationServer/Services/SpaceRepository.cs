@@ -30,8 +30,8 @@ namespace HomeAutomationServer.Services
                 var stream = response.GetResponseStream();
                 var reader = new StreamReader(stream);
 
-                string userString = reader.ReadToEnd();
-                return JObject.Parse(userString);
+                string spaceString = reader.ReadToEnd();
+                return JObject.Parse(spaceString);
             }*/
 
             return null;
@@ -53,7 +53,7 @@ namespace HomeAutomationServer.Services
                 var reader = new StreamReader(stream);
 
                 string houseString = reader.ReadToEnd();
-                JObject houseObject = JObject.Parse(userString);
+                JObject houseObject = JObject.Parse(spaceString);
             }
               
             int version;
@@ -90,8 +90,8 @@ namespace HomeAutomationServer.Services
                 var stream = response.GetResponseStream();
                 var reader = new StreamReader(stream);
 
-                string userString = reader.ReadToEnd();
-                return JObject.Parse(userString);
+                string spaceString = reader.ReadToEnd();
+                return JObject.Parse(spaceString);
             }*/
             return null;
         }
@@ -112,7 +112,7 @@ namespace HomeAutomationServer.Services
                 var reader = new StreamReader(stream);
 
                 string houseString = reader.ReadToEnd();
-                JObject houseObject = JObject.Parse(userString);
+                JObject houseObject = JObject.Parse(spaceString);
             }
               
             int version;
@@ -131,8 +131,8 @@ namespace HomeAutomationServer.Services
                 var stream = response.GetResponseStream();
                 var reader = new StreamReader(stream);
 
-                string userString = reader.ReadToEnd();
-                return JObject.Parse(userString);
+                string spaceString = reader.ReadToEnd();
+                return JObject.Parse(spaceString);
             }*/
             return null;
 

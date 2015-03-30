@@ -30,8 +30,8 @@ namespace HomeAutomationServer.Services
                var stream = response.GetResponseStream();
                var reader = new StreamReader(stream);
 
-               string userString = reader.ReadToEnd();
-               return JObject.Parse(userString);
+               string deviceString = reader.ReadToEnd();
+               return JObject.Parse(deviceString);
            }*/
             return null;
         }
@@ -51,8 +51,8 @@ namespace HomeAutomationServer.Services
                var stream = response.GetResponseStream();
                var reader = new StreamReader(stream);
 
-               string userString = reader.ReadToEnd();
-               return JObject.Parse(userString);
+               string deviceString = reader.ReadToEnd();
+               return JObject.Parse(deviceString);
            }
         }
 
@@ -71,8 +71,8 @@ namespace HomeAutomationServer.Services
                 var stream = response.GetResponseStream();
                 var reader = new StreamReader(stream);
 
-                string userString = reader.ReadToEnd();
-                return JObject.Parse(userString);
+                string deviceString = reader.ReadToEnd();
+                return JObject.Parse(deviceString);
             }
         }
 
@@ -91,8 +91,8 @@ namespace HomeAutomationServer.Services
                 var stream = response.GetResponseStream();
                 var reader = new StreamReader(stream);
 
-                string userString = reader.ReadToEnd();
-                return JObject.Parse(userString);
+                string deviceString = reader.ReadToEnd();
+                return JObject.Parse(deviceString);
             }
         }
 
@@ -111,8 +111,8 @@ namespace HomeAutomationServer.Services
                 var stream = response.GetResponseStream();
                 var reader = new StreamReader(stream);
 
-                string userString = reader.ReadToEnd();
-                return JObject.Parse(userString);
+                string deviceString = reader.ReadToEnd();
+                return JObject.Parse(deviceString);
             }
         }
 
@@ -132,7 +132,7 @@ namespace HomeAutomationServer.Services
                 var reader = new StreamReader(stream);
 
                 string houseString = reader.ReadToEnd();
-                JObject houseObject = JObject.Parse(userString);
+                JObject houseObject = JObject.Parse(deviceString);
             }
               
             int version;
@@ -169,8 +169,8 @@ namespace HomeAutomationServer.Services
                 var stream = response.GetResponseStream();
                 var reader = new StreamReader(stream);
 
-                string userString = reader.ReadToEnd();
-                return JObject.Parse(userString);
+                string deviceString = reader.ReadToEnd();
+                return JObject.Parse(deviceString);
             }*/
             return null;
         }
@@ -191,7 +191,7 @@ namespace HomeAutomationServer.Services
                 var reader = new StreamReader(stream);
 
                 string houseString = reader.ReadToEnd();
-                JObject houseObject = JObject.Parse(userString);
+                JObject houseObject = JObject.Parse(deviceString);
             }
               
             int version;
