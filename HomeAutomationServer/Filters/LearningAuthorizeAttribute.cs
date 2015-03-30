@@ -18,8 +18,7 @@ namespace HomeAutomationServer.Filters
     public class LearningAuthorizeAttribute : AuthorizationFilterAttribute
     {
 
-        [Inject]
-        public UserRepository TheRepository { get; set; }
+        private UserRepository TheRepository = new UserRepository();
 
         public override void OnAuthorization(System.Web.Http.Controllers.HttpActionContext actionContext)
         {
@@ -41,8 +40,8 @@ namespace HomeAutomationServer.Filters
                     var userName = credArray[0];
                     var password = credArray[1];
 
-                    if (TheRepository.GetUser(userName) != null &&
-                        TheRepository.GetUser(userName).Password == (password))
+                    if (TheRepository.GetUser(userName) != null /*&&
+                        TheRepository.GetUser(userName).Password == (password)*/)
                     {
                         var currentPrincipal = new GenericPrincipal(new GenericIdentity(userName), null);
                         Thread.CurrentPrincipal = currentPrincipal;

@@ -1,11 +1,15 @@
 ﻿using HomeAutomationServer.Models;
 using HomeAutomationServer.Services;
 using System;
+using HomeAutomationServer.Services;
+using HomeAutomationServer.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
+using Newtonsoft.Json.Linq;
 
 // Space controller class
 
@@ -13,26 +17,16 @@ namespace HomeAutomationServerAPI.Controllers
 {
     public class SpaceController : ApiController
     {
-        private SpaceRepository spaceRepository;
+        private SpaceRepository spaceRepository = new SpaceRepository();
 
-        public SpaceController()
+        // GET api/space/houseid/spaceid
+        [Route("api/space/{houseid}/{spaceid}")]
+        public JObject Get(string houseid, string spaceid)                        // HTTP GET - gets devices in the space
         {
-            this.spaceRepository = new SpaceRepository();
+            return null;
         }
 
-        // GET api/Space
-        public IEnumerable<Space> Get()                             // HTTP GET - gets information about the space
-        {
-            return spaceRepository.GetAllSpaces();
-        }
-
-        // GET api/Space/id
-        public Space Get(int id)
-        {
-            return spaceRepository.GetSpace(id);
-        }
-
-        // PATCH api/Space/id, name, type, housename
+        /* PATCH api/Space/id, name, type, housename
         public HttpResponseMessage Patch(int id, string name = "", int type = -1, int houseId = -1)                      // HTTP PATCH - updates information about the space
         {
             Exception ex = spaceRepository.UpdateSpace(id, name, type, houseId);
@@ -41,53 +35,20 @@ namespace HomeAutomationServerAPI.Controllers
                 return Request.CreateResponse(System.Net.HttpStatusCode.OK);
 
             return response;
-        }
-
-        // PATCH api/Space
-        public HttpResponseMessage Patch(Space space)                      // HTTP PATCH - updates information about the space
-        {
-            Exception ex = spaceRepository.UpdateSpace(space);
-            var response = Request.CreateErrorResponse(System.Net.HttpStatusCode.NotModified, ex);
-            if (ex.Message == "updated")
-                return Request.CreateResponse<Space>(System.Net.HttpStatusCode.OK, space);
-
-            return response;
-        }
-
-        /*// PATCH api/Space/id, permission
-        public HttpResponseMessage Patch(int id, bool permission)                      // HTTP PATCH - updates information about the space
-        {
-            /*Exception ex = this.spaceRepository.UpdateSpace();
-            var response = Request.CreateErrorResponse(System.Net.HttpStatusCode.NotModified, ex);
-            if (ex.Message == "updated")
-                return Request.CreateResponse(System.Net.HttpStatusCode.OK);
-
-            return response;
-            return null;
         }*/
 
-        // POST api/Space
-        public HttpResponseMessage Post(Space space)                  // HTTP POST - posts a new space
+        // POST api/space/houseid/spaceid & model
+        [Route("api/space/{houseid}/{spaceid}")]
+        public JToken Post(string houseid, string spaceid, [FromBody] JToken model)                  // HTTP POST - posts a new space
         {
-            Exception ex = spaceRepository.SaveSpace(space);
-            var response = Request.CreateErrorResponse(System.Net.HttpStatusCode.NotAcceptable, ex);
-
-            if (ex.Message == "saved")
-                response = Request.CreateResponse<Space>(System.Net.HttpStatusCode.Created, space);
-
-            return response;
+            return null;
         }
 
-        // DELETE api/Space/id
-        public HttpResponseMessage Delete(int id)                // HTTP DELETE - deletes a space
+        // DELETE api/space/houseid/spaceid
+        [Route("api/space/{houseid}/{spaceid}")]
+        public JObject Delete(string houseid, string spaceid)                // HTTP DELETE - deletes a space
         {
-            Exception ex = spaceRepository.DeleteSpace(id);
-            var response = Request.CreateErrorResponse(System.Net.HttpStatusCode.NotAcceptable, ex);
-
-            if (ex.Message == "deleted")
-                response = Request.CreateResponse(System.Net.HttpStatusCode.OK);
-
-            return response;
+            return null;
         }
     }
 }

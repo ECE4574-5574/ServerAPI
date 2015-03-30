@@ -1,6 +1,7 @@
 ﻿using HomeAutomationServer.Services;
 using HomeAutomationServer.Models;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -15,7 +16,7 @@ namespace HomeAutomationServer.Services
     public class UserRepository
     {
 
-        public User GetUser(string username)
+        public JObject GetUser(string username)
         {
             WebRequest request = WebRequest.Create("http://54.152.190.217:8080/UI/" + username);
             request.Method = "GET";
@@ -30,28 +31,37 @@ namespace HomeAutomationServer.Services
                 var stream = response.GetResponseStream();
                 var reader = new StreamReader(stream);
 
-                User user = JsonConvert.DeserializeObject<User>(reader.ReadToEnd());
-                return user;
+                string userString = reader.ReadToEnd();
+                return JObject.Parse(userString);
             }
         }
-        // The below code is good, but I commented it out because I could not build it.
 
-        public HttpWebResponse SaveUser(User user)
+        public JToken SaveUser(/*User user*/string username, JToken model)
         {
-            
-            WebRequest request = WebRequest.Create("http://54.152.190.217:8080/U/" + user.UserName);
-            request.Method = "POST";
+            //WebRequest request = WebRequest.Create("http://54.152.190.217:8080/U/" + username);
+            //request.ContentType = "text/json";
+            //request.Method = "POST";
 
-            using (HttpWebResponse response = request.GetResponse() as HttpWebResponse)
-            {
-                return response;
-            }
-        
-        //  if (getUser(user.UserId) != null)          // Persistent storage getUser() method
-        //        return new Exception("User with User ID: " + user.UserId + " already exists");
+            //using (var streamWriter = new StreamWriter(request.GetRequestStream()))
+            //{
+            //    /*string json = "{\"username\":\"" + user.UserName + "\"," +
+            //      "\"firstname\":\"" + user.FirstName + "\"," + "\"lastname\":\"" + user.LastName + "\"," + 
+            //      "\"houses\":\"" + user.MyHouses.ToString() + "\"}";*/
 
-        //    addUser(user);                              // Persistent storage addUser() method
-        //    return new Exception("saved");
+            //    streamWriter.Write(model.ToString());
+            //}
+
+            //using (HttpWebResponse response = request.GetResponse() as HttpWebResponse)
+            //{
+            //    if (response.StatusCode != HttpStatusCode.OK)
+            //        throw new Exception(String.Format(
+            //        "Server error (HTTP {0}: {1}).",
+            //        response.StatusCode,
+            //        response.StatusDescription));
+
+            //    return model;
+            //}
+            return null;
         }
 
 

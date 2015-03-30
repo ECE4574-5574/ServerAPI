@@ -1,11 +1,12 @@
-﻿using HomeAutomationServer.Models;
+﻿using HomeAutomationServer.Services;
+using HomeAutomationServer.Models;
 using System;
 using System.Collections.Generic;
-using HomeAutomationServer.Services;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
+using Newtonsoft.Json.Linq;
 
 // This is the house controller and will respond to GET, POST, PATCH, and DELETE
 
@@ -13,62 +14,35 @@ namespace HomeAutomationServerAPI.Controllers
 {
     public class HouseController : ApiController
     {
-        private HouseRepository houseRepository;
+        private HouseRepository houseRepository = new HouseRepository();
 
-        // GET api/house
-        public IEnumerable<House> Get()
+        // GET api/house/houseid
+        [Route("api/house/{houseid}")]
+        public JObject Get(string houseid)
         {
-            return houseRepository.GetAllHouses();
+            return houseRepository.GetHouse(houseid);
         }
 
-        // GET api/house/id
-        public House Get(int id)
+
+        // POST api/house/houseid
+        [Route("api/house/{houseid}")]
+        public JToken Post(/*User user*/ string houseid, [FromBody] JToken model)                  // HTTP POST - posts a new user
         {
-            return houseRepository.GetHouse(id);
+            return houseRepository.SaveHouse(houseid, model);
         }
 
-        // POST api/house
-        public HttpResponseMessage Post(House house)
+        /*// PATCH api/House/
+        [Route("{houseid}")]
+        public JObject Patch(string houseid, string housename = "", string username = "")
         {
-            Exception ex = houseRepository.SaveHouse(house);
-            var response = Request.CreateErrorResponse(System.Net.HttpStatusCode.NotAcceptable, ex);
+            return null;
+        }*/
 
-            if (ex.Message == "saved")
-                return Request.CreateResponse<House>(System.Net.HttpStatusCode.Created, house);
-            else return response;
-        }
-
-        // PATCH api/house
-        public HttpResponseMessage Patch(House house)
+        // DELETE api/house/houseid
+        [Route("api/house/{houseid}")]
+        public JObject Delete(string houseid)
         {
-            Exception ex = houseRepository.UpdateHouse(house);
-            var response = Request.CreateErrorResponse(System.Net.HttpStatusCode.NotModified, ex);
-
-            if (ex.Message == "updated")
-                return Request.CreateResponse<House>(System.Net.HttpStatusCode.OK, house);
-            else return response;
-        }
-
-        // PATCH api/house/id, name, userId
-        public HttpResponseMessage Patch(int id, string name = "", int userId = -1)
-        {
-            Exception ex = houseRepository.UpdateHouse(id, name, userId);
-            var response = Request.CreateErrorResponse(System.Net.HttpStatusCode.NotModified, ex);
-
-            if (ex.Message == "updated")
-                return Request.CreateResponse(System.Net.HttpStatusCode.OK);
-            else return response;
-        }
-
-        // DELETE api/house/id
-        public HttpResponseMessage Delete(int id)
-        {
-            Exception ex = houseRepository.DeleteHouse(id);
-            var response = Request.CreateErrorResponse(System.Net.HttpStatusCode.NotModified, ex);
-
-            if (ex.Message == "deleted")
-                return Request.CreateResponse(System.Net.HttpStatusCode.OK);
-            else return response;
+            return null;
         }
     }
 }
