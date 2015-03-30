@@ -23,7 +23,7 @@ namespace HomeAutomationServerAPI.Controllers
         [Route("api/space/{houseid}/{spaceid}")]
         public JObject Get(string houseid, string spaceid)                        // HTTP GET - gets devices in the space
         {
-            return null;
+            return spaceRepository.GetSpace(houseid, spaceid);
         }
 
         /* PATCH api/Space/id, name, type, housename
@@ -39,16 +39,16 @@ namespace HomeAutomationServerAPI.Controllers
 
         // POST api/space/houseid/spaceid & model
         [Route("api/space/{houseid}/{spaceid}")]
-        public JToken Post(string houseid, string spaceid, [FromBody] JToken model)                  // HTTP POST - posts a new space
+        public JObject Post(string houseid, string spaceid, [FromBody] JToken model)                  // HTTP POST - posts a new space
         {
-            return null;
+            return spaceRepository.SaveSpace(houseid, spaceid, model);
         }
 
         // DELETE api/space/houseid/spaceid
         [Route("api/space/{houseid}/{spaceid}")]
         public JObject Delete(string houseid, string spaceid)                // HTTP DELETE - deletes a space
         {
-            return null;
+            return spaceRepository.DeleteSpace(houseid, spaceid);
         }
     }
 }

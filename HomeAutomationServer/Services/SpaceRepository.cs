@@ -1,8 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
+﻿using HomeAutomationServer.Services;
 using HomeAutomationServer.Models;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Net;
+using System.Web;
 
 // This class tells the controller how to process the HTTP commands
 
@@ -10,31 +15,130 @@ namespace HomeAutomationServer.Services
 {
     public class SpaceRepository
     {
-        public IEnumerable<Space> GetAllSpaces()
+        public JObject GetSpace(string houseid, string spaceid)
         {
-            IEnumerable<Space> spaceEnumerable;
-            //spaceEnumerable = getAllSpaces();             // Persistent storage getAllSpaces() method
+            /*WebRequest request = WebRequest.Create("http://54.152.190.217:8080/RI/" + houseid + "/" + spaceid);
+            request.Method = "GET";
+
+            using (HttpWebResponse response = request.GetResponse() as HttpWebResponse)
+            {
+                if (response.StatusCode != HttpStatusCode.OK)
+                    throw new Exception(String.Format(
+                    "Server error (HTTP {0}: {1}).",
+                    response.StatusCode,
+                    response.StatusDescription));
+                var stream = response.GetResponseStream();
+                var reader = new StreamReader(stream);
+
+                string userString = reader.ReadToEnd();
+                return JObject.Parse(userString);
+            }*/
+
             return null;
         }
 
-        public Space GetSpace(int id)
+        public JObject SaveSpace(string houseid, string spaceid, JToken model)
         {
-            //return getSpace(id);                       // Persistent storage getSpace() method
+            /*WebRequest request = WebRequest.Create("http://54.152.190.217:8080/HI/" + houseid);
+            request.Method = "GET";
+
+            using (HttpWebResponse response = request.GetResponse() as HttpWebResponse)
+            {
+                if (response.StatusCode != HttpStatusCode.OK)
+                    throw new Exception(String.Format(
+                    "Server error (HTTP {0}: {1}).",
+                    response.StatusCode,
+                    response.StatusDescription));
+                var stream = response.GetResponseStream();
+                var reader = new StreamReader(stream);
+
+                string houseString = reader.ReadToEnd();
+                JObject houseObject = JObject.Parse(userString);
+            }
+              
+            int version;
+            // Get version from JObject
+             
+            request = WebRequest.Create("http://54.152.190.217:8080/R/" + houseid + "/" + version + "/" + spaceid);
+            request.ContentType = "application/json";
+            request.Method = "POST";
+
+            using (var streamWriter = new StreamWriter(request.GetRequestStream()))
+            {
+               streamWriter.Write(model.ToString());
+            }
+
+            using (HttpWebResponse response = request.GetResponse() as HttpWebResponse)
+            {
+                if (response.StatusCode != HttpStatusCode.OK)
+                    throw new Exception(String.Format(
+                    "Server error (HTTP {0}: {1}).",
+                    response.StatusCode,
+                    response.StatusDescription));
+            }
+
+            request = WebRequest.Create("http://54.152.190.217:8080/RI/" + houseid + "/" + version + "/" + spaceid);
+            request.Method = "GET";
+
+            using (HttpWebResponse response = request.GetResponse() as HttpWebResponse)
+            {
+                if (response.StatusCode != HttpStatusCode.OK)
+                    throw new Exception(String.Format(
+                    "Server error (HTTP {0}: {1}).",
+                    response.StatusCode,
+                    response.StatusDescription));
+                var stream = response.GetResponseStream();
+                var reader = new StreamReader(stream);
+
+                string userString = reader.ReadToEnd();
+                return JObject.Parse(userString);
+            }*/
             return null;
         }
 
-        public Exception SaveSpace(Space space)
+        public JObject DeleteSpace(string houseid, string spaceid)
         {
-            //if (getSpace(space.SpaceId) != null)          // Persistent storage getSpace() method
-            //    return new Exception("Space with Space ID: " + space.SpaceId + " already exists");
+            /*WebRequest request = WebRequest.Create("http://54.152.190.217:8080/HI/" + houseid);
+            request.Method = "GET";
 
-            //addSpace(space);                              // Persistent storage addSpace() method
-            //return new Exception("saved");
+            using (HttpWebResponse response = request.GetResponse() as HttpWebResponse)
+            {
+                if (response.StatusCode != HttpStatusCode.OK)
+                    throw new Exception(String.Format(
+                    "Server error (HTTP {0}: {1}).",
+                    response.StatusCode,
+                    response.StatusDescription));
+                var stream = response.GetResponseStream();
+                var reader = new StreamReader(stream);
+
+                string houseString = reader.ReadToEnd();
+                JObject houseObject = JObject.Parse(userString);
+            }
+              
+            int version;
+            // Get version from JObject
+              
+            request = WebRequest.Create("http://54.152.190.217:8080/R/" + houseid + "/" + version + "/" + spaceid);
+            request.Method = "DELETE";
+
+            using (HttpWebResponse response = request.GetResponse() as HttpWebResponse)
+            {
+                if (response.StatusCode != HttpStatusCode.OK)
+                    throw new Exception(String.Format(
+                    "Server error (HTTP {0}: {1}).",
+                    response.StatusCode,
+                    response.StatusDescription));
+                var stream = response.GetResponseStream();
+                var reader = new StreamReader(stream);
+
+                string userString = reader.ReadToEnd();
+                return JObject.Parse(userString);
+            }*/
             return null;
 
         }
 
-        public Exception UpdateSpace(int id, string name, int type, int houseId)
+        /*public Exception UpdateSpace(int id, string name, int type, int houseId)
         {
             //Space space = new Space();
             //space = getSpace(id);                             // Persistent storage getSpace() method
@@ -68,19 +172,6 @@ namespace HomeAutomationServer.Services
             //}
             return null;
 
-        }
-
-        public Exception DeleteSpace(int id)
-        {
-            //if (getSpace(id) == null)                 // Persistent storage getSpace() method
-            //    return new Exception("Space with Space Id: " + id + " not found");
-            //else
-            //{
-            //    removeSpace(id);                      // Persistent storage removeSpace() method
-            //    return new Exception("deleted");
-            //}
-            return null;
-
-        }
+        }*/
     }
 }

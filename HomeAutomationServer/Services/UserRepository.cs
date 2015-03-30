@@ -36,31 +36,63 @@ namespace HomeAutomationServer.Services
             }
         }
 
-        public JToken SaveUser(/*User user*/string username, JToken model)
+        public JObject SaveUser(string username, JToken model)
         {
-            //WebRequest request = WebRequest.Create("http://54.152.190.217:8080/U/" + username);
-            //request.ContentType = "text/json";
-            //request.Method = "POST";
+            /*WebRequest request = WebRequest.Create("http://54.152.190.217:8080/U/" + username);
+            request.ContentType = "application/json";
+            request.Method = "POST";
 
-            //using (var streamWriter = new StreamWriter(request.GetRequestStream()))
-            //{
-            //    /*string json = "{\"username\":\"" + user.UserName + "\"," +
-            //      "\"firstname\":\"" + user.FirstName + "\"," + "\"lastname\":\"" + user.LastName + "\"," + 
-            //      "\"houses\":\"" + user.MyHouses.ToString() + "\"}";*/
+            using (var streamWriter = new StreamWriter(request.GetRequestStream()))
+            {
+               streamWriter.Write(model.ToString());
+            }
 
-            //    streamWriter.Write(model.ToString());
-            //}
+            using (HttpWebResponse response = request.GetResponse() as HttpWebResponse)
+            {
+                if (response.StatusCode != HttpStatusCode.OK)
+                    throw new Exception(String.Format(
+                    "Server error (HTTP {0}: {1}).",
+                    response.StatusCode,
+                    response.StatusDescription));
+            }
 
-            //using (HttpWebResponse response = request.GetResponse() as HttpWebResponse)
-            //{
-            //    if (response.StatusCode != HttpStatusCode.OK)
-            //        throw new Exception(String.Format(
-            //        "Server error (HTTP {0}: {1}).",
-            //        response.StatusCode,
-            //        response.StatusDescription));
+            request = WebRequest.Create("http://54.152.190.217:8080/UI/" + username);
+            request.Method = "GET";
 
-            //    return model;
-            //}
+            using (HttpWebResponse response = request.GetResponse() as HttpWebResponse)
+            {
+                if (response.StatusCode != HttpStatusCode.OK)
+                    throw new Exception(String.Format(
+                    "Server error (HTTP {0}: {1}).",
+                    response.StatusCode,
+                    response.StatusDescription));
+                var stream = response.GetResponseStream();
+                var reader = new StreamReader(stream);
+
+                string userString = reader.ReadToEnd();
+                return JObject.Parse(userString);
+            }*/
+            return null;
+        }
+
+        public JObject DeleteUser(string username)
+        {
+            /*WebRequest request = WebRequest.Create("http://54.152.190.217:8080/A/USER/" + username);
+            request.Method = "DELETE";
+
+            using (HttpWebResponse response = request.GetResponse() as HttpWebResponse)
+            {
+                if (response.StatusCode != HttpStatusCode.OK)
+                    throw new Exception(String.Format(
+                    "Server error (HTTP {0}: {1}).",
+                    response.StatusCode,
+                    response.StatusDescription));
+                var stream = response.GetResponseStream();
+                var reader = new StreamReader(stream);
+
+                string userString = reader.ReadToEnd();
+                return JObject.Parse(userString);
+            }*/
             return null;
         }
 

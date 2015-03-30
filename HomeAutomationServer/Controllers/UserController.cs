@@ -39,7 +39,7 @@ namespace HomeAutomationServer.Controllers
 
         // POST api/user/username
         [Route("api/user/{username}")]
-        public JToken Post(/*User user*/ string username, [FromBody] JToken model)                  // HTTP POST - posts a new user
+        public JObject Post(/*User user*/ string username, [FromBody] JToken model)                  // HTTP POST - posts a new user
         {
             return userRepository.SaveUser(username, model);
         }
@@ -48,7 +48,7 @@ namespace HomeAutomationServer.Controllers
         [Route("api/user/{username}")]
         public JObject Delete(string username)                // HTTP DELETE - deletes a user
         {
-            return null;
+            return userRepository.DeleteUser(username);
         }
 
         // POST api/user/updateposition

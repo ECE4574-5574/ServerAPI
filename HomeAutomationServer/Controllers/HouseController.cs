@@ -26,7 +26,7 @@ namespace HomeAutomationServerAPI.Controllers
 
         // POST api/house/houseid
         [Route("api/house/{houseid}")]
-        public JToken Post(/*User user*/ string houseid, [FromBody] JToken model)                  // HTTP POST - posts a new user
+        public JObject Post(/*User user*/ string houseid, [FromBody] JToken model)                  // HTTP POST - posts a new user
         {
             return houseRepository.SaveHouse(houseid, model);
         }

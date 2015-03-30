@@ -15,29 +15,214 @@ namespace HomeAutomationServer.Services
 {
     public class DeviceRepository
     {
-        public JObject GetDevice(string houseid, string spaceid, int id)
+        public JObject GetDevice(string houseid, string spaceid, string deviceid)       // Return device
         {
-            //return getDevice(id);                       // Persistent storage getDevice() method
-            return null;
+           /*WebRequest request = WebRequest.Create("http://54.152.190.217:8080/DI/" + houseid + "/" + spaceid + "/" + deviceid);
+           request.Method = "GET";
 
+           using (HttpWebResponse response = request.GetResponse() as HttpWebResponse)
+           {
+               if (response.StatusCode != HttpStatusCode.OK)
+                   throw new Exception(String.Format(
+                   "Server error (HTTP {0}: {1}).",
+                   response.StatusCode,
+                   response.StatusDescription));
+               var stream = response.GetResponseStream();
+               var reader = new StreamReader(stream);
+
+               string userString = reader.ReadToEnd();
+               return JObject.Parse(userString);
+           }*/
+            return null;
         }
 
-        public Exception SaveDevice(Device device)
+        public JObject GetDevice(string houseid, string spaceid)            // Return devices in space
         {
-            //if (getDevice(device.DeviceId) != null)          // Persistent storage getDevice() method
-            //    return new Exception("Device with Device ID: " + device.DeviceId + " already exists");
-            
-            //addDevice(device);                              // Persistent storage addDevice() method
-            //return new Exception("saved");
-            return null;
+            WebRequest request = WebRequest.Create("http://54.152.190.217:8080/RD/" + houseid + "/" + spaceid);
+           request.Method = "GET";
 
+           using (HttpWebResponse response = request.GetResponse() as HttpWebResponse)
+           {
+               if (response.StatusCode != HttpStatusCode.OK)
+                   throw new Exception(String.Format(
+                   "Server error (HTTP {0}: {1}).",
+                   response.StatusCode,
+                   response.StatusDescription));
+               var stream = response.GetResponseStream();
+               var reader = new StreamReader(stream);
+
+               string userString = reader.ReadToEnd();
+               return JObject.Parse(userString);
+           }
         }
 
-        public Exception UpdateDevice(int id, string name, int type, int spaceId)
+        public JObject GetDevice(string houseid, string spaceid, int type)      // Return devices in space by type
+        {
+            WebRequest request = WebRequest.Create("http://54.152.190.217:8080/RT/" + houseid + "/" + spaceid + "/" + type);
+            request.Method = "GET";
+
+            using (HttpWebResponse response = request.GetResponse() as HttpWebResponse)
+            {
+                if (response.StatusCode != HttpStatusCode.OK)
+                    throw new Exception(String.Format(
+                    "Server error (HTTP {0}: {1}).",
+                    response.StatusCode,
+                    response.StatusDescription));
+                var stream = response.GetResponseStream();
+                var reader = new StreamReader(stream);
+
+                string userString = reader.ReadToEnd();
+                return JObject.Parse(userString);
+            }
+        }
+
+        public JObject GetDevice(string houseid)            // Return devices in house
+        {
+            WebRequest request = WebRequest.Create("http://54.152.190.217:8080/HD/" + houseid);
+            request.Method = "GET";
+
+            using (HttpWebResponse response = request.GetResponse() as HttpWebResponse)
+            {
+                if (response.StatusCode != HttpStatusCode.OK)
+                    throw new Exception(String.Format(
+                    "Server error (HTTP {0}: {1}).",
+                    response.StatusCode,
+                    response.StatusDescription));
+                var stream = response.GetResponseStream();
+                var reader = new StreamReader(stream);
+
+                string userString = reader.ReadToEnd();
+                return JObject.Parse(userString);
+            }
+        }
+
+        public JObject GetDevice(string houseid, int type)          // Return devices in house by type
+        {
+            WebRequest request = WebRequest.Create("http://54.152.190.217:8080/HT/" + houseid + "/" + type);
+            request.Method = "GET";
+
+            using (HttpWebResponse response = request.GetResponse() as HttpWebResponse)
+            {
+                if (response.StatusCode != HttpStatusCode.OK)
+                    throw new Exception(String.Format(
+                    "Server error (HTTP {0}: {1}).",
+                    response.StatusCode,
+                    response.StatusDescription));
+                var stream = response.GetResponseStream();
+                var reader = new StreamReader(stream);
+
+                string userString = reader.ReadToEnd();
+                return JObject.Parse(userString);
+            }
+        }
+
+        public JObject SaveDevice(string houseid, string spaceid, string deviceid, JToken model)
+        {
+            /*WebRequest request = WebRequest.Create("http://54.152.190.217:8080/HI/" + houseid);
+            request.Method = "GET";
+
+            using (HttpWebResponse response = request.GetResponse() as HttpWebResponse)
+            {
+                if (response.StatusCode != HttpStatusCode.OK)
+                    throw new Exception(String.Format(
+                    "Server error (HTTP {0}: {1}).",
+                    response.StatusCode,
+                    response.StatusDescription));
+                var stream = response.GetResponseStream();
+                var reader = new StreamReader(stream);
+
+                string houseString = reader.ReadToEnd();
+                JObject houseObject = JObject.Parse(userString);
+            }
+              
+            int version;
+            // Get version from JObject
+             
+            request = WebRequest.Create("http://54.152.190.217:8080/D/" + houseid + "/" + version + "/" + spaceid + "/" + deviceid);
+            request.ContentType = "application/json";
+            request.Method = "POST";
+
+            using (var streamWriter = new StreamWriter(request.GetRequestStream()))
+            {
+               streamWriter.Write(model.ToString());
+            }
+
+            using (HttpWebResponse response = request.GetResponse() as HttpWebResponse)
+            {
+                if (response.StatusCode != HttpStatusCode.OK)
+                    throw new Exception(String.Format(
+                    "Server error (HTTP {0}: {1}).",
+                    response.StatusCode,
+                    response.StatusDescription));
+            }
+
+            request = WebRequest.Create("http://54.152.190.217:8080/DI/" + houseid + "/" + version + "/" + spaceid + "/" + deviceid);
+            request.Method = "GET";
+
+            using (HttpWebResponse response = request.GetResponse() as HttpWebResponse)
+            {
+                if (response.StatusCode != HttpStatusCode.OK)
+                    throw new Exception(String.Format(
+                    "Server error (HTTP {0}: {1}).",
+                    response.StatusCode,
+                    response.StatusDescription));
+                var stream = response.GetResponseStream();
+                var reader = new StreamReader(stream);
+
+                string userString = reader.ReadToEnd();
+                return JObject.Parse(userString);
+            }*/
+            return null;
+        }
+
+        public JObject DeleteDevice(string houseid, string spaceid, string deviceid)
+        {
+            /*WebRequest request = WebRequest.Create("http://54.152.190.217:8080/HI/" + houseid);
+            request.Method = "GET";
+
+            using (HttpWebResponse response = request.GetResponse() as HttpWebResponse)
+            {
+                if (response.StatusCode != HttpStatusCode.OK)
+                    throw new Exception(String.Format(
+                    "Server error (HTTP {0}: {1}).",
+                    response.StatusCode,
+                    response.StatusDescription));
+                var stream = response.GetResponseStream();
+                var reader = new StreamReader(stream);
+
+                string houseString = reader.ReadToEnd();
+                JObject houseObject = JObject.Parse(userString);
+            }
+              
+            int version;
+            // Get version from JObject
+             
+            request = WebRequest.Create("http://54.152.190.217:8080/D/" + houseid + "/" + version + "/" + spaceid + "/" + deviceid);
+            request.ContentType = "application/json";
+            request.Method = "DELETE";
+
+            using (var streamWriter = new StreamWriter(request.GetRequestStream()))
+            {
+               streamWriter.Write(model.ToString());
+            }
+
+            using (HttpWebResponse response = request.GetResponse() as HttpWebResponse)
+            {
+                if (response.StatusCode != HttpStatusCode.OK)
+                    throw new Exception(String.Format(
+                    "Server error (HTTP {0}: {1}).",
+                    response.StatusCode,
+                    response.StatusDescription));
+            }*/
+
+            return null;
+        }
+
+        /*public Exception UpdateDevice(int id, string name, int type, int spaceId)
         {
             //Device device = new Device();
             //device = getDevice(id);                             // Persistent storage getDevice() method
-            
+
             //if (device == null)
             //    return new Exception("Device with Device Id: " + id + " not found");
 
@@ -67,18 +252,6 @@ namespace HomeAutomationServer.Services
             //}
             return null;
 
-        }
-
-        public Exception DeleteDevice(int id)
-        {
-            //if (getDevice(id) == null)                 // Persistent storage getDevice() method
-            //    return new Exception("Device with Device Id: " + id + " not found");
-            //else
-            //{
-            //    removeDevice(id);                      // Persistent storage removeDevice() method
-            //    return new Exception("deleted");
-            //}
-            return null;
-        }
+        }*/
     }
 }

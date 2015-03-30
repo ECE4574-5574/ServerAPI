@@ -15,15 +15,6 @@ namespace HomeAutomationServer.Services
 {
     public class HouseRepository
     {
-        public IEnumerable<House> GetAllHouses()
-        {
-            //IEnumerable<House> houseEnumerable;
-            //houseEnumerable = getAllHouses();             // Persistent storage getAllHouses() method
-            //return houseEnumerable;
-            return null;
-
-        }
-
         public JObject GetHouse(string id)
         {
              WebRequest request = WebRequest.Create("http://54.152.190.217:8080/HI/" + id);
@@ -44,32 +35,68 @@ namespace HomeAutomationServer.Services
             }
         }
 
-        public JToken SaveHouse(/*House house*/ string houseId, JToken model)
+        public JObject SaveHouse(string houseId, JToken model)
         {
-            WebRequest request = WebRequest.Create("http://54.152.190.217:8080/H/" + houseId);
-            request.ContentType = "text/json";
+            /*WebRequest request = WebRequest.Create("http://54.152.190.217:8080/H/" + houseId);
+            request.ContentType = "application/json";
             request.Method = "POST";
             
             using (var streamWriter = new StreamWriter(request.GetRequestStream()))
             {
-                /*string json = "{\"username\":\"" + user.UserName + "\"," +
-                  "\"firstname\":\"" + user.FirstName + "\"," + "\"lastname\":\"" + user.LastName + "\"," + 
-                  "\"houses\":\"" + user.MyHouses.ToString() + "\"}";*/
-
                 streamWriter.Write(model.ToString());
             }
 
-            HttpWebResponse response = request.GetResponse() as HttpWebResponse;
-            if (response.StatusCode != HttpStatusCode.OK)
-                throw new Exception(String.Format(
-                "Server error (HTTP {0}: {1}).",
-                response.StatusCode,
-                response.StatusDescription));
+            using (HttpWebResponse response = request.GetResponse() as HttpWebResponse)
+            {
+                if (response.StatusCode != HttpStatusCode.OK)
+                    throw new Exception(String.Format(
+                    "Server error (HTTP {0}: {1}).",
+                    response.StatusCode,
+                    response.StatusDescription));
+            }
 
-            return model;
+            request = WebRequest.Create("http://54.152.190.217:8080/HI/" + houseId);
+            request.Method = "GET";
+
+            using (HttpWebResponse response = request.GetResponse() as HttpWebResponse)
+            {
+                if (response.StatusCode != HttpStatusCode.OK)
+                    throw new Exception(String.Format(
+                    "Server error (HTTP {0}: {1}).",
+                    response.StatusCode,
+                    response.StatusDescription));
+                var stream = response.GetResponseStream();
+                var reader = new StreamReader(stream);
+
+                string userString = reader.ReadToEnd();
+                return JObject.Parse(userString);
+            }*/
+            return null;
         }
 
-        public Exception UpdateHouse(int id, string name, int userId)
+        public JObject DeleteHouse(string houseid)
+        {
+            /*WebRequest request = WebRequest.Create("http://54.152.190.217:8080/H/" + houseid);
+           request.Method = "DELETE";
+
+           using (HttpWebResponse response = request.GetResponse() as HttpWebResponse)
+           {
+               if (response.StatusCode != HttpStatusCode.OK)
+                   throw new Exception(String.Format(
+                   "Server error (HTTP {0}: {1}).",
+                   response.StatusCode,
+                   response.StatusDescription));
+               var stream = response.GetResponseStream();
+               var reader = new StreamReader(stream);
+
+               string userString = reader.ReadToEnd();
+               return JObject.Parse(userString);
+           }*/
+
+            return null;
+        }
+
+        /*public Exception UpdateHouse(int id, string name, int userId)
         {
             //House house = new House();
             //house = getHouse(id);                             // Persistent storage getHouse() method
@@ -100,19 +127,6 @@ namespace HomeAutomationServer.Services
             //}
             return null;
 
-        }
-
-        public Exception DeleteHouse(int id)
-        {
-            //if (getHouse(id) == null)                 // Persistent storage getHouse() method
-            //    return new Exception("House with House Id: " + id + " not found");
-            //else
-            //{
-            //    removeHouse(id);                      // Persistent storage removeHouse() method
-            //    return new Exception("deleted");
-            //}
-            return null;
-
-        }
+        }*/
     }
 }

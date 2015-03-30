@@ -23,35 +23,35 @@ namespace HomeAutomationServerAPI.Controllers
         [Route("api/device/{houseid}/{spaceid}/{deviceid}")]
         public JObject Get(string houseid, string spaceid, string deviceid)
         {
-            return null;
+            return deviceRepository.GetDevice(houseid, spaceid, deviceid);
         }
 
         // GET api/device/houseid/spaceid
         [Route("api/device/{houseid}/{spaceid}")]
         public JObject Get(string houseid, string spaceid)
         {
-            return null;
+            return deviceRepository.GetDevice(houseid, spaceid);
         }
 
         // GET api/device/houseid/spaceid/type
         [Route("api/device/{houseid}/{spaceid}/{type}")]
         public JObject Get(string houseid, string spaceid, int type)
         {
-            return null;
+            return deviceRepository.GetDevice(houseid, spaceid, type);
         }
 
         // GET api/device/houseid
         [Route("api/device/{houseid}")]
         public JObject Get(string houseid)
         {
-            return null;
+            return deviceRepository.GetDevice(houseid);
         }
 
         // GET api/device/houseid/type
         [Route("api/device/{houseid}/{type}")]
         public JObject Get(string houseid, int type)
         {
-            return null;
+            return deviceRepository.GetDevice(houseid, type);
         }
 
        /* // PATCH api/Device/housid, spaceid, deviceid, name, type, newSpaceId
@@ -62,16 +62,16 @@ namespace HomeAutomationServerAPI.Controllers
 
         // POST api/device/houseid, spaceid, deviceid, model
         [Route("api/device/{houseid}/{spaceid}/{deviceid}")]
-        public JToken Post(string houseid, string spaceid, string deviceid, [FromBody] JToken model)
+        public JObject Post(string houseid, string spaceid, string deviceid, [FromBody] JToken model)
         {
-            return null;
+            return deviceRepository.SaveDevice(houseid, spaceid, deviceid, model);
         }
 
         // DELETE api/device/id
         [Route("api/device/{houseid}/{spaceid}/{deviceid}")]
         public JObject Delete(string houseid, string spaceid, string deviceid)
         {
-            return null;
+            return deviceRepository.DeleteDevice(houseid, spaceid, deviceid);
         }
     }
 }
