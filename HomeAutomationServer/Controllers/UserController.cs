@@ -12,10 +12,10 @@ using Newtonsoft.Json.Linq;
 
 namespace HomeAutomationServer.Controllers
 {
-    [RoutePrefix("api/user")]
+    [RoutePrefix("api/User")]
     public class UserController : ApiController
     {
-        private UserRepository userRepository;
+        private UserRepository userRepository = new UserRepository();
 
         public UserController()
         {
@@ -29,7 +29,7 @@ namespace HomeAutomationServer.Controllers
         //}
 
         // GET api/User/id
-        public User Get(string username)
+        public JObject Get(string username)
         {
             return userRepository.GetUser(username);
         }
@@ -61,17 +61,9 @@ namespace HomeAutomationServer.Controllers
         }
 
         // POST api/User
-        public HttpResponseMessage Post(/*User user*/ string username, [FromBody] JToken model)                  // HTTP POST - posts a new user
+        public JToken Post(/*User user*/ string username, [FromBody] JToken model)                  // HTTP POST - posts a new user
         {
-            HttpWebResponse response = userRepository.SaveUser(username, model);
-            if (response.StatusCode != HttpStatusCode.Created)
-            {
-                return Request.CreateErrorResponse(System.Net.HttpStatusCode.NotAcceptable, new Exception(String.Format(
-                "Server error (HTTP {0}: {1}).",
-                response.StatusCode,
-                response.StatusDescription)));
-            }
-            return Request.CreateResponse(System.Net.HttpStatusCode.Created);
+            return userRepository.SaveUser(username, model);
         }
 
         // DELETE api/User/id
