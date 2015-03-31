@@ -96,25 +96,10 @@ namespace HomeAutomationServer.Services
             return null;
         }
 
-
-        public User UpdateUserPosition(string username)
+        //Sends an updated position to the decison system
+        public void OnUpdatePosition(JToken model)
         {
-            WebRequest request = WebRequest.Create("http://54.152.190.217:8080/UI/" + username);
-            request.Method = "GET";
-
-            using (HttpWebResponse response = request.GetResponse() as HttpWebResponse)
-            {
-                if (response.StatusCode != HttpStatusCode.OK)
-                    throw new Exception(String.Format(
-                    "Server error (HTTP {0}: {1}).",
-                    response.StatusCode,
-                    response.StatusDescription));
-                var stream = response.GetResponseStream();
-                var reader = new StreamReader(stream);
-
-                User user = JsonConvert.DeserializeObject<User>(reader.ReadToEnd());
-                return user;
-            }
+            //stubbed, will send an updated positio
         }
 
         //public Exception UpdateUser(int id, string firstName, string lastName)

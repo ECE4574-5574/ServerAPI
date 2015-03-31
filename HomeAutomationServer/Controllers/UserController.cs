@@ -56,6 +56,7 @@ namespace HomeAutomationServer.Controllers
         [Route("api/user/updateposition/{username}")]
         public object UpdatePosition(string username, [FromBody] JToken model)
         {
+            userRepository.OnUpdatePosition(model);
             return Ok(model);
         }
     }

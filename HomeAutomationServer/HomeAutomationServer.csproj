@@ -204,7 +204,6 @@
     <Compile Include="Filters\ForceHttpsAttribute.cs" />
     <Compile Include="Filters\LearningAuthorizeAttribute.cs" />
     <Compile Include="Services\DataContractJsonSerializer.cs" />
-    <Compile Include="Services\EventsRepository.cs" />
     <Compile Include="Services\ServerIdentityService.cs" />
     <Compile Include="Controllers\SpaceController.cs" />
     <Compile Include="Controllers\UserController.cs" />
