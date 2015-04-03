@@ -12,11 +12,11 @@ namespace HomeAutomationServer.Controllers
     [RoutePrefix("api/events")]
     public class EventsController : ApiController
     {
-        private EventsRepository eventsRepository;
+        //private EventsRepository eventsRepository;
 
         public EventsController()
         {
-            this.eventsRepository = new EventsRepository();
+            //this.eventsRepository = new EventsRepository();
         }
 
         [Route("weather")]
@@ -41,7 +41,7 @@ namespace HomeAutomationServer.Controllers
         public object UpdatePosition(int userid, [FromBody] JToken model)
         {
 
-            eventsRepository.OnUpdatePosition("stub");
+            //eventsRepository.OnUpdatePosition("stub");
             return Ok(model);
         }
 
