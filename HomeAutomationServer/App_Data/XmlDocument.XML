@@ -564,7 +564,7 @@
             Gets the houses information with the specified houseid.
             </summary>
             <param name="houseid"></param>
-            <returns>Returns the houses information in a JObject.</returns>
+            <returns>Returns the houses information via a JObject.</returns>
         </member>
         <member name="M:HomeAutomationServerAPI.Controllers.HouseController.Post(System.String,Newtonsoft.Json.Linq.JObject)">
             <summary>
@@ -596,8 +596,7 @@
             <param name="houseid"></param>
             <param name="spaceid"></param>
             <param name="model"></param>
-            <body name="JObject model"></body>
-            <returns>Returns the space information found in a JObject.</returns>
+            <returns>Returns the space information found via a JObject.</returns>
         </member>
         <member name="M:HomeAutomationServerAPI.Controllers.SpaceController.Delete(System.String,System.String)">
             <summary>
@@ -605,7 +604,7 @@
             </summary>
             <param name="houseid"></param>
             <param name="spaceid"></param>
-            <returns>Returns the space deleted in a JObject.</returns>
+            <returns>Returns the space deleted via a JObject.</returns>
         </member>
         <member name="M:HomeAutomationServer.Controllers.UserController.Get(System.String)">
             <summary>
@@ -627,7 +626,7 @@
             Delete a user with the username. 
             </summary>
             <param name="username"></param>
-            <returns>Returns the object deleted by JObject.</returns>
+            <returns>Returns the object deleted by a JObject.</returns>
         </member>
     </members>
 </doc>
