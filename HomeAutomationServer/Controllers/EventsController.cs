@@ -12,11 +12,11 @@ namespace HomeAutomationServer.Controllers
     [RoutePrefix("api/events")]
     public class EventsController : ApiController
     {
-       // private EventsRepository eventsRepository;
+        //private EventsRepository eventsRepository;
 
         public EventsController()
         {
-         //   this.eventsRepository = new EventsRepository();
+            //this.eventsRepository = new EventsRepository();
         }
 
         [Route("weather")]
