@@ -20,6 +20,12 @@ namespace HomeAutomationServerAPI.Controllers
         private SpaceRepository spaceRepository = new SpaceRepository();
 
         // GET api/space/houseid/spaceid
+        /// <summary>
+        /// Gets the spaces information with the houseid and spaceid provided.
+        /// </summary>
+        /// <param name="houseid"></param>
+        /// <param name="spaceid"></param>
+        /// <returns>Returns a JObject of the spaces information found.</returns>
         [Route("api/space/{houseid}/{spaceid}")]
         public JObject Get(string houseid, string spaceid)                        // HTTP GET - gets devices in the space
         {
@@ -37,14 +43,27 @@ namespace HomeAutomationServerAPI.Controllers
             return response;
         }*/
 
-        // POST api/space/houseid/spaceid & model
+        // POST api/space/houseid/spaceid
+        /// <summary>
+        /// Posts the space with the JObject information provided and with the specified houseid and spaceid.
+        /// </summary>
+        /// <param name="houseid"></param>
+        /// <param name="spaceid"></param>
+        /// <param name="model"></param>
+        /// <returns>Returns the space information found via a JObject.</returns>
         [Route("api/space/{houseid}/{spaceid}")]
-        public JObject Post(string houseid, string spaceid, [FromBody] JToken model)                  // HTTP POST - posts a new space
+        public JObject Post(string houseid, string spaceid, [FromBody] JObject model)                  // HTTP POST - posts a new space
         {
             return spaceRepository.SaveSpace(houseid, spaceid, model);
         }
 
         // DELETE api/space/houseid/spaceid
+        /// <summary>
+        /// Deletes the space specified by the houseid and spaceid
+        /// </summary>
+        /// <param name="houseid"></param>
+        /// <param name="spaceid"></param>
+        /// <returns>Returns the space deleted via a JObject.</returns>
         [Route("api/space/{houseid}/{spaceid}")]
         public JObject Delete(string houseid, string spaceid)                // HTTP DELETE - deletes a space
         {

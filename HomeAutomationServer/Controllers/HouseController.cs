@@ -17,6 +17,11 @@ namespace HomeAutomationServerAPI.Controllers
         private HouseRepository houseRepository = new HouseRepository();
 
         // GET api/house/houseid
+        /// <summary>
+        /// Gets the houses information with the specified houseid.
+        /// </summary>
+        /// <param name="houseid"></param>
+        /// <returns>Returns the houses information via a JObject.</returns>
         [Route("api/house/{houseid}")]
         public JObject Get(string houseid)
         {
@@ -25,8 +30,14 @@ namespace HomeAutomationServerAPI.Controllers
 
 
         // POST api/house/houseid
+        /// <summary>
+        /// Posts the house with the JObject information provided and the specified houseid.
+        /// </summary>
+        /// <param name="houseid"></param>
+        /// <param name="model"></param>
+        /// <returns>Returns the houses information posted via JObject.</returns>
         [Route("api/house/{houseid}")]
-        public JObject Post(/*User user*/ string houseid, [FromBody] JToken model)                  // HTTP POST - posts a new user
+        public JObject Post(/*User user*/ string houseid, [FromBody] JObject model)                  // HTTP POST - posts a new user
         {
             return houseRepository.SaveHouse(houseid, model);
         }
@@ -39,6 +50,11 @@ namespace HomeAutomationServerAPI.Controllers
         }*/
 
         // DELETE api/house/houseid
+        /// <summary>
+        /// Deletes the house with the specified houseid.
+        /// </summary>
+        /// <param name="houseid"></param>
+        /// <returns>Returns the house deleted via JObject.</returns>
         [Route("api/house/{houseid}")]
         public JObject Delete(string houseid)
         {
