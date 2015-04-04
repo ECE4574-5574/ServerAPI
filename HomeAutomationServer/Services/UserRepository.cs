@@ -38,7 +38,7 @@ namespace HomeAutomationServer.Services
 
         public JObject SaveUser(string username, JToken model)
         {
-            /*WebRequest request = WebRequest.Create("http://54.152.190.217:8080/U/" + username);
+            WebRequest request = WebRequest.Create("http://54.152.190.217:8080/U/" + username);
             request.ContentType = "application/json";
             request.Method = "POST";
 
@@ -56,6 +56,7 @@ namespace HomeAutomationServer.Services
                     response.StatusDescription));
             }
 
+            //return null;
             request = WebRequest.Create("http://54.152.190.217:8080/UI/" + username);
             request.Method = "GET";
 
@@ -71,8 +72,8 @@ namespace HomeAutomationServer.Services
 
                 string userString = reader.ReadToEnd();
                 return JObject.Parse(userString);
-            }*/
-            return null;
+            }
+           // return null;
         }
 
         public JObject DeleteUser(string username)
