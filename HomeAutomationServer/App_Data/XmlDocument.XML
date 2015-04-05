@@ -503,6 +503,39 @@
             </summary>
             <param name="documentPath">The physical path to XML document.</param>
         </member>
+        <member name="M:HomeAutomationServer.Controllers.EventsController.UpdateWeather">
+            <summary>
+            Updates the weather.
+            </summary>
+            <returns>Reutrns status OK.</returns>
+        </member>
+        <member name="M:HomeAutomationServer.Controllers.EventsController.UpdateDeviceState">
+            <summary>
+            Updates devices state.
+            </summary>
+            <returns>Returns status OK.</returns>
+        </member>
+        <member name="M:HomeAutomationServer.Controllers.EventsController.Command">
+            <summary>
+            Updates action/command.
+            </summary>
+            <returns>Returns status OK.</returns>
+        </member>
+        <member name="M:HomeAutomationServer.Controllers.EventsController.UpdatePosition(System.Int32,Newtonsoft.Json.Linq.JToken)">
+            <summary>
+            Updates the users position.
+            </summary>
+            <param name="userid"></param>
+            <param name="model"></param>
+            <returns>Returns JToken received.</returns>
+        </member>
+        <member name="M:HomeAutomationServer.Controllers.EventsController.PostLocalTime(Newtonsoft.Json.Linq.JObject)">
+            <summary>
+            Update local time.
+            </summary>
+            <param name="model"></param>
+            <returns>Returns status OK.</returns>
+        </member>
         <member name="M:HomeAutomationServerAPI.Controllers.DeviceController.Get(System.String)">
             <summary>
             Gets the devices information specified by the deviceid. 
@@ -558,6 +591,21 @@
             <param name="spaceid"></param>
             <param name="deviceid"></param>
             <returns>The device deleted as a JObject.</returns>
+        </member>
+        <member name="M:HomeAutomationServer.Controllers.DeviceMgrController.GetDeviceState(System.Int32)">
+            <summary>
+            Gets the status of the device with the device ID provided.
+            </summary>
+            <param name="deviceid"></param>
+            <returns>Status of the device and device information via JObject. Hardcoded for now.</returns>
+        </member>
+        <member name="M:HomeAutomationServer.Controllers.DeviceMgrController.PostDeviceState(System.Int32,Newtonsoft.Json.Linq.JObject)">
+            <summary>
+            Post a device status to a device with device ID specified. Takes a JObject.
+            </summary>
+            <param name="deviceid"></param>
+            <param name="model"></param>
+            <returns>Returns the information posted via JObject.</returns>
         </member>
         <member name="M:HomeAutomationServerAPI.Controllers.HouseController.Get(System.String)">
             <summary>
