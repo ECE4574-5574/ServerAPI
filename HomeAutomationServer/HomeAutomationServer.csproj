@@ -349,7 +349,6 @@
     <Content Include="Views\Shared\_Layout.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Views\DeviceMgrRepository\" />
     <Folder Include="Views\Weather\" />
   </ItemGroup>
   <ItemGroup>
