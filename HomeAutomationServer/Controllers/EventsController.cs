@@ -12,7 +12,7 @@ namespace HomeAutomationServer.Controllers
     [RoutePrefix("api/events")]
     public class EventsController : ApiController
     {
-        //private EventsRepository eventsRepository;
+       /* //private EventsRepository eventsRepository;
 
         public EventsController()
         {
@@ -77,7 +77,7 @@ namespace HomeAutomationServer.Controllers
         public object PostLocalTime([FromBody] JObject model)
         {
             return Ok();
-        }
+        }*/
 
     }
 }

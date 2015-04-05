@@ -8,7 +8,7 @@ using System.Web.Http;
 
 namespace HomeAutomationServer.Controllers
 {
-    [RoutePrefix("api/sim")]
+    /*[RoutePrefix("api/sim")]
     public class SimController : ApiController
     {
 
@@ -20,5 +20,5 @@ namespace HomeAutomationServer.Controllers
             return obj;
         }
 
-    }
+    }*/
 }
