@@ -205,6 +205,7 @@
     <Compile Include="Filters\ForceHttpsAttribute.cs" />
     <Compile Include="Filters\LearningAuthorizeAttribute.cs" />
     <Compile Include="Services\DataContractJsonSerializer.cs" />
+    <Compile Include="Services\DeviceMgrRepository.cs" />
     <Compile Include="Services\ServerIdentityService.cs" />
     <Compile Include="Controllers\SpaceController.cs" />
     <Compile Include="Controllers\UserController.cs" />
@@ -348,6 +349,7 @@
     <Content Include="Views\Shared\_Layout.cshtml" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="Views\DeviceMgrRepository\" />
     <Folder Include="Views\Weather\" />
   </ItemGroup>
   <ItemGroup>
