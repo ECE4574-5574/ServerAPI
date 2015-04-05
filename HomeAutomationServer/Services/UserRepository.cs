@@ -114,7 +114,7 @@ namespace HomeAutomationServer.Services
 
             try
             {
-                using (HttpWebResponse response = (HttpWebResponse)request.GetResponse() as HttpWebResponse)
+                using (HttpWebResponse response = request.GetResponse() as HttpWebResponse)
                 {
                     if (response.StatusCode != HttpStatusCode.OK)
                         throw new Exception(String.Format(
