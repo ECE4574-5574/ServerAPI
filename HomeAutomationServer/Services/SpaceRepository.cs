@@ -17,7 +17,7 @@ namespace HomeAutomationServer.Services
     {
         public JObject GetSpace(string houseid, string spaceid)
         {
-            /*WebRequest request = WebRequest.Create("http://54.152.190.217:8080/RI/" + houseid + "/" + spaceid);
+            /*WebRequest request = WebRequest.Create("http://54.152.190.217:8081/RI/" + houseid + "/" + spaceid);
             request.Method = "GET";
 
             using (HttpWebResponse response = request.GetResponse() as HttpWebResponse)
@@ -39,7 +39,7 @@ namespace HomeAutomationServer.Services
 
         public JObject SaveSpace(string houseid, string spaceid, JToken model)
         {
-            /*WebRequest request = WebRequest.Create("http://54.152.190.217:8080/HI/" + houseid);
+            /*WebRequest request = WebRequest.Create("http://54.152.190.217:8081/HI/" + houseid);
             request.Method = "GET";
 
             using (HttpWebResponse response = request.GetResponse() as HttpWebResponse)
@@ -59,7 +59,7 @@ namespace HomeAutomationServer.Services
             int version;
             // Get version from JObject
              
-            request = WebRequest.Create("http://54.152.190.217:8080/R/" + houseid + "/" + version + "/" + spaceid);
+            request = WebRequest.Create("http://54.152.190.217:8081/R/" + houseid + "/" + version + "/" + spaceid);
             request.ContentType = "application/json";
             request.Method = "POST";
 
@@ -77,7 +77,7 @@ namespace HomeAutomationServer.Services
                     response.StatusDescription));
             }
 
-            request = WebRequest.Create("http://54.152.190.217:8080/RI/" + houseid + "/" + version + "/" + spaceid);
+            request = WebRequest.Create("http://54.152.190.217:8081/RI/" + houseid + "/" + version + "/" + spaceid);
             request.Method = "GET";
 
             using (HttpWebResponse response = request.GetResponse() as HttpWebResponse)
@@ -98,7 +98,7 @@ namespace HomeAutomationServer.Services
 
         public JObject DeleteSpace(string houseid, string spaceid)
         {
-            /*WebRequest request = WebRequest.Create("http://54.152.190.217:8080/HI/" + houseid);
+            /*WebRequest request = WebRequest.Create("http://54.152.190.217:8081/HI/" + houseid);
             request.Method = "GET";
 
             using (HttpWebResponse response = request.GetResponse() as HttpWebResponse)
@@ -118,7 +118,7 @@ namespace HomeAutomationServer.Services
             int version;
             // Get version from JObject
               
-            request = WebRequest.Create("http://54.152.190.217:8080/R/" + houseid + "/" + version + "/" + spaceid);
+            request = WebRequest.Create("http://54.152.190.217:8081/R/" + houseid + "/" + version + "/" + spaceid);
             request.Method = "DELETE";
 
             using (HttpWebResponse response = request.GetResponse() as HttpWebResponse)

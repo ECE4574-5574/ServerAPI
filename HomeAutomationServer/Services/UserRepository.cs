@@ -18,7 +18,7 @@ namespace HomeAutomationServer.Services
 
         public JObject GetUser(string username)
         {
-            WebRequest request = WebRequest.Create("http://54.152.190.217:8080/UI/" + username);
+            WebRequest request = WebRequest.Create("http://54.152.190.217:8081/UI/" + username);
             request.Method = "GET";
 
             using (HttpWebResponse response = request.GetResponse() as HttpWebResponse)
@@ -38,7 +38,7 @@ namespace HomeAutomationServer.Services
 
         public JObject SaveUser(string username, JToken model)
         {
-            WebRequest request = WebRequest.Create("http://54.152.190.217:8080/U/" + username);
+            WebRequest request = WebRequest.Create("http://54.152.190.217:8081/U/" + username);
             request.ContentType = "application/json";
             request.Method = "POST";
 
@@ -57,7 +57,7 @@ namespace HomeAutomationServer.Services
             }
 
             //return null;
-            request = WebRequest.Create("http://54.152.190.217:8080/UI/" + username);
+            request = WebRequest.Create("http://54.152.190.217:8081/UI/" + username);
             request.Method = "GET";
 
             using (HttpWebResponse response = request.GetResponse() as HttpWebResponse)
@@ -78,7 +78,7 @@ namespace HomeAutomationServer.Services
 
         public JObject DeleteUser(string username)
         {
-            /*WebRequest request = WebRequest.Create("http://54.152.190.217:8080/A/USER/" + username);
+            /*WebRequest request = WebRequest.Create("http://54.152.190.217:8081/A/USER/" + username);
             request.Method = "DELETE";
 
             using (HttpWebResponse response = request.GetResponse() as HttpWebResponse)
