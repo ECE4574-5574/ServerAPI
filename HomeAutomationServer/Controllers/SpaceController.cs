@@ -1,9 +1,6 @@
 ﻿using HomeAutomationServer.Models;
 using HomeAutomationServer.Services;
 using System;
-using HomeAutomationServer.Services;
-using HomeAutomationServer.Models;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
@@ -25,7 +22,7 @@ namespace HomeAutomationServerAPI.Controllers
         /// </summary>
         /// <param name="houseid"></param>
         /// <param name="spaceid"></param>
-        /// <returns>Returns a JSON object data of the space information found.</returns>
+        /// <returns>Returns JSON object data of the space information found.</returns>
         [Route("api/space/{houseid}/{spaceid}")]
         public JObject Get(string houseid, string spaceid)                        // HTTP GET - gets devices in the space
         {

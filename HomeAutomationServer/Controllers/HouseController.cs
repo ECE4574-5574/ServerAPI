@@ -21,7 +21,7 @@ namespace HomeAutomationServerAPI.Controllers
         /// Gets the houses information with the specified houseid.
         /// </summary>
         /// <param name="houseid"></param>
-        /// <returns>Returns the houses information via a JSON object data.</returns>
+        /// <returns>Returns the houses information via JSON object data.</returns>
         [Route("api/house/{houseid}")]
         public JObject Get(string houseid)
         {
