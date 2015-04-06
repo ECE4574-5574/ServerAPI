@@ -503,110 +503,6 @@
             </summary>
             <param name="documentPath">The physical path to XML document.</param>
         </member>
-        <member name="M:HomeAutomationServer.Controllers.EventsController.UpdateWeather">
-            <summary>
-            Updates the weather.
-            </summary>
-            <returns>Reutrns status OK.</returns>
-        </member>
-        <member name="M:HomeAutomationServer.Controllers.EventsController.UpdateDeviceState">
-            <summary>
-            Updates devices state.
-            </summary>
-            <returns>Returns status OK.</returns>
-        </member>
-        <member name="M:HomeAutomationServer.Controllers.EventsController.Command">
-            <summary>
-            Updates action/command.
-            </summary>
-            <returns>Returns status OK.</returns>
-        </member>
-        <member name="M:HomeAutomationServer.Controllers.EventsController.UpdatePosition(System.Int32,Newtonsoft.Json.Linq.JToken)">
-            <summary>
-            Updates the users position.
-            </summary>
-            <param name="userid"></param>
-            <param name="model"></param>
-            <returns>Returns JToken received.</returns>
-        </member>
-        <member name="M:HomeAutomationServer.Controllers.EventsController.PostLocalTime(Newtonsoft.Json.Linq.JObject)">
-            <summary>
-            Update local time.
-            </summary>
-            <param name="model"></param>
-            <returns>Returns status OK.</returns>
-        </member>
-        <member name="M:HomeAutomationServerAPI.Controllers.DeviceController.Get(System.String)">
-            <summary>
-            Gets the devices information specified by the deviceid. 
-            </summary>
-            <param name="deviceid"></param>
-            <returns>Returns a JObject of the devices information.</returns>
-        </member>
-        <member name="M:HomeAutomationServerAPI.Controllers.DeviceController.Get(System.String,System.String)">
-            <summary>
-            Gets all the devices from the space with the houseid and spaceid provided.
-            </summary>
-            <param name="houseid"></param>
-            <param name="spaceid"></param>
-            <returns>Returns a JArray of the device items.</returns>
-        </member>
-        <member name="M:HomeAutomationServerAPI.Controllers.DeviceController.Get(System.String,System.String,System.Int32)">
-            <summary>
-            Gets all the devices from the space of the type specified and with the houseid and spaceid provided.
-            </summary>
-            <param name="houseid"></param>
-            <param name="spaceid"></param>
-            <param name="type"></param>
-            <returns>Returns a JArray of the devices found.</returns>
-        </member>
-        <member name="M:HomeAutomationServerAPI.Controllers.DeviceController.GetHouse(System.String)">
-            <summary>
-            Gets all the devices from the house with the houseid provided.
-            </summary>
-            <param name="houseid"></param>
-            <returns>Returns a JArray of the devices found.</returns>
-        </member>
-        <member name="M:HomeAutomationServerAPI.Controllers.DeviceController.Get(System.String,System.Int32)">
-            <summary>
-            Gets all the devices from the house of the type specified and with the houseid provided.
-            </summary>
-            <param name="houseid"></param>
-            <param name="type"></param>
-            <returns>Returns a JArray of the devices found.</returns>
-        </member>
-        <member name="M:HomeAutomationServerAPI.Controllers.DeviceController.Post(System.String,Newtonsoft.Json.Linq.JObject)">
-            <summary>
-            Posts a device with the deviceid and the JObject information specified.
-            </summary>
-            <param name="deviceid"></param>
-            <param name="model"></param>
-            <returns>Returns the device posted in a JObject.</returns>
-        </member>
-        <member name="M:HomeAutomationServerAPI.Controllers.DeviceController.Delete(System.String,System.String,System.String)">
-            <summary>
-            Deletes a device with the specified houseid, spaceid, and deviceid.
-            </summary>
-            <param name="houseid"></param>
-            <param name="spaceid"></param>
-            <param name="deviceid"></param>
-            <returns>The device deleted as a JObject.</returns>
-        </member>
-        <member name="M:HomeAutomationServer.Controllers.DeviceMgrController.GetDeviceState(System.Int32)">
-            <summary>
-            Gets the status of the device with the device ID provided.
-            </summary>
-            <param name="deviceid"></param>
-            <returns>Status of the device and device information via JObject. Hardcoded for now.</returns>
-        </member>
-        <member name="M:HomeAutomationServer.Controllers.DeviceMgrController.PostDeviceState(System.Int32,Newtonsoft.Json.Linq.JObject)">
-            <summary>
-            Post a device status to a device with device ID specified. Takes a JObject.
-            </summary>
-            <param name="deviceid"></param>
-            <param name="model"></param>
-            <returns>Returns the information posted via JObject.</returns>
-        </member>
         <member name="M:HomeAutomationServerAPI.Controllers.HouseController.Get(System.String)">
             <summary>
             Gets the houses information with the specified houseid.
@@ -653,28 +549,6 @@
             <param name="houseid"></param>
             <param name="spaceid"></param>
             <returns>Returns the space deleted via a JObject.</returns>
-        </member>
-        <member name="M:HomeAutomationServer.Controllers.UserController.Get(System.String)">
-            <summary>
-            Get a users information with the username provided.
-            </summary>
-            <param name="username"></param>
-            <returns>Returns the users information by a JObject.</returns>
-        </member>
-        <member name="M:HomeAutomationServer.Controllers.UserController.Post(System.String,Newtonsoft.Json.Linq.JObject)">
-            <summary>
-            Post a user with the username and JObject data provided.
-            </summary>
-            <param name="username"></param>
-            <param name="model"></param>
-            <returns>Returns the user posted by a JObject.</returns>
-        </member>
-        <member name="M:HomeAutomationServer.Controllers.UserController.Delete(System.String)">
-            <summary>
-            Delete a user with the username. 
-            </summary>
-            <param name="username"></param>
-            <returns>Returns the object deleted by a JObject.</returns>
         </member>
     </members>
 </doc>
