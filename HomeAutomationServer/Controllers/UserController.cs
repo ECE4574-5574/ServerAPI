@@ -56,6 +56,13 @@ namespace HomeAutomationServer.Controllers
         [Route("api/user/updateposition/{username}")]
         public object UpdatePosition(string username, [FromBody] JToken model)
         {
+            JToken child = model.First();
+            child.AddBeforeSelf(new JProperty("usersID", username));
+            DateTime currentTime;
+            //currentTime = DateTime.Now;
+            //JToken child2 = model.Last();
+            //child2.AddAfterSelf(new JProperty("locationTimeStamp", currentTime.ToString()));
+            //model.AddBeforeSelf(new JProperty("user",username));
             userRepository.OnUpdatePosition(model);
             return Ok(model);
         }
