@@ -24,22 +24,34 @@ namespace HomeAutomationServer.Controllers
             identityService = new ServerIdentityService();
         }
 
+        // GET api/devicemgr/state/deviceid
+        /// <summary>
+        /// Gets the status of the device with the device ID provided.
+        /// </summary>
+        /// <param name="deviceid"></param>
+        /// <returns>Status of the device and device information via JObject. Hardcoded for now.</returns>
         [Route("state/{deviceid}")]
-        public object GetDeviceState(int deviceid)
+        public JObject GetDeviceState(int deviceid)
         {
-            return new Device
-            {
-                DeviceId = deviceid,
-                DeviceName = "Living Room Main Light",
-                DeviceType =  2,
-                State = true
-            };
+            JObject device = new JObject();
+            device["DeviceId"] = deviceid;
+            device["DeviceName"] = "Living Room Main Light";
+            device["DeviceType"] = 2;
+            device["State"] = true;
+            return device;
         }
 
+        // POST api/devicemgr/state/deviceid
+        /// <summary>
+        /// Post a device status to a device with device ID specified. Takes a JObject.
+        /// </summary>
+        /// <param name="deviceid"></param>
+        /// <param name="model"></param>
+        /// <returns>Returns the information posted via JObject.</returns>
         [Route("state/{deviceid}")]
-        public object PostDeviceState(int deviceid, [FromBody] JToken model)
+        public JObject PostDeviceState(int deviceid, [FromBody] JObject model)
         {
-            return Ok(model);
+            return model;
         }
 
     }
