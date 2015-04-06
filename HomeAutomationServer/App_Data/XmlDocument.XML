@@ -639,10 +639,11 @@
             <param name="username"></param>
             <returns>Returns true if deleted, false if not.</returns>
         </member>
-        <member name="M:HomeAutomationServer.Controllers.UserController.UpdatePosition(Newtonsoft.Json.Linq.JObject)">
+        <member name="M:HomeAutomationServer.Controllers.UserController.UpdatePosition(System.String,Newtonsoft.Json.Linq.JObject)">
             <summary>
             Updates the user position and location time stamp to the user, requires JSON object data for the user.
             </summary>
+            <param name="username"></param>
             <param name="model"></param>
             <returns>Returns the updates JSON object data for the user.</returns>
         </member>

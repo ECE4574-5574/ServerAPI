@@ -63,6 +63,7 @@ namespace HomeAutomationServer.Controllers
         /// <summary>
         /// Updates the user position and location time stamp to the user, requires JSON object data for the user.
         /// </summary>
+        /// <param name="username"></param>
         /// <param name="model"></param>
         /// <returns>Returns the updates JSON object data for the user.</returns>
         [Route("api/user/updateposition/{username}")]
