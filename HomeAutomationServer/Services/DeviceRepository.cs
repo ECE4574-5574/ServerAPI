@@ -17,7 +17,7 @@ namespace HomeAutomationServer.Services
     {
         public JObject GetDevice(string houseid, string spaceid, string deviceid)       // Return device
         {
-           /*WebRequest request = WebRequest.Create("http://54.152.190.217:8080/DI/" + houseid + "/" + spaceid + "/" + deviceid);
+           /*WebRequest request = WebRequest.Create("http://54.152.190.217:8081/DI/" + houseid + "/" + spaceid + "/" + deviceid);
            request.Method = "GET";
 
            using (HttpWebResponse response = request.GetResponse() as HttpWebResponse)
@@ -38,7 +38,7 @@ namespace HomeAutomationServer.Services
 
         public JArray GetDevice(string houseid, string spaceid)            // Return devices in space
         {
-            WebRequest request = WebRequest.Create("http://54.152.190.217:8080/RD/" + houseid + "/" + spaceid);
+            WebRequest request = WebRequest.Create("http://54.152.190.217:8081/RD/" + houseid + "/" + spaceid);
            request.Method = "GET";
 
            using (HttpWebResponse response = request.GetResponse() as HttpWebResponse)
@@ -58,7 +58,7 @@ namespace HomeAutomationServer.Services
 
         public JArray GetDevice(string houseid, string spaceid, int type)      // Return devices in space by type
         {
-            WebRequest request = WebRequest.Create("http://54.152.190.217:8080/RT/" + houseid + "/" + spaceid + "/" + type);
+            WebRequest request = WebRequest.Create("http://54.152.190.217:8081/RT/" + houseid + "/" + spaceid + "/" + type);
             request.Method = "GET";
 
             using (HttpWebResponse response = request.GetResponse() as HttpWebResponse)
@@ -78,7 +78,7 @@ namespace HomeAutomationServer.Services
 
         public JArray GetDevice(string houseid)            // Return devices in house
         {
-            WebRequest request = WebRequest.Create("http://54.152.190.217:8080/HD/" + houseid);
+            WebRequest request = WebRequest.Create("http://54.152.190.217:8081/HD/" + houseid);
             request.Method = "GET";
 
             using (HttpWebResponse response = request.GetResponse() as HttpWebResponse)
@@ -118,7 +118,7 @@ namespace HomeAutomationServer.Services
 
         public bool saveDevice(JObject model)
         {
-            /*WebRequest request = WebRequest.Create("http://54.152.190.217:8080/HI/" + houseid);
+            /*WebRequest request = WebRequest.Create("http://54.152.190.217:8081/HI/" + houseid);
             request.Method = "GET";
 
             using (HttpWebResponse response = request.GetResponse() as HttpWebResponse)
@@ -155,7 +155,7 @@ namespace HomeAutomationServer.Services
                     response.StatusDescription));
             }
 
-            request = WebRequest.Create("http://54.152.190.217:8080/DI/" + houseid + "/" + version + "/" + spaceid + "/" + deviceid);
+            request = WebRequest.Create("http://54.152.190.217:8081/DI/" + houseid + "/" + version + "/" + spaceid + "/" + deviceid);
             request.Method = "GET";
 
             using (HttpWebResponse response = request.GetResponse() as HttpWebResponse)
@@ -176,7 +176,7 @@ namespace HomeAutomationServer.Services
 
         public JObject DeleteDevice(string houseid, string spaceid, string deviceid)
         {
-            /*WebRequest request = WebRequest.Create("http://54.152.190.217:8080/HI/" + houseid);
+            /*WebRequest request = WebRequest.Create("http://54.152.190.217:8081/HI/" + houseid);
             request.Method = "GET";
 
             using (HttpWebResponse response = request.GetResponse() as HttpWebResponse)
@@ -196,7 +196,7 @@ namespace HomeAutomationServer.Services
             int version;
             // Get version from JObject
              
-            request = WebRequest.Create("http://54.152.190.217:8080/D/" + houseid + "/" + version + "/" + spaceid + "/" + deviceid);
+            request = WebRequest.Create("http://54.152.190.217:8081/D/" + houseid + "/" + version + "/" + spaceid + "/" + deviceid);
             request.ContentType = "application/json";
             request.Method = "DELETE";
 
