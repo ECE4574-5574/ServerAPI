@@ -24,40 +24,55 @@ namespace HomeAutomationServer.Controllers
         }
 
         // GET api/user/username
+        /// <summary>
+        /// Gets the users information by the username provided via JSON object data.
+        /// </summary>
+        /// <param name="username"></param>
+        /// <returns>Returns the users information via JSON object data.</returns>
         [Route("api/user/{username}")]
         public JObject Get(string username)
         {
             return userRepository.GetUser(username);
         }
 
-        /*// PATCH api/User/username, first name, last name 
-        [Route("{username}")]
-        public JObject Patch(string username, string firstName = "", string lastName = "")                      // HTTP PATCH - updates information about the user
+        // POST api/user
+        /// <summary>
+        /// Posts the users information provided by JSON object data.
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns>Returns true if the information was posted, false if not.</returns>
+        [Route("api/user")]
+        public bool Post([FromBody] JObject model)                  // HTTP POST - posts a new user
         {
-            return null;
-
-        }*/
-
-        // POST api/user/username
-        [Route("api/user/{username}")]
-        public JObject Post(/*User user*/ string username, [FromBody] JToken model)                  // HTTP POST - posts a new user
-        {
-            return userRepository.SaveUser(username, model);
+            return true; //userRepository.SaveUser(model);
         }
 
         // DELETE api/user/username
+        /// <summary>
+        /// Deletes the user specified by the username.
+        /// </summary>
+        /// <param name="username"></param>
+        /// <returns>Returns true if deleted, false if not.</returns>
         [Route("api/user/{username}")]
-        public JObject Delete(string username)                // HTTP DELETE - deletes a user
+        public bool Delete(string username)                // HTTP DELETE - deletes a user
         {
-            return userRepository.DeleteUser(username);
+            return true; // userRepository.DeleteUser(username);
         }
 
         // POST api/user/updateposition
-        [Route("api/user/updateposition/{username}")]
-        public object UpdatePosition(string username, [FromBody] JToken model)
+        /// <summary>
+        /// Updates the user position and location time stamp to the user, requires JSON object data for the user.
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns>Returns the updates JSON object data for the user.</returns>
+        [Route("api/user/updateposition")]
+        public JObject UpdatePosition([FromBody] JObject model)
         {
+            DateTime currentTime;
+            currentTime = DateTime.Now;
+            model["locationTimeStamp"] = currentTime.ToString();
             userRepository.OnUpdatePosition(model);
-            return Ok(model);
+            return model;
         }
     }
 }

@@ -98,7 +98,7 @@ namespace HomeAutomationServer.Services
 
         public JArray GetDevice(string houseid, int type)          // Return devices in house by type
         {
-            WebRequest request = WebRequest.Create("http://54.152.190.217:8080/HT/" + houseid + "/" + type);
+            WebRequest request = WebRequest.Create("http://54.152.190.217:8081/HT/" + houseid + "/" + type);
             request.Method = "GET";
 
             using (HttpWebResponse response = request.GetResponse() as HttpWebResponse)
@@ -116,7 +116,7 @@ namespace HomeAutomationServer.Services
             }
         }
 
-        public JObject SaveDevice(string houseid, string spaceid, string deviceid, JToken model)
+        public bool saveDevice(JObject model)
         {
             /*WebRequest request = WebRequest.Create("http://54.152.190.217:8080/HI/" + houseid);
             request.Method = "GET";
@@ -137,8 +137,7 @@ namespace HomeAutomationServer.Services
               
             int version;
             // Get version from JObject
-             
-            request = WebRequest.Create("http://54.152.190.217:8080/D/" + houseid + "/" + version + "/" + spaceid + "/" + deviceid);
+            WebRequest request = WebRequest.Create(http://someurldecisionteam); //"http://54.152.190.217:8080/D/" + houseid + "/" + version + "/" + spaceid + "/" + deviceid);
             request.ContentType = "application/json";
             request.Method = "POST";
 
@@ -172,7 +171,7 @@ namespace HomeAutomationServer.Services
                 string deviceString = reader.ReadToEnd();
                 return JObject.Parse(deviceString);
             }*/
-            return null;
+            return true;
         }
 
         public JObject DeleteDevice(string houseid, string spaceid, string deviceid)
