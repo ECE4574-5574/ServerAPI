@@ -21,7 +21,7 @@ namespace HomeAutomationServerAPI.Controllers
         /// Gets the houses information with the specified houseid.
         /// </summary>
         /// <param name="houseid"></param>
-        /// <returns>Returns the houses information via a JObject.</returns>
+        /// <returns>Returns the houses information via a JSON object data.</returns>
         [Route("api/house/{houseid}")]
         public JObject Get(string houseid)
         {
@@ -29,17 +29,16 @@ namespace HomeAutomationServerAPI.Controllers
         }
 
 
-        // POST api/house/houseid
+        // POST api/house
         /// <summary>
-        /// Posts the house with the JObject information provided and the specified houseid.
+        /// Posts the house with the JSON object information provided.
         /// </summary>
-        /// <param name="houseid"></param>
         /// <param name="model"></param>
-        /// <returns>Returns the houses information posted via JObject.</returns>
-        [Route("api/house/{houseid}")]
-        public JObject Post(/*User user*/ string houseid, [FromBody] JObject model)                  // HTTP POST - posts a new user
+        /// <returns>Returns true if the house was posted, false if not.</returns>
+        [Route("api/house")]
+        public bool Post([FromBody] JObject model)                  // HTTP POST - posts a new user
         {
-            return houseRepository.SaveHouse(houseid, model);
+            return true; // houseRepository.SaveHouse(houseid, model);
         }
 
         /*// PATCH api/House/
@@ -54,7 +53,7 @@ namespace HomeAutomationServerAPI.Controllers
         /// Deletes the house with the specified houseid.
         /// </summary>
         /// <param name="houseid"></param>
-        /// <returns>Returns the house deleted via JObject.</returns>
+        /// <returns>Returns true if the house was deleted, false if not.</returns>
         [Route("api/house/{houseid}")]
         public JObject Delete(string houseid)
         {

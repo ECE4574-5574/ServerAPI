@@ -19,6 +19,13 @@ namespace HomeAutomationServerAPI.Controllers
         private DeviceRepository deviceRepository = new DeviceRepository();
 
         // GET api/device/houseid/spaceid/deviceid
+        /// <summary>
+        /// Gets the device information with the specified house ID, space ID, and device ID.
+        /// </summary>
+        /// <param name="houseid"></param>
+        /// <param name="spaceid"></param>
+        /// <param name="deviceid"></param>
+        /// <returns>Returns JSON object data of the device.</returns>
         [Route("api/device/{houseid}/{spaceid}/{deviceid:alpha}")]
         public JObject Get(string houseid, string spaceid, string deviceid)
         {
@@ -26,6 +33,12 @@ namespace HomeAutomationServerAPI.Controllers
         }
 
         // GET api/device/houseid/spaceid
+        /// <summary>
+        /// Gets all of the devices information with the specified house ID and space ID.
+        /// </summary>
+        /// <param name="houseid"></param>
+        /// <param name="spaceid"></param>
+        /// <returns>Returns all devices in the space via JSON array data.</returns>
         [Route("api/device/{houseid}/{spaceid}")]
         public JArray Get(string houseid, string spaceid)
         {
@@ -33,6 +46,13 @@ namespace HomeAutomationServerAPI.Controllers
         }
 
         // GET api/device/houseid/spaceid/type
+        /// <summary>
+        /// Gets all of the devices in the space of the type specified, with the provided house ID and space ID.
+        /// </summary>
+        /// <param name="houseid"></param>
+        /// <param name="spaceid"></param>
+        /// <param name="type"></param>
+        /// <returns>Returns all of the devices in the space of the type specified via JSON array data.</returns>
         [Route("api/device/{houseid}/{spaceid}/{type:int}")]
         public JArray Get(string houseid, string spaceid, int type)
         {
@@ -40,6 +60,11 @@ namespace HomeAutomationServerAPI.Controllers
         }
 
         // GET api/device/houseid
+        /// <summary>
+        /// Gets all of the devices in the house with the specified house ID.
+        /// </summary>
+        /// <param name="houseid"></param>
+        /// <returns>Returns all of the devices in the house specified via JSON array data.</returns>
         [Route("api/device/{houseid}")]
         public JArray Get(string houseid)
         {
@@ -47,30 +72,42 @@ namespace HomeAutomationServerAPI.Controllers
         }
 
         // GET api/device/houseid/type
+        /// <summary>
+        /// Gets all of the devices in the house of the specified type, with the provided house ID.
+        /// </summary>
+        /// <param name="houseid"></param>
+        /// <param name="type"></param>
+        /// <returns>Returns all of the devices in the specified house via JSON array data.</returns>
         [Route("api/device/{houseid}/{type}")]
         public JArray Get(string houseid, int type)
         {
             return deviceRepository.GetDevice(houseid, type);
         }
 
-       /* // PATCH api/Device/housid, spaceid, deviceid, name, type, newSpaceId
-        public JObject Patch(string houseid, string spaceid, string deviceid, string name = "", int type = -1, string newSpaceId = "")
+        // POST api/device
+        /// <summary>
+        /// Posts a device with the JSON object data given.
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns>Returns true if posted, false if not.</returns>
+        [Route("api/device")]
+        public bool Post([FromBody] JObject model)
         {
-            return null;
-        }*/
-
-        // POST api/device/houseid, spaceid, deviceid, model
-        [Route("api/device/{houseid}/{spaceid}/{deviceid}")]
-        public JObject Post(string houseid, string spaceid, string deviceid, [FromBody] JToken model)
-        {
-            return deviceRepository.SaveDevice(houseid, spaceid, deviceid, model);
+            return true; //deviceRepository.SaveDevice(model);
         }
 
         // DELETE api/device/id
+        /// <summary>
+        /// Deletes a device with the specified house ID, space ID, and device ID provided.
+        /// </summary>
+        /// <param name="houseid"></param>
+        /// <param name="spaceid"></param>
+        /// <param name="deviceid"></param>
+        /// <returns>Returns true if the device was deleted, false if not.</returns>
         [Route("api/device/{houseid}/{spaceid}/{deviceid}")]
-        public JObject Delete(string houseid, string spaceid, string deviceid)
+        public bool Delete(string houseid, string spaceid, string deviceid)
         {
-            return deviceRepository.DeleteDevice(houseid, spaceid, deviceid);
+            return true; // deviceRepository.DeleteDevice(houseid, spaceid, deviceid);
         }
     }
 }

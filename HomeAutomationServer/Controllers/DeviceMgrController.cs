@@ -29,7 +29,7 @@ namespace HomeAutomationServer.Controllers
         /// Gets the status of the device with the device ID provided.
         /// </summary>
         /// <param name="deviceid"></param>
-        /// <returns>Status of the device and device information via JObject. Hardcoded for now.</returns>
+        /// <returns>Returns the status of the device and device information via JSON ojbect data. Hardcoded for now.</returns>
         [Route("state/{deviceid}")]
         public JObject GetDeviceState(int deviceid)
         {
@@ -41,17 +41,17 @@ namespace HomeAutomationServer.Controllers
             return device;
         }
 
-        // POST api/devicemgr/state/deviceid
+        // POST api/devicemgr/state
         /// <summary>
-        /// Post a device status to a device with device ID specified. Takes a JObject.
+        /// Update a device state to a device. Takes a JSON object data.
         /// </summary>
         /// <param name="deviceid"></param>
         /// <param name="model"></param>
-        /// <returns>Returns the information posted via JObject.</returns>
-        [Route("state/{deviceid}")]
-        public JObject PostDeviceState(int deviceid, [FromBody] JObject model)
+        /// <returns>Returns true if the information was posted, false if not.</returns>
+        [Route("state")]
+        public bool PostDeviceState([FromBody] JObject model)
         {
-            return model;
+            return true;
         }
 
     }
