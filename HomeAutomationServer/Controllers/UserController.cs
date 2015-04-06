@@ -65,12 +65,13 @@ namespace HomeAutomationServer.Controllers
         /// </summary>
         /// <param name="model"></param>
         /// <returns>Returns the updates JSON object data for the user.</returns>
-        [Route("api/user/updateposition")]
-        public JObject UpdatePosition([FromBody] JObject model)
+        [Route("api/user/updateposition/{username}")]
+        public JObject UpdatePosition(string username,[FromBody] JObject model)
         {
+            model["usersID"] = username;
             DateTime currentTime;
-            currentTime = DateTime.Now;
-            model["locationTimeStamp"] = currentTime.ToString();
+            //currentTime = DateTime.Now;
+            //model["locationTimeStamp"] = currentTime.ToString();
             userRepository.OnUpdatePosition(model);
             return model;
         }
