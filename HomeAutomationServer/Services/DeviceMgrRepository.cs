@@ -14,6 +14,7 @@ namespace HomeAutomationServer.Services
     public class DeviceMgrRepository
     {
         private string deviceApiHost = "http://localhost:8080/";
+        private string appApiHost = "";
 
         public bool PostDeviceState(UInt64 houseid, UInt64 roomid, UInt64 deviceid, JObject data)
         {
@@ -28,25 +29,56 @@ namespace HomeAutomationServer.Services
                 streamWriter.Close();
             }
 
-            //var httpResponse = (HttpWebResponse)httpWebRequest.GetResponse();
-
-            using (var response = request.GetResponse() as HttpWebResponse)
+            try
             {
-                if (response.StatusCode != HttpStatusCode.OK)
-                    throw new Exception(String.Format(
-                    "Server error (HTTP {0}: {1}).",
-                    response.StatusCode,
-                    response.StatusDescription));
-                var stream = response.GetResponseStream();
-                var reader = new StreamReader(stream);
-
-                using (var streamReader = new StreamReader(response.GetResponseStream()))
+                using (var response = request.GetResponse() as HttpWebResponse)
                 {
-                    var result = streamReader.ReadToEnd();
+                    if (response.StatusCode != HttpStatusCode.OK)
+                    {
+                        throw new Exception(String.Format(
+                        "Server error (HTTP {0}: {1}).",
+                        response.StatusCode,
+                        response.StatusDescription));
+                    }
                 }
-
-                return true;
             }
+
+            catch (WebException)
+            {
+                //return false;
+            }
+
+            request = WebRequest.Create(appApiHost);
+            request.ContentType = "application/json";
+            request.Method = "POST";
+
+            using (var streamWriter = new StreamWriter(request.GetRequestStream()))
+            {
+                streamWriter.Write(data.ToString());
+                streamWriter.Flush();
+                streamWriter.Close();
+            }
+
+            try
+            {
+                using (var response = request.GetResponse() as HttpWebResponse)
+                {
+                    if (response.StatusCode != HttpStatusCode.OK)
+                    {
+                        throw new Exception(String.Format(
+                        "Server error (HTTP {0}: {1}).",
+                        response.StatusCode,
+                        response.StatusDescription));
+                    }
+                }
+            }
+
+            catch (WebException)
+            {
+                //return false;
+            }
+
+            return true;
         }
     }
 }
