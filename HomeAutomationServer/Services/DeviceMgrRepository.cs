@@ -13,6 +13,14 @@ namespace HomeAutomationServer.Services
 {
     public class DeviceMgrRepository
     {
-        
+		public JObject GetDeviceState(int deviceid)
+		{
+			return null;
+		}
+
+		public bool PostDeviceState(JObject model)
+		{
+			return true;
+		}
     }
 }
