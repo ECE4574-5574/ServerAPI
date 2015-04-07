@@ -23,9 +23,7 @@ namespace HomeAutomationServer.Services
 
             using (var streamWriter = new StreamWriter(request.GetRequestStream()))
             {
-                string json = data.ToString();
-
-                streamWriter.Write(json);
+                streamWriter.Write(data.ToString());
                 streamWriter.Flush();
                 streamWriter.Close();
             }
