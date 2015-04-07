@@ -1,4 +1,4 @@
-﻿using HomeAutomationServer.Filters;
+using HomeAutomationServer.Filters;
 using HomeAutomationServer.Models;
 using HomeAutomationServer.Services;
 using Newtonsoft.Json.Linq;
@@ -17,15 +17,13 @@ namespace HomeAutomationServer.Controllers
     {
         private DeviceRepository repo;
         private ServerIdentityService identityService;
-
-		private DeviceMgrRepository devices; 
+        private DeviceMgrRepository deviceMgrRepository;
 
         public DeviceMgrController()
         {
             repo = new DeviceRepository();
             identityService = new ServerIdentityService();
-
-			devices = new DeviceMgrRepository ();
+            this.deviceMgrRepository = new DeviceMgrRepository();
         }
 
         // GET api/devicemgr/state/deviceid
@@ -37,7 +35,12 @@ namespace HomeAutomationServer.Controllers
         [Route("state/{deviceid}")]
         public JObject GetDeviceState(int deviceid)
         {
-			return devices.GetDeviceState(deviceid);         
+            JObject device = new JObject();
+            device["DeviceId"] = deviceid;
+            device["DeviceName"] = "Living Room Main Light";
+            device["DeviceType"] = 2;
+            device["State"] = true;
+            return device;
         }
 
         // POST api/devicemgr/state
@@ -49,7 +52,8 @@ namespace HomeAutomationServer.Controllers
         [Route("state")]
         public bool PostDeviceState([FromBody] JObject model)
         {
-			return devices.PostDeviceState(model); 
+            deviceMgrRepository.PostDeviceState(model["houseId"].ToString(), model["roomId"].ToString(), model["deviceId"].ToString(), model);
+            return true;
         }
 
     }
