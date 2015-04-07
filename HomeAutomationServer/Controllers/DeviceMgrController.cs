@@ -1,4 +1,4 @@
-using HomeAutomationServer.Filters;
+﻿using HomeAutomationServer.Filters;
 using HomeAutomationServer.Models;
 using HomeAutomationServer.Services;
 using Newtonsoft.Json.Linq;
@@ -52,7 +52,7 @@ namespace HomeAutomationServer.Controllers
         [Route("state")]
         public bool PostDeviceState([FromBody] JObject model)
         {
-            deviceMgrRepository.PostDeviceState(model["houseId"].ToString(), model["roomId"].ToString(), model["deviceId"].ToString(), model);
+            deviceMgrRepository.PostDeviceState((UInt64)model["houseId"], (UInt64)model["roomId"], (UInt64)model["deviceId"], model);
             return true;
         }
 

@@ -1,4 +1,4 @@
-using HomeAutomationServer.Services;
+﻿using HomeAutomationServer.Services;
 using HomeAutomationServer.Models;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -15,7 +15,7 @@ namespace HomeAutomationServer.Services
     {
         private string deviceApiHost = "http://localhost:8080/";
 
-        public bool PostDeviceState(string houseid, string roomid, string deviceid, JObject data)
+        public bool PostDeviceState(UInt64 houseid, UInt64 roomid, UInt64 deviceid, JObject data)
         {
             WebRequest request = WebRequest.Create(deviceApiHost + houseid + "/" + roomid + "/" + deviceid);
             request.ContentType = "application/json";
