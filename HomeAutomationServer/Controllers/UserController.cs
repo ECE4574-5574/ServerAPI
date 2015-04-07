@@ -69,7 +69,7 @@ namespace HomeAutomationServer.Controllers
         [Route("api/user/updateposition/{username}")]
         public bool UpdatePosition(string username,[FromBody] JObject model)
         {
-            model["usersID"] = username;
+            model["userId"] = username;
             DateTime currentTime;
             //currentTime = DateTime.Now;
             //model["locationTimeStamp"] = currentTime.ToString();
