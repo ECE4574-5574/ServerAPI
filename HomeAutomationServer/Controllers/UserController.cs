@@ -61,20 +61,19 @@ namespace HomeAutomationServer.Controllers
 
         // POST api/user/updateposition
         /// <summary>
-        /// Updates the user position and location time stamp to the user, requires JSON object data for the user.
+        /// Updates the user position and location time stamp to the user, requires JSON object data and the username for the user.
         /// </summary>
         /// <param name="username"></param>
         /// <param name="model"></param>
-        /// <returns>Returns the updates JSON object data for the user.</returns>
+        /// <returns>Returns true if updated, false if not.</returns>
         [Route("api/user/updateposition/{username}")]
-        public JObject UpdatePosition(string username,[FromBody] JObject model)
+        public bool UpdatePosition(string username,[FromBody] JObject model)
         {
             model["usersID"] = username;
             DateTime currentTime;
             //currentTime = DateTime.Now;
             //model["locationTimeStamp"] = currentTime.ToString();
-            userRepository.OnUpdatePosition(model);
-            return model;
+            return userRepository.OnUpdatePosition(model);
         }
     }
 }

@@ -92,20 +92,18 @@ namespace HomeAutomationServer.Services
         }
 
         //Sends an updated position to the decison system
-        public void OnUpdatePosition(JToken model)
+        public bool OnUpdatePosition(JObject model)
         {
             WebRequest request = WebRequest.Create("http://localhost:8081/LocationChange");
             request.ContentType = "application/json";
             request.Method = "POST";
-            //request.GetResponse();
-            //request.KeepAlive = false;
 
             using (var streamWriter = new StreamWriter(request.GetRequestStream()))
             {
                 streamWriter.Write(model.ToString());
+                streamWriter.Flush();
                 streamWriter.Close();
             }
-            // request = WebRequest.Create("http://localhost:8081");
 
             try
             {
@@ -123,10 +121,10 @@ namespace HomeAutomationServer.Services
             {
                 // always catches this exception even when the Jtoken is sent properly. 
                 // Gets an error saying Connection was closed.
+                //return false;
             }
 
-            //return null;
-            //stubbed, will send an updated positio
+            return true;
         }
 
         //public Exception UpdateUser(int id, string firstName, string lastName)
