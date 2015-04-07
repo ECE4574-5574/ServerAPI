@@ -35,9 +35,9 @@ namespace HomeAutomationServer.Services
             }
         }
 
-        public JObject SaveHouse(string houseId, JToken model)
+        /*public JObject SaveHouse(string houseId, JToken model)
         {
-            /*WebRequest request = WebRequest.Create("http://54.152.190.217:8081/H/" + houseId);
+            WebRequest request = WebRequest.Create("http://54.152.190.217:8081/H/" + houseId);
             request.ContentType = "application/json";
             request.Method = "POST";
             
@@ -70,9 +70,9 @@ namespace HomeAutomationServer.Services
 
                 string houseString = reader.ReadToEnd();
                 return JObject.Parse(houseString);
-            }*/
+            }
             return null;
-        }
+        }*/
 
         public JObject DeleteHouse(string houseid)
         {

@@ -49,7 +49,7 @@ namespace HomeAutomationServer.Controllers
         [Route("state")]
         public bool PostDeviceState([FromBody] JObject model)
         {
-			return devices.PostDeviceState(model); 
+			return devices.PostDeviceState(model);
         }
 
     }

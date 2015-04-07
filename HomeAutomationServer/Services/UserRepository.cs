@@ -35,7 +35,7 @@ namespace HomeAutomationServer.Services
             }
         }
 
-        public JObject SaveUser(string username, JToken model)
+        /*public JObject SaveUser(string username, JToken model)
         {
             WebRequest request = WebRequest.Create("http://54.152.190.217:8081/U/" + username);
             request.ContentType = "application/json";
@@ -43,37 +43,32 @@ namespace HomeAutomationServer.Services
 
             using (var streamWriter = new StreamWriter(request.GetRequestStream()))
             {
-               streamWriter.Write(model.ToString());
+                streamWriter.Write(model.ToString());
+                streamWriter.Close();
+            }
+            // request = WebRequest.Create("http://localhost:8081");
+
+            try
+            {
+                using (HttpWebResponse response = request.GetResponse() as HttpWebResponse)
+                {
+                    if (response.StatusCode != HttpStatusCode.OK)
+                        throw new Exception(String.Format(
+                        "Server error (HTTP {0}: {1}).",
+                        response.StatusCode,
+                        response.StatusDescription));
+                }
             }
 
-            using (HttpWebResponse response = request.GetResponse() as HttpWebResponse)
+            catch (WebException we)
             {
-                if (response.StatusCode != HttpStatusCode.OK)
-                    throw new Exception(String.Format(
-                    "Server error (HTTP {0}: {1}).",
-                    response.StatusCode,
-                    response.StatusDescription));
+                // always catches this exception even when the Jtoken is sent properly. 
+                // Gets an error saying Connection was closed.
             }
 
             //return null;
-            request = WebRequest.Create("http://54.152.190.217:8081/UI/" + username);
-            request.Method = "GET";
-
-            using (HttpWebResponse response = request.GetResponse() as HttpWebResponse)
-            {
-                if (response.StatusCode != HttpStatusCode.OK)
-                    throw new Exception(String.Format(
-                    "Server error (HTTP {0}: {1}).",
-                    response.StatusCode,
-                    response.StatusDescription));
-                var stream = response.GetResponseStream();
-                var reader = new StreamReader(stream);
-
-                string userString = reader.ReadToEnd();
-                return JObject.Parse(userString);
-            }
-           // return null;
-        }
+            //stubbed, will send an updated positio
+        }*/
 
         public JObject DeleteUser(string username)
         {
