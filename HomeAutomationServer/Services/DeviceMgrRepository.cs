@@ -48,7 +48,7 @@ namespace HomeAutomationServer.Services
                 //return false;
             }
 
-            request = WebRequest.Create(appApiHost);
+            /*request = WebRequest.Create(appApiHost);
             request.ContentType = "application/json";
             request.Method = "POST";
 
@@ -76,7 +76,9 @@ namespace HomeAutomationServer.Services
             catch (WebException)
             {
                 //return false;
-            }
+            }*/ 
+
+            // PUSH NOTIFICATION TO APP
 
             return true;
         }
