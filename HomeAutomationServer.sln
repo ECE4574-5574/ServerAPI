@@ -7,7 +7,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HomeAutomationServer", "Hom
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HomeAutomationServer.Tests", "HomeAutomationServer.Tests\HomeAutomationServer.Tests.csproj", "{D08788F4-8247-43E2-B4DC-C70AC9D5E352}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "api", "..\Devices\api\api.csproj", "{DCE2FD21-5B48-4413-A2A2-B55D1B70C7D4}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "api", "api\api.csproj", "{DCE2FD21-5B48-4413-A2A2-B55D1B70C7D4}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -358,7 +358,7 @@
     <Content Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\Devices\api\api.csproj">
+    <ProjectReference Include="..\api\api.csproj">
       <Project>{dce2fd21-5b48-4413-a2a2-b55d1b70c7d4}</Project>
       <Name>api</Name>
     </ProjectReference>
