@@ -15,7 +15,7 @@ namespace HomeAutomationServer.Services
     {
         public bool sendTimeFrame(JObject model)
         {
-            WebRequest request = WebRequest.Create("");
+            WebRequest request = WebRequest.Create("http://54.152.190.217:8085/");
             request.ContentType = "application/json";
             request.Method = "POST";
 

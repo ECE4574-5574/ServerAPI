@@ -8,6 +8,7 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Web;
+using api;
 
 namespace HomeAutomationServer.Services
 {

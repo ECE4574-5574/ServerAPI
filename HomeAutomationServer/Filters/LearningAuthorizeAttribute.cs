@@ -6,7 +6,6 @@ using System.Net.Http;
 using System.Web.Http;
 using System.Web;
 using System.Web.Http.Filters;
-using System.Net.Http;
 using System.Threading;
 using System.Security.Principal;
 using System.Text;

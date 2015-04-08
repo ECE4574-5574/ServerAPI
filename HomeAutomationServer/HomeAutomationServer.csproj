@@ -224,6 +224,7 @@
     <Compile Include="Services\UserRepository.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="api.csproj" />
     <Content Include="App_Data\XmlDocument.XML" />
     <Content Include="Areas\HelpPage\HelpPage.css" />
     <Content Include="Content\themes\base\images\ui-bg_flat_0_aaaaaa_40x100.png" />
@@ -355,6 +356,12 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\Devices\api\api.csproj">
+      <Project>{dce2fd21-5b48-4413-a2a2-b55d1b70c7d4}</Project>
+      <Name>api</Name>
+    </ProjectReference>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
