@@ -219,6 +219,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\DeviceRepository.cs" />
     <Compile Include="Services\HouseRepository.cs" />
+    <Compile Include="Services\SimRepository.cs" />
     <Compile Include="Services\SpaceRepository.cs" />
     <Compile Include="Services\UserRepository.cs" />
   </ItemGroup>
@@ -349,6 +350,7 @@
     <Content Include="Views\Shared\_Layout.cshtml" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="Views\SimRepository\" />
     <Folder Include="Views\Weather\" />
   </ItemGroup>
   <ItemGroup>
@@ -372,7 +374,7 @@
           <AutoAssignPort>True</AutoAssignPort>
           <DevelopmentServerPort>49310</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
-          <IISUrl>http://localhost:49310/</IISUrl>
+          <IISUrl>http://localhost:8081/</IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
           <UseCustomServer>False</UseCustomServer>
           <CustomServerUrl>

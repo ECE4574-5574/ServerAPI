@@ -595,6 +595,13 @@
             <param name="houseid"></param>
             <returns>Returns true if the house was deleted, false if not.</returns>
         </member>
+        <member name="M:HomeAutomationServer.Controllers.SimController.Post(Newtonsoft.Json.Linq.JObject)">
+            <summary>
+            Post the information via JSON data regarding the SimHarneses time frame configurations to the Decision Making System.
+            </summary>
+            <param name="model"></param>
+            <returns>Returns true if posted, false if not.</returns>
+        </member>
         <member name="M:HomeAutomationServerAPI.Controllers.SpaceController.Get(System.String,System.String)">
             <summary>
             Gets the space information with the houseid and spaceid provided.

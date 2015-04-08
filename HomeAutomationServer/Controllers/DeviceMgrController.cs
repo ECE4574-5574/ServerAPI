@@ -55,6 +55,5 @@ namespace HomeAutomationServer.Controllers
             deviceMgrRepository.PostDeviceState((UInt64)model["houseId"], (UInt64)model["roomId"], (UInt64)model["deviceId"], model);
             return true;
         }
-
     }
 }
