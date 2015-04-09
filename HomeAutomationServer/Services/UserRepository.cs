@@ -17,7 +17,7 @@ namespace HomeAutomationServer.Services
     {
         public JObject GetUser(string username)
         {
-            WebRequest request = WebRequest.Create("http://54.152.190.217:8081/UI/" + username);
+            WebRequest request = WebRequest.Create("http://54.152.190.217:8080/UI/" + username);
             request.Method = "GET";
 
             using (HttpWebResponse response = request.GetResponse() as HttpWebResponse)
@@ -37,7 +37,7 @@ namespace HomeAutomationServer.Services
 
         public bool SaveUser(string username, JToken model)
         {
-            /*WebRequest request = WebRequest.Create("http://54.152.190.217:8081/U/" + username);
+            WebRequest request = WebRequest.Create("http://54.152.190.217:8081/U/" + username);
             request.ContentType = "application/json";
             request.Method = "POST";
 
@@ -73,7 +73,7 @@ namespace HomeAutomationServer.Services
 
         public JObject DeleteUser(string username)
         {
-            /*WebRequest request = WebRequest.Create("http://54.152.190.217:8081/A/USER/" + username);
+            /*WebRequest request = WebRequest.Create("http://54.152.190.217:8080/A/USER/" + username);
             request.Method = "DELETE";
 
             using (HttpWebResponse response = request.GetResponse() as HttpWebResponse)
@@ -95,7 +95,7 @@ namespace HomeAutomationServer.Services
         //Sends an updated position to the decison system
         public bool OnUpdatePosition(JObject model)
         {
-            WebRequest request = WebRequest.Create("http://localhost:8081/LocationChange");
+            WebRequest request = WebRequest.Create("http://54.152.190.217:8085/LocationChange");
             request.ContentType = "application/json";
             request.Method = "POST";
 
@@ -117,7 +117,6 @@ namespace HomeAutomationServer.Services
                         response.StatusDescription));
                 }
             }
-
             catch (WebException we)
             {
                 // always catches this exception even when the Jtoken is sent properly. 
