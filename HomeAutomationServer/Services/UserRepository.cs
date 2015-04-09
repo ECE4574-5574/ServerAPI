@@ -9,6 +9,16 @@ using System.Linq;
 using System.Net;
 using System.Web;
 
+using Amazon;
+using Amazon.EC2;
+using Amazon.EC2.Model;
+using Amazon.SimpleDB;
+using Amazon.SimpleDB.Model;
+using Amazon.S3;
+using Amazon.S3.Model;
+using Amazon.SimpleNotificationService;
+using Amazon.SimpleNotificationService.Model;
+
 // This class tells the controller how to process the HTTP commands
 
 namespace HomeAutomationServer.Services
@@ -123,6 +133,11 @@ namespace HomeAutomationServer.Services
                 // Gets an error saying Connection was closed.
                 //return false;
             }
+
+            AmazonSimpleNotificationServiceClient snsClient = new AmazonSimpleNotificationServiceClient();
+
+            ListPlatformApplicationsResponse appsResponse = snsClient.ListPlatformApplications();
+            snsClient.Publish("arn:aws:sns:us-east-1:336632281456:MyTopic", "Hello World");
 
             return true;
         }
