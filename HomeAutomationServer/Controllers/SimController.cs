@@ -8,7 +8,7 @@ using System.Net.Http;
 using System.Web.Http;
 using Newtonsoft.Json.Linq;
 using HomeAutomationServer.Filters;
-using api;
+//using api;
 
 namespace HomeAutomationServer.Controllers
 {
