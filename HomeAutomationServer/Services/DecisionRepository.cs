@@ -12,7 +12,7 @@ using System.Web;
 
 namespace HomeAutomationServer.Services
 {
-    public class DeviceMgrRepository
+    public class DecisionRepository
     {
         private string deviceApiHost = "http://localhost:8080/";
         private string appApiHost = "";

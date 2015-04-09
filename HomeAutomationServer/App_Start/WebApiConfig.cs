@@ -1,4 +1,4 @@
-﻿using HomeAutomationServerAPI.Controllers;
+﻿using HomeAutomationServer.Controllers;
 using Newtonsoft.Json.Serialization;
 using System;
 using System.Collections.Generic;

@@ -16,7 +16,7 @@ namespace HomeAutomationServerAPI.Controllers
     public class DeviceController : ApiController
     {
 
-        private DeviceRepository deviceRepository = new DeviceRepository();
+       /* private DeviceRepository deviceRepository = new DeviceRepository();
 
         // GET api/device/houseid/spaceid/deviceid
         /// <summary>
@@ -108,6 +108,6 @@ namespace HomeAutomationServerAPI.Controllers
         public bool Delete(string houseid, string spaceid, string deviceid)
         {
             return true; // deviceRepository.DeleteDevice(houseid, spaceid, deviceid);
-        }
+        }*/
     }
 }

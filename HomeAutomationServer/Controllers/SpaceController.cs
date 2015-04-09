@@ -16,7 +16,7 @@ namespace HomeAutomationServerAPI.Controllers
     {
         private SpaceRepository spaceRepository = new SpaceRepository();
 
-        // GET api/space/houseid/spaceid
+        /*// GET api/space/houseid/spaceid
         /// <summary>
         /// Gets the space information with the houseid and spaceid provided.
         /// </summary>
@@ -52,6 +52,6 @@ namespace HomeAutomationServerAPI.Controllers
         public bool Delete(string houseid, string spaceid)                // HTTP DELETE - deletes a space
         {
             return true; // spaceRepository.DeleteSpace(houseid, spaceid);
-        }
+        }*/
     }
 }

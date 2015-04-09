@@ -12,38 +12,25 @@ using System.Web.Http;
 namespace HomeAutomationServer.Controllers
 {
 
-    [RoutePrefix("api/devicemgr")]
-    public class DeviceMgrController : ApiController
+    [RoutePrefix("api/decision")]
+    public class DecisionController : ApiController
     {
         private DeviceRepository repo;
         private ServerIdentityService identityService;
-        private DeviceMgrRepository deviceMgrRepository;
+        private DecisionRepository deviceMgrRepository;
 
-        public DeviceMgrController()
+        public DecisionController()
         {
             repo = new DeviceRepository();
             identityService = new ServerIdentityService();
-            this.deviceMgrRepository = new DeviceMgrRepository();
+            this.deviceMgrRepository = new DecisionRepository();
         }
 
-        // GET api/devicemgr/state/deviceid
-        /// <summary>
-        /// Gets the status of the device with the device ID provided.
-        /// </summary>
-        /// <param name="deviceid"></param>
-        /// <returns>Returns the status of the device and device information via JSON object data. Hardcoded for now.</returns>
-        [Route("state/{deviceid}")]
-        public JObject GetDeviceState(int deviceid)
-        {
-            JObject device = new JObject();
-            device["DeviceId"] = deviceid;
-            device["DeviceName"] = "Living Room Main Light";
-            device["DeviceType"] = 2;
-            device["State"] = true;
-            return device;
-        }
+        ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        //
+        // Device
 
-        // POST api/devicemgr/state
+        // POST api/decision/state
         /// <summary>
         /// Update a device state to a device. Requires JSON object data.
         /// </summary>

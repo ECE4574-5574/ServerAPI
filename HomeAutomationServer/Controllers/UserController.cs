@@ -23,13 +23,13 @@ namespace HomeAutomationServer.Controllers
             this.userRepository = new UserRepository();
         }
 
-        // GET api/user/username
+        /*// GET api/user/username
         /// <summary>
         /// Gets the users information by the username provided via JSON object data.
         /// </summary>
         /// <param name="username"></param>
         /// <returns>Returns the users information via JSON object data.</returns>
-        [Route("api/user/{username}")]
+        [Route("api/storage/user/{username}")]
         public JObject Get(string username)
         {
             return userRepository.GetUser(username);
@@ -41,7 +41,7 @@ namespace HomeAutomationServer.Controllers
         /// </summary>
         /// <param name="model"></param>
         /// <returns>Returns true if the information was posted, false if not.</returns>
-        [Route("api/user")]
+        [Route("api/storage/user")]
         public bool Post([FromBody] JObject model)                  // HTTP POST - posts a new user
         {
             return true; //userRepository.SaveUser(model);
@@ -53,7 +53,7 @@ namespace HomeAutomationServer.Controllers
         /// </summary>
         /// <param name="username"></param>
         /// <returns>Returns true if deleted, false if not.</returns>
-        [Route("api/user/{username}")]
+        [Route("api/stroage/user/{username}")]
         public bool Delete(string username)                // HTTP DELETE - deletes a user
         {
             return true; // userRepository.DeleteUser(username);
@@ -66,7 +66,7 @@ namespace HomeAutomationServer.Controllers
         /// <param name="username"></param>
         /// <param name="model"></param>
         /// <returns>Returns true if updated, false if not.</returns>
-        [Route("api/user/updateposition/{username}")]
+        [Route("api/app/user/updateposition/{username}")]
         public bool UpdatePosition(string username,[FromBody] JObject model)
         {
             model["userId"] = username;
@@ -74,7 +74,7 @@ namespace HomeAutomationServer.Controllers
             //currentTime = DateTime.Now;
             //model["locationTimeStamp"] = currentTime.ToString();
             return userRepository.OnUpdatePosition(model);
-        }
+        }*/
     }
 }
 
