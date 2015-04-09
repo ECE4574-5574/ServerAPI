@@ -15,7 +15,7 @@ namespace HomeAutomationServer.Services
 {
     public class DeviceRepository
     {
-        string decisionURL = "http://LocalHost:8081/";
+        string decisionURL = "http://54.152.190.217:8085/";
         string storageURL = "http://54.152.190.217:8080/";
 
         public JObject GetDevice(string houseid, string spaceid, string deviceid)       // Return device
