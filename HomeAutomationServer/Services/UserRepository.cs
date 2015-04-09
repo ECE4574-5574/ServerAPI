@@ -134,10 +134,18 @@ namespace HomeAutomationServer.Services
                 //return false;
             }
 
-            AmazonSimpleNotificationServiceClient snsClient = new AmazonSimpleNotificationServiceClient();
+           // try
+           // {
+                AmazonSimpleNotificationServiceClient snsClient = new AmazonSimpleNotificationServiceClient("AKIAJM2E3LGZHJYGFSQQ", "p3Qi8DAXj+XHAH+ny7HrlRyleBs5V5DJv77zKK3T", Amazon.RegionEndpoint.USEast1);
 
-            ListPlatformApplicationsResponse appsResponse = snsClient.ListPlatformApplications();
-            snsClient.Publish("arn:aws:sns:us-east-1:336632281456:MyTopic", "Hello World");
+                //ListPlatformApplicationsResponse appsResponse = snsClient.ListPlatformApplications();
+                snsClient.Publish("arn:aws:sns:us-east-1:336632281456:MyTopic", "Hello World");
+//            }
+
+  //          catch (Exception e)
+    //        {
+               // Console.WriteLine(e.ToString());
+      //      }
 
             return true;
         }
