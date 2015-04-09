@@ -15,14 +15,13 @@ namespace HomeAutomationServer.Services
     {
         public bool sendTimeFrame(JObject model)
         {
-            WebRequest request = WebRequest.Create("http://54.152.190.217:8085/");
+            WebRequest request = WebRequest.Create("http://54.152.190.217:8085/TimeConfig");
             request.ContentType = "application/json";
             request.Method = "POST";
 
             using (var streamWriter = new StreamWriter(request.GetRequestStream()))
             {
                 streamWriter.Write(model.ToString());
-                streamWriter.Flush();
                 streamWriter.Close();
             }
 

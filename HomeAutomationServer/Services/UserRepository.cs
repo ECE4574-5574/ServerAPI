@@ -35,9 +35,9 @@ namespace HomeAutomationServer.Services
             }
         }
 
-        /*public JObject SaveUser(string username, JToken model)
+        public bool SaveUser(string username, JToken model)
         {
-            WebRequest request = WebRequest.Create("http://54.152.190.217:8081/U/" + username);
+            /*WebRequest request = WebRequest.Create("http://54.152.190.217:8081/U/" + username);
             request.ContentType = "application/json";
             request.Method = "POST";
 
@@ -67,8 +67,9 @@ namespace HomeAutomationServer.Services
             }
 
             //return null;
-            //stubbed, will send an updated positio
-        }*/
+            return true;
+            //stubbed, will send an updated positio*/
+        }
 
         public JObject DeleteUser(string username)
         {
