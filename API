@@ -1,0 +1,56 @@
+ASP.NET Web API Help Page
+
+Introduction
+
+Provide a general description of your APIs here.
+
+Decision
+
+API	Description
+POST api/decision/state	
+Update a device state to a device. Requires JSON object data.
+Storage
+
+API	Description
+GET api/storage/device/{houseid}/{spaceid}/{deviceid}	
+Gets the device information with the specified house ID, space ID, and device ID.
+GET api/storage/device/{houseid}/{spaceid}	
+Gets all of the devices information with the specified house ID and space ID.
+GET api/storage/device/{houseid}/{spaceid}/{type}	
+Gets all of the devices in the space of the type specified, with the provided house ID and space ID.
+GET api/storage/device/{houseid}	
+Gets all of the devices in the house with the specified house ID.
+GET api/storage/device/{houseid}/{type}	
+Gets all of the devices in the house of the specified type, with the provided house ID.
+POST api/storage/device	
+Posts a device with the JSON object data given.
+DELETE api/storage/device/{houseid}/{spaceid}/{deviceid}	
+Deletes a device with the specified house ID, space ID, and device ID provided.
+GET api/storage/space/{houseid}/{spaceid}	
+Gets the space information with the houseid and spaceid provided.
+POST api/storage/space	
+Posts the space with the JSON object data information provided.
+DELETE api/storage/space/{houseid}/{spaceid}	
+Deletes the space specified by the houseid and spaceid
+GET api/storage/house/{houseid}	
+Gets the houses information with the specified houseid.
+POST api/storage/house	
+Posts the house with the JSON object information provided.
+DELETE api/storage/house/{houseid}	
+Deletes the house with the specified houseid.
+GET api/storage/user/{username}	
+Gets the users information by the username provided via JSON object data.
+POST api/storage/user	
+Posts the users information provided by JSON object data.
+DELETE api/storage/api/stroage/user/{username}	
+Deletes the user specified by the username.
+App
+
+API	Description
+POST api/app/user/updateposition/{username}	
+Updates the user position and location time stamp to the user, requires JSON object data and the username for the user.
+Sim
+
+API	Description
+POST api/sim/timeframe	
+Post the information via JSON data regarding the SimHarneses time frame configurations to the Decision Making System.
