@@ -73,9 +73,7 @@ Updates the user position and location time stamp to the user, requires JSON obj
 
 -------------------------------------------------------------------------------------------------------------------------
 
-Sim
-
-API	Description
+***Sim***
 
 POST api/sim/timeframe	
 Post the information via JSON data regarding the SimHarneses time frame configurations to the Decision Making System.
