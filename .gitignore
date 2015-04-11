@@ -3,6 +3,7 @@
 *.mdb
 *.pidb
 *.userprefs
+*.exe
 **/obj/
 **/bin/
 **/Components/
