@@ -2,8 +2,8 @@
 
 ***Decision***
 
-PATCH api/decision/state/{deviceid}	
-Updates a devices state with the given device ID.
+Patch api/decision/state/{deviceid}/{state}
+Updates a devices state with the given device ID to the state specified. 
 Returns true if the devcies state has been updated.
 
 GET api/decision/state/{deviceid}
