@@ -2,8 +2,13 @@
 
 ***Decision***
 
-POST api/decision/state	
-Update a device state to a device. Requires JSON object data.
+PATCH api/decision/state/{deviceid}	
+Updates a devices state with the given device ID.
+Returns true if the devcies state has been updated.
+
+GET api/decision/state/{deviceid}
+Get the state of the device, which is either true or false.
+Returns the state of the device. True if enabled, false if not.
 
 ----------------------------------------------------------------------------------------------------------------------------
 
