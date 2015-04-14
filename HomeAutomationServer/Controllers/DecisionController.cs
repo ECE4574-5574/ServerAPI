@@ -1,4 +1,4 @@
-﻿using HomeAutomationServer.Filters;
+using HomeAutomationServer.Filters;
 using HomeAutomationServer.Models;
 using HomeAutomationServer.Services;
 using Newtonsoft.Json.Linq;
@@ -30,16 +30,29 @@ namespace HomeAutomationServer.Controllers
         //
         // Device
 
-        // POST api/decision/state
+        
+        // Patch api/decision/state/{deviceid}/{state}
         /// <summary>
-        /// Update a device state to a device. Requires JSON object data.
+        /// Updates a devices state with the given device ID to the state specified. 
         /// </summary>
-        /// <param name="model"></param>
-        /// <returns>Returns true if the information was posted, false if not.</returns>
-        [Route("state")]
-        public bool PostDeviceState([FromBody] JObject model)
+        /// <param name="deviceid"></param>
+        /// <param name="state"></param>
+        /// <returns>Returns true if the devices state has been updated. Returns false if not.</returns>
+        [Route("api/decision/state/{deviceid}/{state}")]
+        public bool UpdateState(UInt64 deviceid, bool state)
         {
-            deviceMgrRepository.PostDeviceState((UInt64)model["houseId"], (UInt64)model["roomId"], (UInt64)model["deviceId"], model);
+            return true;
+        }
+
+        // Get api/decision/state/{deviceid}
+        /// <summary>
+        /// Get the state of the device, which is either true or false.
+        /// </summary>
+        /// <param name="deviceid"></param>
+        /// <returns>Return the state of the device. True if enabled, false if not.</returns>
+        [Route("state/{deviceid}")]
+        public bool GetDeviceState(UInt64 deviceid)
+        {
             return true;
         }
     }
