@@ -32,6 +32,16 @@ Gets all of the devices in the house of the specified type, with the provided ho
 
 POST api/storage/device	
 Posts a device with the JSON object data given.
+Data should be in the following format:
+{
+	"HOUSEID" : <house-id>
+	"ROOMID" : <room-id>
+	"DEVICETYPE": <devicetype>
+	<any other JSON blob you want to store>: <value>
+}
+ROOMID 0 indicates that the device is stored directly in the house.
+Returns a unique ID for this device (in the given house/room)
+
 
 DELETE api/storage/device/{houseid}/{spaceid}/{deviceid}	
 Deletes a device with the specified house ID, space ID, and device ID provided.
