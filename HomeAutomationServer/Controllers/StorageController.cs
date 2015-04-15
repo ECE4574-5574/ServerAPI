@@ -97,9 +97,9 @@ namespace HomeAutomationServer.Controllers
         /// <param name="model"></param>
         /// <returns>Returns true if posted, false if not.</returns>
         [Route("device")]
-        public bool PostDevice([FromBody] JObject model)
+        public int PostDevice([FromBody] JObject model)
         {
-            return true; //deviceRepository.SaveDevice(model);
+            return deviceRepository.SaveDevice(model);
         }
 
         // DELETE api/device/id
@@ -143,7 +143,7 @@ namespace HomeAutomationServer.Controllers
         [Route("space")]
         public bool PostSpace([FromBody] JObject model)                  // HTTP POST - posts a new space
         {
-            return true; // spaceRepository.SaveSpace(houseid, spaceid, model);
+            return spaceRepository.saveSpace(houseid, spaceid, model);
         }
 
         // DELETE api/space/houseid/spaceid

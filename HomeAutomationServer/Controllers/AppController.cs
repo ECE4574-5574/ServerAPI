@@ -36,5 +36,11 @@ namespace HomeAutomationServer.Controllers
             //model["locationTimeStamp"] = currentTime.ToString();
             return userRepository.OnUpdatePosition(model);
         }
+
+        [Route("user/devicetoken/{username}")]
+        public bool getDeviceToken(string username, [FromBody] JObject model)
+        {
+            return true;
+        }
     }
 }
