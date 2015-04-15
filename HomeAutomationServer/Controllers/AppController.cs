@@ -44,10 +44,10 @@ namespace HomeAutomationServer.Controllers
 
         // GET api/app/device/{deviceid}
         /// <summary>
-        /// Get a devices pending JSON data with the device ID provided.
+        /// Get pending JSON device data with the device ID provided.
         /// </summary>
         /// <param name="deviceid"></param>
-        /// <returns>Returns pending JSON data of the device with the device ID provided.</returns>
+        /// <returns>Returns pending JSON device data with the device ID provided.</returns>
         [Route("device/{deviceid}")]
         public JToken GetDevice(string deviceid)
         {
@@ -56,13 +56,24 @@ namespace HomeAutomationServer.Controllers
 
         // GET api/app/device
         /// <summary>
-        /// Get all the pending device JSON data as an array of JSON data.
+        /// Get all the pending JSON device data as an array of JSON data.
         /// </summary>
         /// <returns>Returns an array of JSON data of the devices.</returns>
         [Route("device")]
         public JArray GetDevices()
         {
             return appCache.GetAllBlobs();
+        }
+
+        // GET api/app/device/count
+        /// <summary>
+        /// Get the pending JSON device data count.
+        /// </summary>
+        /// <returns>Returns the number of pending JSON device data.</returns>
+        [Route("device/count")]
+        public int GetDeviceCount()
+        {
+            return appCache.GetBlobCount();
         }
     }
 }
