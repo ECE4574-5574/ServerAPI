@@ -127,6 +127,13 @@ namespace HomeAutomationServer.Services
 
             WebRequest request = WebRequest.Create(storageURL + "D/" + houseId + "/" + roomId + "/" + deviceType);
             request.Method = "POST";
+            
+            using (var streamWriter = new StreamWriter(request.GetRequestStream()))
+            {
+                streamWriter.Write(model.ToString());
+                streamWriter.Flush();
+                streamWriter.Close();
+            }
             using (HttpWebResponse response = request.GetResponse() as HttpWebResponse)
             {
                 if (response.StatusCode != HttpStatusCode.OK)
