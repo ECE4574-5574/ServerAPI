@@ -2,12 +2,14 @@
 
 ***Decision***
 
-Patch api/decision/state/{deviceid}/{state}
-Updates a devices state with the given device ID to the state specified. 
+PATCH api/decision/state
+<Param = JSON blob>
+Updates a devices state with the given device JSON data. The new device state should be reflected in the data. 
 Returns true if the devices state has been updated.
 
-GET api/decision/state/{deviceid}
-Get the state of the device, which is either true or false.
+GET api/decision/state
+<Param = JSON blob>
+Get the state of the device from the JSON data provided, which is either true or false.
 Returns the state of the device. True if enabled, false if not.
 
 ----------------------------------------------------------------------------------------------------------------------------
@@ -67,6 +69,8 @@ Posts the house with the JSON object information provided.
 
 DELETE api/storage/house/{houseid}	
 Deletes the house with the specified houseid.
+
+---User---
 
 GET api/storage/user/{username}	
 Gets the users information by the username provided via JSON object data.
