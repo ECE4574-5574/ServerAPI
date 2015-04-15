@@ -1,5 +1,4 @@
-﻿using HomeAutomationServer.Services;
-using HomeAutomationServer.Models;
+using HomeAutomationServer.Services;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
@@ -8,80 +7,68 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Web;
-//using api;
+using api;
 
 namespace HomeAutomationServer.Services
 {
     public class DecisionRepository
     {
-        private string deviceApiHost = "http://localhost:8080/";
+        private string houseApiHost = "";
         private string appApiHost = "";
+        static Uri serverUri;
+        private Interfaces deviceInterface = new Interfaces(serverUri);
 
-        public bool PostDeviceState(UInt64 houseid, UInt64 roomid, UInt64 deviceid, JObject data)
+        public bool StateUpdate(UInt64 deviceid, bool state)
         {
-            WebRequest request = WebRequest.Create(deviceApiHost + houseid + "/" + roomid + "/" + deviceid);
-            request.ContentType = "application/json";
-            request.Method = "POST";
+            string deviceString;
 
-            using (var streamWriter = new StreamWriter(request.GetRequestStream()))
+            WebRequest request = WebRequest.Create(houseApiHost);
+            request.Method = "GET";
+
+            using (HttpWebResponse response = request.GetResponse() as HttpWebResponse)
             {
-                streamWriter.Write(data.ToString());
-                streamWriter.Flush();
-                streamWriter.Close();
+                if (response.StatusCode != HttpStatusCode.OK)
+                    throw new Exception(String.Format(
+                       "Server error (HTTP {0}: {1}).",
+                       response.StatusCode,
+                       response.StatusDescription));
+                var stream = response.GetResponseStream();
+                var reader = new StreamReader(stream);
+
+                deviceString = reader.ReadToEnd();
             }
 
-            try
-            {
-                using (var response = request.GetResponse() as HttpWebResponse)
-                {
-                    if (response.StatusCode != HttpStatusCode.OK)
-                    {
-                        throw new Exception(String.Format(
-                        "Server error (HTTP {0}: {1}).",
-                        response.StatusCode,
-                        response.StatusDescription));
-                    }
-                }
-            }
-
-            catch (WebException)
-            {
-                //return false;
-            }
-
-            /*request = WebRequest.Create(appApiHost);
-            request.ContentType = "application/json";
-            request.Method = "POST";
-
-            using (var streamWriter = new StreamWriter(request.GetRequestStream()))
-            {
-                streamWriter.Write(data.ToString());
-                streamWriter.Flush();
-                streamWriter.Close();
-            }
-
-            try
-            {
-                using (var response = request.GetResponse() as HttpWebResponse)
-                {
-                    if (response.StatusCode != HttpStatusCode.OK)
-                    {
-                        throw new Exception(String.Format(
-                        "Server error (HTTP {0}: {1}).",
-                        response.StatusCode,
-                        response.StatusDescription));
-                    }
-                }
-            }
-
-            catch (WebException)
-            {
-                //return false;
-            }*/ 
-
-            // PUSH NOTIFICATION TO APP
+            Device myDevice = Interfaces.DeserializeDevice(deviceString, null, null);
+            //myDevice.Enable = state;
+            JObject device = JObject.Parse(myDevice.ToString());
+            //send to APP cache
+            // send to Storage
 
             return true;
+        }
+
+        public bool GetState(UInt64 deviceid)
+        {
+            JObject device = new JObject();
+
+            WebRequest request = WebRequest.Create(houseApiHost);
+            request.Method = "GET";
+
+             using (HttpWebResponse response = request.GetResponse() as HttpWebResponse)
+             {
+                 if (response.StatusCode != HttpStatusCode.OK)
+                     throw new Exception(String.Format(
+                        "Server error (HTTP {0}: {1}).",
+                        response.StatusCode,
+                        response.StatusDescription));
+                 var stream = response.GetResponseStream();
+                 var reader = new StreamReader(stream);
+
+                 string deviceString = reader.ReadToEnd();
+                 device = JObject.Parse(deviceString);
+            }
+
+            return (bool)device["Enabled"];
         }
     }
 }
