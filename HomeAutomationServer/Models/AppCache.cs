@@ -31,12 +31,21 @@ namespace HomeAutomationServer.Models
 
         public JToken GetDeviceBlob(string deviceID)
         {
-            return deviceBlobs[deviceID];
+            JToken blob = deviceBlobs[deviceID];
+            deviceBlobs[deviceID].Remove();
+            return blob;
         }
 
         public JArray GetAllBlobs()
         {
-            return deviceBlobs;
+            JArray blobs = deviceBlobs;
+            deviceBlobs.RemoveAll();
+            return blobs;
+        }
+
+        public int GetBlobCount()
+        {
+            return deviceBlobs.Count;
         }
 
         ////////////////////////////////////////////////////////////////////////////////////////
