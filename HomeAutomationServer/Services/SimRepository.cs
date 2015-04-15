@@ -1,4 +1,4 @@
-﻿using HomeAutomationServer.Services;
+using HomeAutomationServer.Services;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
@@ -38,9 +38,40 @@ namespace HomeAutomationServer.Services
                 }
             }
 
-            catch (WebException)
+            catch (WebException ex)
             {
-                //return false;
+                File.AppendAllText("HomeAutomationServer/logfile.txt", "Failed sending time config to Decision: " + ex.Message);
+                return false;
+            }
+
+            request = WebRequest.Create("");
+            request.ContentType = "application/json";
+            request.Method = "POST";
+
+            using (var streamWriter = new StreamWriter(request.GetRequestStream()))
+            {
+                streamWriter.Write(model.ToString());
+                streamWriter.Close();
+            }
+
+            try
+            {
+                using (var response = request.GetResponse() as HttpWebResponse)
+                {
+                    if (response.StatusCode != HttpStatusCode.OK)
+                    {
+                        throw new Exception(String.Format(
+                        "Server error (HTTP {0}: {1}).",
+                        response.StatusCode,
+                        response.StatusDescription));
+                    }
+                }
+            }
+
+            catch (WebException ex)
+            {
+                File.AppendAllText("HomeAutomationServer/logfile.txt", "Failed sending time config to Storage: " + ex.Message);
+                return false;
             }
 
             return true;
