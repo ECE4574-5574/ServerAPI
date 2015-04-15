@@ -1,5 +1,4 @@
 using HomeAutomationServer.Filters;
-using HomeAutomationServer.Models;
 using HomeAutomationServer.Services;
 using Newtonsoft.Json.Linq;
 using System;
@@ -15,13 +14,15 @@ namespace HomeAutomationServer.Controllers
     [RoutePrefix("api/decision")]
     public class DecisionController : ApiController
     {
-        private DeviceRepository repo;
+        private DeviceRepository deviceRepo;
+        private DecisionRepository decisionRepo;
         private ServerIdentityService identityService;
         private DecisionRepository deviceMgrRepository;
 
         public DecisionController()
         {
-            repo = new DeviceRepository();
+            deviceRepo = new DeviceRepository();
+            decisionRepo = new DecisionRepository();
             identityService = new ServerIdentityService();
             this.deviceMgrRepository = new DecisionRepository();
         }
@@ -30,30 +31,29 @@ namespace HomeAutomationServer.Controllers
         //
         // Device
 
-        
-        // Patch api/decision/state/{deviceid}/{state}
+
+        // Patch api/decision/state
         /// <summary>
-        /// Updates a devices state with the given device ID to the state specified. 
+        /// Updates a devices state with the given device JSON data. The new device state should be reflected in the data. 
         /// </summary>
-        /// <param name="deviceid"></param>
-        /// <param name="state"></param>
+        /// <param name="model"></param>
         /// <returns>Returns true if the devices state has been updated. Returns false if not.</returns>
-        [Route("api/decision/state/{deviceid}/{state}")]
-        public bool UpdateState(UInt64 deviceid, bool state)
+        [Route("api/decision/state")]
+        public bool UpdateState([FromBody] JObject model)
         {
-            return true;
+            return decisionRepo.StateUpdate(model);
         }
 
-        // Get api/decision/state/{deviceid}
+        // Get api/decision/state
         /// <summary>
-        /// Get the state of the device, which is either true or false.
+        /// Get the state of the device from the device JSON data provided, which is either true or false.
         /// </summary>
-        /// <param name="deviceid"></param>
+        /// <param name="model"></param>
         /// <returns>Return the state of the device. True if enabled, false if not.</returns>
-        [Route("state/{deviceid}")]
-        public bool GetDeviceState(UInt64 deviceid)
+        [Route("state")]
+        public bool GetDeviceState([FromBody] JObject model)
         {
-            return true;
+            return decisionRepo.GetState(model);
         }
     }
 }
