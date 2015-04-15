@@ -118,16 +118,11 @@ namespace HomeAutomationServer.Services
             }
         }
 
-        public int saveDevice(JObject model)
+        public bool saveDevice(JObject model)
         {
-            string houseId, roomId, deviceType;
-            int deviceId;
-            houseId = model.GetValue("HOUSEID").ToString();
-            roomId = model.GetValue("ROOMID").ToString();
-            deviceType = model.GetValue("DEVICETYPE").ToString();
+            /*WebRequest request = WebRequest.Create("http://54.152.190.217:8081/HI/" + houseid);
+            request.Method = "GET";
 
-            WebRequest request = WebRequest.Create(storageURL + "D/" + houseId + "/" + roomId + "/" + deviceType);
-            request.Method = "POST";
             using (HttpWebResponse response = request.GetResponse() as HttpWebResponse)
             {
                 if (response.StatusCode != HttpStatusCode.OK)
@@ -138,10 +133,47 @@ namespace HomeAutomationServer.Services
                 var stream = response.GetResponseStream();
                 var reader = new StreamReader(stream);
 
-                deviceId = int.Parse(reader.ReadToEnd());
-                //JObject houseObject = JObject.Parse(deviceString);
+                string houseString = reader.ReadToEnd();
+                JObject houseObject = JObject.Parse(deviceString);
             }
-            return deviceId;
+              
+            int version;
+            // Get version from JObject
+            WebRequest request = WebRequest.Create(http://someurldecisionteam); //"http://54.152.190.217:8080/D/" + houseid + "/" + version + "/" + spaceid + "/" + deviceid);
+            request.ContentType = "application/json";
+            request.Method = "POST";
+
+            using (var streamWriter = new StreamWriter(request.GetRequestStream()))
+            {
+               streamWriter.Write(model.ToString());
+            }
+
+            using (HttpWebResponse response = request.GetResponse() as HttpWebResponse)
+            {
+                if (response.StatusCode != HttpStatusCode.OK)
+                    throw new Exception(String.Format(
+                    "Server error (HTTP {0}: {1}).",
+                    response.StatusCode,
+                    response.StatusDescription));
+            }
+
+            request = WebRequest.Create("http://54.152.190.217:8081/DI/" + houseid + "/" + version + "/" + spaceid + "/" + deviceid);
+            request.Method = "GET";
+
+            using (HttpWebResponse response = request.GetResponse() as HttpWebResponse)
+            {
+                if (response.StatusCode != HttpStatusCode.OK)
+                    throw new Exception(String.Format(
+                    "Server error (HTTP {0}: {1}).",
+                    response.StatusCode,
+                    response.StatusDescription));
+                var stream = response.GetResponseStream();
+                var reader = new StreamReader(stream);
+
+                string deviceString = reader.ReadToEnd();
+                return JObject.Parse(deviceString);
+            }*/
+            return true;
         }
 
         /*public bool sendObject(JObject model)
