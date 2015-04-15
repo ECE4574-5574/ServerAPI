@@ -97,9 +97,9 @@ namespace HomeAutomationServer.Controllers
         /// <param name="model"></param>
         /// <returns>Returns true if posted, false if not.</returns>
         [Route("device")]
-        public bool PostDevice([FromBody] JObject model)
+        public int PostDevice([FromBody] JObject model)
         {
-            return true; //deviceRepository.SaveDevice(model);
+            return deviceRepository.saveDevice(model);
         }
 
         // DELETE api/device/id

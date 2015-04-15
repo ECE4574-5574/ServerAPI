@@ -40,7 +40,7 @@ Data should be in the following format:
 	<any other JSON blob you want to store>: <value>
 }
 ROOMID 0 indicates that the device is stored directly in the house.
-Returns a JSON blob with all the information plus the unique ID for this device (in the given house/room)
+Returns a unique ID for this device (in the given house/room)
 
 
 DELETE api/storage/device/{houseid}/{spaceid}/{deviceid}	
