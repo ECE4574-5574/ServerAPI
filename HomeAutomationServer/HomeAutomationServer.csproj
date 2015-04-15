@@ -19,6 +19,8 @@
     <IISExpressUseClassicPipelineMode />
     <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\..\</SolutionDir>
     <RestorePackages>true</RestorePackages>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -156,6 +158,7 @@
     <Compile Include="Services\SpaceRepository.cs" />
     <Compile Include="Services\UserRepository.cs" />
     <Compile Include="App_Start\NinjectWebCommon.cs" />
+    <Compile Include="Controllers\HouseController.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="App_Data\XmlDocument.XML" />
@@ -304,12 +307,6 @@
   </Target>
   <Target Name="AfterBuild">
   </Target> -->
-  <ItemGroup>
-    <ProjectReference Include="..\..\Devices\api\api.csproj">
-      <Project>{DCE2FD21-5B48-4413-A2A2-B55D1B70C7D4}</Project>
-      <Name>api</Name>
-    </ProjectReference>
-  </ItemGroup>
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>
