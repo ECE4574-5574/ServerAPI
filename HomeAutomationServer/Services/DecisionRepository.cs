@@ -1,4 +1,5 @@
 using HomeAutomationServer.Services;
+using HomeAutomationServer.Models;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
@@ -14,6 +15,7 @@ namespace HomeAutomationServer.Services
     {
         private string houseApiHost = "http://house_address:house_port/device/";
         private string storageUrl = "";
+        private AppCache appCache = new AppCache();
 
         public bool StateUpdate(JObject model)
         {
@@ -72,7 +74,17 @@ namespace HomeAutomationServer.Services
                 return false;
             }
 
-            // put in cache
+            try
+            {
+                if (!appCache.AddDeviceBlob(model))
+                    throw new Exception("AppCache add device failed when adding: " + model.ToString());
+            }
+
+            catch(Exception ex)
+            {
+                File.AppendAllText("HomeAutomationServer/logfile.txt", ex.Message);
+                return false;
+            }
 
             return true;
         }
