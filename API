@@ -94,9 +94,20 @@ Posts the updated device info (blob) to persistent storage and updates the state
 POST api/app/user/updateposition/{username}	
 Updates the user position and location time stamp to the user, requires JSON object data and the username for the user.
 
-
 POST api/app/user/devicetoken/{username}
 Posts the devicetoken for a given user.
+
+---Device---
+
+GET api/app/device/{deviceid}
+Get pending JSON device data with the device ID provided.
+
+GET api/app/device
+Get all the pending JSON device data as an array of JSON data.
+
+GET api/app/device/count
+Get the count of the pending JSON device data.
+
 -------------------------------------------------------------------------------------------------------------------------
 
 ***Sim***
