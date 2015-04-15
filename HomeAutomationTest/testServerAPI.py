@@ -48,95 +48,106 @@ class ServerAPITest:
 	# # Updates a devices state with the given device ID to the state specified. 
 	# # Returns true if the devices state has been updated.
 
-	# # POST api/decision/state/{deviceid}
-	# # Update a device state to a device. Requires JSON object data.
-	# # Returns true if the information was posted, false if not.
-	# def post_decision_state_deviceid:
-	# 	try:
-	# 		conn = httplib.HTTPConnection(getHostName(server_url), getPortNumber(server_url))
-	# 		conn.request('POST', '/api/decision/state/{deviceid}')
-	# 		res = conn.getresponse()
-	# 		res.status
-	# 	except Exception, e:
-	# 		raise e
+	# POST api/decision/state/{deviceid}
+	# Update a device state to a device. Requires JSON object data.
+	# Returns true if the information was posted, false if not.
+	def post_decision_state_deviceid(deviceid):
+		print 'testing: POST api/decision/state/{deviceid}'
+		try:
+			headers = {"Content-type": "application/x-www-form-urlencoded", "Accept": "text/plain"}
+			conn = httplib.HTTPConnection(self.hostName, self.portNumber)
+			conn.request('POST', '/api/decision/state/' + deviceid, headers)
+			res = conn.getresponse()
+			print res.status
+			print res.read()
+		except Exception, e:
+			raise e
 
 	#storage device
 
 	# GET api/storage/device/{houseid}/{spaceid}/{deviceid}
 	# Gets the device information with the specified house ID, space ID, and device ID.
 	def get_storage_device_houseid_spaceid_deviceid(houseid, spaceid, deviceid):
+		print 'testing: GET api/storage/device/{houseid}/{spaceid}/{deviceid}'
 		try:
 			conn = httplib.HTTPConnection(self.hostName, self.portNumber)
 			conn.request('GET', '/api/storage/device/'+ houseid + '/' + spaceid + '/' + deviceid)
 			res = conn.getresponse()
-			if res.status == 200:
-				res.read()
 			print res.status
+			if res.status == 200:
+				print res.read()
 		except Exception, e:
 			raise e
 
 	# GET api/storage/device/{houseid}/{spaceid}
 	# Gets all of the devices information with the specified house ID and space ID.
 	def get_storage_device_houseid_spaceid(houseid, spaceid):
+		print 'testing: GET api/storage/device/{houseid}/{spaceid}'
 		try:
 			conn = httplib.HTTPConnection(self.hostName, self.portNumber)
 			conn.request('GET', '/api/storage/device/'+ houseid + '/' + spaceid)
 			res = conn.getresponse()
-			if res.status == 200:
-				res.read()
 			print res.status
+			if res.status == 200:
+				print res.read()
 		except Exception, e:
 			raise e
 
 	# GET api/storage/device/{houseid}/{spaceid}/{type}
 	# Gets all of the devices in the space of the type specified, with the provided house ID and space ID.
 	def get_storage_device_houseid_spaceid_type(houseid, spaceid, Type):
+		print 'testing: GET api/storage/device/{houseid}/{spaceid}/{type}'
 		try:
 			conn = httplib.HTTPConnection(self.hostName, self.portNumber)
 			conn.request('GET', '/api/storage/device/' + houseid + '/' + spaceid + '/' + Type)
 			res = conn.getresponse()
-			if res.status == 200:
-				res.read()
 			print res.status
+			if res.status == 200:
+				print res.read()
 		except Exception, e:
 			raise e
 
 	# GET api/storage/device/{houseid}
 	# Gets all of the devices in the house with the specified house ID.
 	def get_storage_device_houseid(houseid):
+		print 'testing: GET api/storage/device/{houseid}'
 		try:
 			conn = httplib.HTTPConnection(self.hostName, self.portNumber)
 			conn.request('GET', '/api/storage/device/' + houseid)
 			res = conn.getresponse()
-			if res.status == 200:
-				res.read()
 			print res.status
+			if res.status == 200:
+				print res.read()
 		except Exception, e:
 			raise e
 
 	# GET api/storage/device/{houseid}/{type}
 	# Gets all of the devices in the house of the specified type, with the provided house ID.
 	def get_storage_device_houseid_type(houseid, Type):
+		print 'testing: GET api/storage/device/{houseid}/{type}'
 		try:
 			conn = httplib.HTTPConnection(self.hostName, self.portNumber)
 			conn.request('GET', '/api/storage/device/' + houseid + '/' +Type)
 			res = conn.getresponse()
-			if res.status == 200:
-				res.read()
 			print res.status
+			if res.status == 200:
+				print res.read()
 		except Exception, e:
 			raise e
 
-	# # POST api/storage/device
-	# # Posts a device with the JSON object data given.
-	# def post_storage_device:
-	# 	try:
-	# 		conn = httplib.HTTPConnection(getHostName(server_url), getPortNumber(server_url))
-	# 		conn.request('POST', '/api/storage/device')
-	# 		res = conn.getresponse()
-	# 		res.status
-	# 	except Exception, e:
-	# 		raise e
+	# POST api/storage/device
+	# Posts a device with the JSON object data given.
+	def post_storage_device:
+		print 'testing: POST api/storage/device'
+		try:
+			headers = {"Content-type": "application/x-www-form-urlencoded", "Accept": "text/plain"}
+			conn = httplib.HTTPConnection(self.hostName, self.portNumber)
+			conn.request('POST', '/api/storage/device', headers)
+			res = conn.getresponse()
+			print res.status
+			print res.read()
+		except Exception, e:
+			raise e
 
 	# # DELETE api/storage/device/{houseid}/{spaceid}/{deviceid}
 	# # Deletes a device with the specified house ID, space ID, and device ID provided.
@@ -154,26 +165,30 @@ class ServerAPITest:
 	# GET api/storage/space/{houseid}/{spaceid}
 	# Gets the space information with the houseid and spaceid provided.
 	def get_storage_space_houseid_spaceid(houseid, spaceid):
+		print 'testing: GET api/storage/space/{houseid}/{spaceid}'
 		try:
 			conn = httplib.HTTPConnection(self.hostName, self.portNumber)
 			conn.request('GET', '/api/storage/space/' + houseid +'/' + spaceid)
 			res = conn.getresponse()
-			if res.status == 200:
-				res.read()
 			print res.status
+			if res.status == 200:
+				print res.read()
 		except Exception, e:
 			raise e
 
-	# # POST api/storage/space
-	# # Posts the space with the JSON object data information provided.
-	# def post_storage_space:
-	# 	try:
-	# 		conn = httplib.HTTPConnection(getHostName(server_url), getPortNumber(server_url))
-	# 		conn.request('POST', '/api/storage/space')
-	# 		res = conn.getresponse()
-	# 		res.status
-	# 	except Exception, e:
-	# 		raise e
+	# POST api/storage/space
+	# Posts the space with the JSON object data information provided.
+	def post_storage_space:
+		print 'testing: POST api/storage/space'
+		try:
+			headers = {"Content-type": "application/x-www-form-urlencoded", "Accept": "text/plain"}
+			conn = httplib.HTTPConnection(self.hostName, self.portNumber)
+			conn.request('POST', '/api/storage/space', headers)
+			res = conn.getresponse()
+			print res.status
+			print res.read()
+		except Exception, e:
+			raise e
 
 	# # DELETE api/storage/space/{houseid}/{spaceid}
 	# # Deletes the space specified by the houseid and spaceid
@@ -191,26 +206,30 @@ class ServerAPITest:
 	# GET api/storage/house/{houseid}
 	# Gets the houses information with the specified houseid.
 	def get_storage_house_houseid(houseid):
+		print 'testing: GET api/storage/house/{houseid}'
 		try:
 			conn = httplib.HTTPConnection(self.hostName, self.portNumber)
 			conn.request('GET', '/api/storage/house/' + houseid)
 			res = conn.getresponse()
-			if res.status == 200:
-				res.read()
 			print res.status
+			if res.status == 200:
+				print res.read()
 		except Exception, e:
 			raise e
 
-	# # POST api/storage/house
-	# # Posts the house with the JSON object information provided.
-	# def post_storage_house:
-	# 	try:
-	# 		conn = httplib.HTTPConnection(getHostName(server_url), getPortNumber(server_url))
-	# 		conn.request('POST', '/api/storage/house')
-	# 		res = conn.getresponse()
-	# 		res.status
-	# 	except Exception, e:
-	# 		raise e
+	# POST api/storage/house
+	# Posts the house with the JSON object information provided.
+	def post_storage_house:
+		print 'testing: POST api/storage/house'
+		try:
+			headers = {"Content-type": "application/x-www-form-urlencoded", "Accept": "text/plain"}
+			conn = httplib.HTTPConnection(self.hostName, self.portNumber)
+			conn.request('POST', '/api/storage/house', headers)
+			res = conn.getresponse()
+			print res.status
+			print res.read()
+		except Exception, e:
+			raise e
 
 	# # DELETE api/storage/house/{houseid}
 	# # Deletes the house with the specified houseid.
@@ -228,26 +247,30 @@ class ServerAPITest:
 	# GET api/storage/user/{username}
 	# Gets the users information by the username provided via JSON object data.
 	def get_storage_user_username(username):
+		print 'testing: GET api/storage/user/{username}'
 		try:
 			conn = httplib.HTTPConnection(self.hostName, self.portNumber)
 			conn.request('GET', '/api/storage/user/' + username)
 			res = conn.getresponse()
-			if res.status == 200:
-				res.read()
 			print res.status
+			if res.status == 200:
+				print res.read()
 		except Exception, e:
 			raise e
 
-	# # POST api/storage/user
-	# # Posts the users information provided by JSON object data.
-	# def post_storage_user:
-	# 	try:
-	# 		conn = httplib.HTTPConnection(getHostName(server_url), getPortNumber(server_url))
-	# 		conn.request('POST', '/api/storage/user')
-	# 		res = conn.getresponse()
-	# 		res.status
-	# 	except Exception, e:
-	# 		raise e
+	# POST api/storage/user
+	# Posts the users information provided by JSON object data.
+	def post_storage_user:
+		print 'testing: POST api/storage/user'
+		try:
+			headers = {"Content-type": "application/x-www-form-urlencoded", "Accept": "text/plain"}
+			conn = httplib.HTTPConnection(self.hostName, self.portNumber)
+			conn.request('POST', '/api/storage/user', headers)
+			res = conn.getresponse()
+			print res.status
+			print res.read()
+		except Exception, e:
+			raise e
 
 	# # DELETE api/storage/api/stroage/user/{username}
 	# # Deletes the user specified by the username.
