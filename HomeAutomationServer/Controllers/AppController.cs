@@ -1,4 +1,4 @@
-﻿using HomeAutomationServer.Services;
+using HomeAutomationServer.Services;
 using HomeAutomationServer.Models;
 using System;
 using System.Collections.Generic;
@@ -15,12 +15,13 @@ namespace HomeAutomationServer.Controllers
     public class AppController : ApiController
     {
         private UserRepository userRepository = new UserRepository();
+        private AppCache appCache = new AppCache();
 
         ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         //
         // User
 
-        // POST api/storage/user/updateposition
+        // POST api/app/user/updateposition
         /// <summary>
         /// Updates the user position and location time stamp to the user, requires JSON object data and the username for the user.
         /// </summary>
@@ -37,10 +38,31 @@ namespace HomeAutomationServer.Controllers
             return userRepository.OnUpdatePosition(model);
         }
 
-        [Route("user/devicetoken/{username}")]
-        public bool getDeviceToken(string username, [FromBody] JObject model)
+        ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        //
+        // Device
+
+        // GET api/app/device/{deviceid}
+        /// <summary>
+        /// Get a devices pending JSON data with the device ID provided.
+        /// </summary>
+        /// <param name="deviceid"></param>
+        /// <returns>Returns pending JSON data of the device with the device ID provided.</returns>
+        [Route("device/{deviceid}")]
+        public JToken GetDevice(string deviceid)
         {
-            return true;
+            return appCache.GetDeviceBlob(deviceid);
+        }
+
+        // GET api/app/device
+        /// <summary>
+        /// Get all the pending device JSON data as an array of JSON data.
+        /// </summary>
+        /// <returns>Returns an array of JSON data of the devices.</returns>
+        [Route("device")]
+        public JArray GetDevices()
+        {
+            return appCache.GetAllBlobs();
         }
     }
 }
