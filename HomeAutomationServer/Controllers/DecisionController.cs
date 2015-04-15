@@ -38,7 +38,8 @@ namespace HomeAutomationServer.Controllers
         /// </summary>
         /// <param name="model"></param>
         /// <returns>Returns true if the devices state has been updated. Returns false if not.</returns>
-        [Route("api/decision/state")]
+        [Route("state")]
+        [HttpPatch]
         public bool UpdateState([FromBody] JObject model)
         {
             return decisionRepo.StateUpdate(model);
