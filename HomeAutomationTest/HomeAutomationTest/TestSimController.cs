@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Net;
 using System.IO;
@@ -11,7 +11,7 @@ namespace HomeAutomationTest
     [TestClass]
     public class TestSimController
     {
-        private string URI = "http://localhost:8081";
+        private string URI = "http://52.5.95.215";
 
         [TestMethod]
         public void TestPostTimeFrame()
@@ -105,7 +105,7 @@ namespace HomeAutomationTest
             // POST api/storage/user	
             // Posts the users information provided by JSON object data.
 
-            WebRequest request = WebRequest.Create(URI + "api/storage/user/" + username);
+            WebRequest request = WebRequest.Create(URI + "/api/storage/user/" + username);
             request.ContentType = "application/json";
             request.Method = "POST";
 
@@ -143,7 +143,7 @@ namespace HomeAutomationTest
             // Now post update location
             // POST api/app/user/updateposition/{username}
 
-            request = WebRequest.Create(URI + "api/app/user/updateposition/" + username);
+            request = WebRequest.Create(URI + "/api/app/user/updateposition/" + username);
             request.ContentType = "application/json";
             request.Method = "POST";
 
@@ -183,7 +183,7 @@ namespace HomeAutomationTest
 
             //Testing update location with wrong username
 
-            request = WebRequest.Create(URI + "api/app/user/updateposition/" + "wrongusername");
+            request = WebRequest.Create(URI + "/api/app/user/updateposition/" + "wrongusername");
             request.ContentType = "application/json";
             request.Method = "POST";
 
@@ -227,7 +227,7 @@ namespace HomeAutomationTest
 
             string username = "idontexist";
 
-            WebRequest request = WebRequest.Create(URI + "api/storage/user/" + username);
+            WebRequest request = WebRequest.Create(URI + "/api/storage/user/" + username);
             request.ContentType = "application/json";
             request.Method = "DELETE";
 
@@ -264,7 +264,7 @@ namespace HomeAutomationTest
             // POST api/storage/user	
             // Posts the users information provided by JSON object data.
 
-            request = WebRequest.Create(URI + "api/storage/user/" + username);
+            request = WebRequest.Create(URI + "/api/storage/user/" + username);
             request.ContentType = "application/json";
             request.Method = "POST";
 
@@ -299,7 +299,7 @@ namespace HomeAutomationTest
             }
 
             // DELETEING THE USER NOW
-            request = WebRequest.Create(URI + "api/storage/user/" + username);
+            request = WebRequest.Create(URI + "/api/storage/user/" + username);
             request.ContentType = "application/json";
             request.Method = "DELETE";
 
@@ -329,7 +329,7 @@ namespace HomeAutomationTest
 
             //Now Trying to get that user
 
-            request = WebRequest.Create(URI + "GET api/storage/user/" + username);
+            request = WebRequest.Create(URI + "/api/storage/user/" + username);
             request.ContentType = "application/json";
             request.Method = "GET";
 
@@ -365,7 +365,7 @@ namespace HomeAutomationTest
             // POST api/storage/user	
             // Posts the users information provided by JSON object data.
 
-            WebRequest request = WebRequest.Create(URI + "api/storage/user/" + username);
+            WebRequest request = WebRequest.Create(URI + "/api/storage/user/" + username);
             request.ContentType = "application/json";
             request.Method = "POST";
 
@@ -402,7 +402,7 @@ namespace HomeAutomationTest
 
             //Now Trying to get that user
 
-            request = WebRequest.Create(URI + "GET api/storage/user/" + username);
+            request = WebRequest.Create(URI + "/api/storage/user/" + username);
             request.ContentType = "application/json";
             request.Method = "GET";
 
@@ -435,7 +435,7 @@ namespace HomeAutomationTest
             string username = "test_get_user_username";
             string password = "password";
 
-            WebRequest request = WebRequest.Create(URI + "GET api/storage/user/" + username);
+            WebRequest request = WebRequest.Create(URI + "/api/storage/user/" + username);
             request.ContentType = "application/json";
             request.Method = "GET";
 
@@ -468,7 +468,7 @@ namespace HomeAutomationTest
 
 
             // Posting a user on the server
-            request = WebRequest.Create(URI + "api/storage/user/" + username);
+            request = WebRequest.Create(URI + "/api/storage/user/" + username);
             request.ContentType = "application/json";
             request.Method = "POST";
 
@@ -504,7 +504,7 @@ namespace HomeAutomationTest
             }
 
 
-            request = WebRequest.Create(URI + "GET api/storage/user/" + username);
+            request = WebRequest.Create(URI + "/api/storage/user/" + username);
             request.ContentType = "application/json";
             request.Method = "GET";
 
@@ -546,7 +546,7 @@ namespace HomeAutomationTest
 
             int houseid = 100;
 
-            WebRequest request = WebRequest.Create(URI + "storage/house/?{houseid=" + houseid + "}");
+            WebRequest request = WebRequest.Create(URI + "/storage/house/?{houseid=" + houseid + "}");
             request.ContentType = "application/json";
             request.Method = "DELETE";
 
@@ -574,14 +574,14 @@ namespace HomeAutomationTest
             catch (WebException we)
             {
                 Console.WriteLine("TestDeleteHouse failed. Couldn't delete a house");
-                Assert.Fail();
+                Assert.Fail("Got a web exception when deleting a house. Possibly can't communicate with Persistent Storage.");
             }
 
             // Posting a house
             // POST api/storage/house	
             // Posts the house with the JSON object information provided.
 
-            request = WebRequest.Create(URI + "storage/house/?{houseid=" + houseid + "}");
+            request = WebRequest.Create(URI + "/storage/house/?{houseid=" + houseid + "}");
             request.ContentType = "application/json";
             request.Method = "POST";
 
@@ -616,7 +616,7 @@ namespace HomeAutomationTest
 
             // Try deleteing that house again
 
-            request = WebRequest.Create(URI + "storage/house/?{houseid=" + houseid + "}");
+            request = WebRequest.Create(URI + "/storage/house/?{houseid=" + houseid + "}");
             request.ContentType = "application/json";
             request.Method = "DELETE";
 
@@ -659,7 +659,7 @@ namespace HomeAutomationTest
 
             int houseid = 101;
 
-            WebRequest request = WebRequest.Create(URI + "storage/house/?{houseid=" + houseid + "}");
+            WebRequest request = WebRequest.Create(URI + "/storage/house/?{houseid=" + houseid + "}");
             request.ContentType = "application/json";
             request.Method = "POST";
 
@@ -735,7 +735,7 @@ namespace HomeAutomationTest
         {
             int houseid = 102;
 
-            WebRequest request = WebRequest.Create(URI + "storage/house/?{houseid=" + houseid + "}");
+            WebRequest request = WebRequest.Create(URI + "/storage/house/?{houseid=" + houseid + "}");
             request.ContentType = "application/json";
             request.Method = "GET";
 
@@ -773,7 +773,7 @@ namespace HomeAutomationTest
             // Posts the house with the JSON object information provided.
 
 
-            request = WebRequest.Create(URI + "storage/house/?{houseid=" + houseid + "}");
+            request = WebRequest.Create(URI + "/storage/house/?{houseid=" + houseid + "}");
             request.ContentType = "application/json";
             request.Method = "POST";
 
@@ -809,7 +809,7 @@ namespace HomeAutomationTest
             // GET THAT HOUSE
             // GET api/storage/house/{houseid}
 
-            request = WebRequest.Create(URI + "storage/house/?{houseid=" + houseid + "}");
+            request = WebRequest.Create(URI + "/storage/house/?{houseid=" + houseid + "}");
             request.ContentType = "application/json";
             request.Method = "GET";
 
