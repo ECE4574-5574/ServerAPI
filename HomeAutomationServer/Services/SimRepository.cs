@@ -55,14 +55,7 @@ namespace HomeAutomationServer.Services
                             fstream.Write(info, 0, info.Length);
                         }
                     }
-                    else
-                    {
-                        using (FileStream fstream = File.OpenWrite(path))
-                        {
-                            Byte[] info = new UTF8Encoding(true).GetBytes("SimConfig -- Failed to Post Sim config info to Decision System: " + ex.Message);
-                            fstream.Write(info, 0, info.Length);
-                        }
-                    }
+                    else File.AppendAllText(path, "\nSimConfig -- Failed to Post Sim config info to Decision System: " + ex.Message);
                     return false;
                 }
 
@@ -102,14 +95,7 @@ namespace HomeAutomationServer.Services
                             fstream.Write(info, 0, info.Length);
                         }
                     }
-                    else
-                    {
-                        using (FileStream fstream = File.OpenWrite(path))
-                        {
-                            Byte[] info = new UTF8Encoding(true).GetBytes("SimConfig -- Failed to send data to the Storage: " + ex.Message);
-                            fstream.Write(info, 0, info.Length);
-                        }
-                    }
+                    else File.AppendAllText(path, "\nSimConfig -- Failed to send data to the Storage: " + ex.Message);
                     return false;
                 }
             }
@@ -125,14 +111,7 @@ namespace HomeAutomationServer.Services
                         fstream.Write(info, 0, info.Length);
                     }
                 }
-                else
-                {
-                    using (FileStream fstream = File.OpenWrite(path))
-                    {
-                        Byte[] info = new UTF8Encoding(true).GetBytes("SimConfig -- Failed to parse model with appropriate keys: " + ex.Message);
-                        fstream.Write(info, 0, info.Length);
-                    }
-                }
+                else File.AppendAllText(path, "\nSimConfig -- Failed to parse model with appropriate keys: " + ex.Message);
                 return false;
             }
 
