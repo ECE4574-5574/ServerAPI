@@ -42,16 +42,16 @@ class ServerAPITest:
 		self.hostName = getHostName(self.server_url);
 		self.portNumber = getPortNumber(self.server_url);
 
-	# #Decision
+	# Decision
 
-	# # Patch api/decision/state/{deviceid}/{state}
-	# # Updates a devices state with the given device ID to the state specified. 
-	# # Returns true if the devices state has been updated.
+	# Patch api/decision/state/{deviceid}/{state}
+	# Updates a devices state with the given device ID to the state specified. 
+	# Returns true if the devices state has been updated.
 
 	# POST api/decision/state/{deviceid}
 	# Update a device state to a device. Requires JSON object data.
 	# Returns true if the information was posted, false if not.
-	def post_decision_state_deviceid(deviceid):
+	def post_decision_state_deviceid(self, deviceid):
 		print 'testing: POST api/decision/state/{deviceid}'
 		try:
 			headers = {"Content-type": "application/x-www-form-urlencoded", "Accept": "text/plain"}
@@ -67,7 +67,7 @@ class ServerAPITest:
 
 	# GET api/storage/device/{houseid}/{spaceid}/{deviceid}
 	# Gets the device information with the specified house ID, space ID, and device ID.
-	def get_storage_device_houseid_spaceid_deviceid(houseid, spaceid, deviceid):
+	def get_storage_device_houseid_spaceid_deviceid(self, houseid, spaceid, deviceid):
 		print 'testing: GET api/storage/device/{houseid}/{spaceid}/{deviceid}'
 		try:
 			conn = httplib.HTTPConnection(self.hostName, self.portNumber)
@@ -81,7 +81,7 @@ class ServerAPITest:
 
 	# GET api/storage/device/{houseid}/{spaceid}
 	# Gets all of the devices information with the specified house ID and space ID.
-	def get_storage_device_houseid_spaceid(houseid, spaceid):
+	def get_storage_device_houseid_spaceid(self, houseid, spaceid):
 		print 'testing: GET api/storage/device/{houseid}/{spaceid}'
 		try:
 			conn = httplib.HTTPConnection(self.hostName, self.portNumber)
@@ -95,7 +95,7 @@ class ServerAPITest:
 
 	# GET api/storage/device/{houseid}/{spaceid}/{type}
 	# Gets all of the devices in the space of the type specified, with the provided house ID and space ID.
-	def get_storage_device_houseid_spaceid_type(houseid, spaceid, Type):
+	def get_storage_device_houseid_spaceid_type(self, houseid, spaceid, Type):
 		print 'testing: GET api/storage/device/{houseid}/{spaceid}/{type}'
 		try:
 			conn = httplib.HTTPConnection(self.hostName, self.portNumber)
@@ -109,7 +109,7 @@ class ServerAPITest:
 
 	# GET api/storage/device/{houseid}
 	# Gets all of the devices in the house with the specified house ID.
-	def get_storage_device_houseid(houseid):
+	def get_storage_device_houseid(self, houseid):
 		print 'testing: GET api/storage/device/{houseid}'
 		try:
 			conn = httplib.HTTPConnection(self.hostName, self.portNumber)
@@ -123,7 +123,7 @@ class ServerAPITest:
 
 	# GET api/storage/device/{houseid}/{type}
 	# Gets all of the devices in the house of the specified type, with the provided house ID.
-	def get_storage_device_houseid_type(houseid, Type):
+	def get_storage_device_houseid_type(self, houseid, Type):
 		print 'testing: GET api/storage/device/{houseid}/{type}'
 		try:
 			conn = httplib.HTTPConnection(self.hostName, self.portNumber)
@@ -137,12 +137,12 @@ class ServerAPITest:
 
 	# POST api/storage/device
 	# Posts a device with the JSON object data given.
-	def post_storage_device:
+	def post_storage_device(self, device):
 		print 'testing: POST api/storage/device'
 		try:
 			headers = {"Content-type": "application/x-www-form-urlencoded", "Accept": "text/plain"}
 			conn = httplib.HTTPConnection(self.hostName, self.portNumber)
-			conn.request('POST', '/api/storage/device', headers)
+			conn.request('POST', '/api/storage/device', json.dumps(device), headers)
 			res = conn.getresponse()
 			print res.status
 			print res.read()
@@ -164,7 +164,7 @@ class ServerAPITest:
 
 	# GET api/storage/space/{houseid}/{spaceid}
 	# Gets the space information with the houseid and spaceid provided.
-	def get_storage_space_houseid_spaceid(houseid, spaceid):
+	def get_storage_space_houseid_spaceid(self, houseid, spaceid):
 		print 'testing: GET api/storage/space/{houseid}/{spaceid}'
 		try:
 			conn = httplib.HTTPConnection(self.hostName, self.portNumber)
@@ -178,12 +178,12 @@ class ServerAPITest:
 
 	# POST api/storage/space
 	# Posts the space with the JSON object data information provided.
-	def post_storage_space:
+	def post_storage_space(self, space):
 		print 'testing: POST api/storage/space'
 		try:
 			headers = {"Content-type": "application/x-www-form-urlencoded", "Accept": "text/plain"}
 			conn = httplib.HTTPConnection(self.hostName, self.portNumber)
-			conn.request('POST', '/api/storage/space', headers)
+			conn.request('POST', '/api/storage/space', json.dumps(space), headers)
 			res = conn.getresponse()
 			print res.status
 			print res.read()
@@ -205,7 +205,7 @@ class ServerAPITest:
 
 	# GET api/storage/house/{houseid}
 	# Gets the houses information with the specified houseid.
-	def get_storage_house_houseid(houseid):
+	def get_storage_house_houseid(self, houseid):
 		print 'testing: GET api/storage/house/{houseid}'
 		try:
 			conn = httplib.HTTPConnection(self.hostName, self.portNumber)
@@ -219,7 +219,7 @@ class ServerAPITest:
 
 	# POST api/storage/house
 	# Posts the house with the JSON object information provided.
-	def post_storage_house:
+	def post_storage_house(self):
 		print 'testing: POST api/storage/house'
 		try:
 			headers = {"Content-type": "application/x-www-form-urlencoded", "Accept": "text/plain"}
@@ -246,7 +246,7 @@ class ServerAPITest:
 
 	# GET api/storage/user/{username}
 	# Gets the users information by the username provided via JSON object data.
-	def get_storage_user_username(username):
+	def get_storage_user_username(self, username):
 		print 'testing: GET api/storage/user/{username}'
 		try:
 			conn = httplib.HTTPConnection(self.hostName, self.portNumber)
@@ -260,7 +260,7 @@ class ServerAPITest:
 
 	# POST api/storage/user
 	# Posts the users information provided by JSON object data.
-	def post_storage_user:
+	def post_storage_user(self):
 		print 'testing: POST api/storage/user'
 		try:
 			headers = {"Content-type": "application/x-www-form-urlencoded", "Accept": "text/plain"}
@@ -283,7 +283,7 @@ class ServerAPITest:
 	# 	except Exception, e:
 	# 		raise e
 
-	# #app
+	# app
 
 	# POST api/app/user/updateposition/{username}
 	# Updates the user position and location time stamp to the user, requires JSON object data and the username for the user.
@@ -299,7 +299,7 @@ class ServerAPITest:
 		except Exception, e:
 			raise e
  
-	#Sim
+	# Sim
 
 	# POST api/sim/timeframe
 	# Post the information via JSON data regarding the SimHarneses time frame configurations to the Decision Making System.
@@ -330,3 +330,14 @@ if __name__ == "__main__":
 				"alt": "21.5452",
 				"time": time}
 	server.post_app_user_updatePosition_username(location)
+
+	# GET api/storage/device/{houseid}/{spaceid}/{deviceid}
+	server.get_storage_device_houseid_spaceid_deviceid('001', '002', '003')
+
+	# POST api/storage/device
+	device = {"deviceId": '002'}
+	server.post_storage_device(device)
+
+	# POST api/storage/space
+	space = {"spaceId": 'mySpace'}
+	server.post_storage_space(space)
