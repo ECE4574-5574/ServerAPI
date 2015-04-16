@@ -55,6 +55,7 @@ namespace HomeAutomationServer.Services
                 {
                     if (!File.Exists(path))
                     {
+                        Directory.CreateDirectory(@"C:\ServerAPILogFile");
                         using (FileStream fstream = File.Create(path))
                         {
                             Byte[] info = new UTF8Encoding(true).GetBytes("Failed to Get house data from Storage: " + ex.Message);
@@ -77,9 +78,10 @@ namespace HomeAutomationServer.Services
             {
                 if (!File.Exists(path))
                 {
+                    Directory.CreateDirectory(@"C:\ServerAPILogFile");
                     using (FileStream fstream = File.Create(path))
                     {
-                        Byte[] info = new UTF8Encoding(true).GetBytes("Failed to create URL with the provided data: " + ex.Message);
+                        Byte[] info = new UTF8Encoding(true).GetBytes("GetHouse -- Failed to create URL with the provided data: " + ex.Message);
                         fstream.Write(info, 0, info.Length);
                     }
                 }
@@ -87,7 +89,7 @@ namespace HomeAutomationServer.Services
                 {
                     using (FileStream fstream = File.OpenWrite(path))
                     {
-                        Byte[] info = new UTF8Encoding(true).GetBytes("Failed to create URL with the provided data: " + ex.Message);
+                        Byte[] info = new UTF8Encoding(true).GetBytes("GetHouse -- Failed to create URL with the provided data: " + ex.Message);
                         fstream.Write(info, 0, info.Length);
                     }
                 }
@@ -139,9 +141,10 @@ namespace HomeAutomationServer.Services
                 {
                     if (!File.Exists(path))
                     {
+                        Directory.CreateDirectory(@"C:\ServerAPILogFile");
                         using (FileStream fstream = File.Create(path))
                         {
-                            Byte[] info = new UTF8Encoding(true).GetBytes("Failed to Post state change to Storage: " + ex.Message);
+                            Byte[] info = new UTF8Encoding(true).GetBytes("House -- Failed to Post state change to Storage: " + ex.Message);
                             fstream.Write(info, 0, info.Length);
                         }
                     }
@@ -149,7 +152,7 @@ namespace HomeAutomationServer.Services
                     {
                         using (FileStream fstream = File.OpenWrite(path))
                         {
-                            Byte[] info = new UTF8Encoding(true).GetBytes("Failed to Post state change to Storage: " + ex.Message);
+                            Byte[] info = new UTF8Encoding(true).GetBytes("House -- Failed to Post state change to Storage: " + ex.Message);
                             fstream.Write(info, 0, info.Length);
                         }
                     }
@@ -163,9 +166,10 @@ namespace HomeAutomationServer.Services
             {
                 if (!File.Exists(path))
                 {
+                    Directory.CreateDirectory(@"C:\ServerAPILogFile");
                     using (FileStream fstream = File.Create(path))
                     {
-                        Byte[] info = new UTF8Encoding(true).GetBytes("Failed to Post Sim config info to Decision System: " + ex.Message);
+                        Byte[] info = new UTF8Encoding(true).GetBytes("DeviceStateHouse -- Failed to create URL from data provided: " + ex.Message);
                         fstream.Write(info, 0, info.Length);
                     }
                 }
@@ -173,7 +177,7 @@ namespace HomeAutomationServer.Services
                 {
                     using (FileStream fstream = File.OpenWrite(path))
                     {
-                        Byte[] info = new UTF8Encoding(true).GetBytes("Failed to Post Sim config info to Decision System: " + ex.Message);
+                        Byte[] info = new UTF8Encoding(true).GetBytes("DeviceStateHouse -- Failed to create URL from data provided: " + ex.Message);
                         fstream.Write(info, 0, info.Length);
                     }
                 }
