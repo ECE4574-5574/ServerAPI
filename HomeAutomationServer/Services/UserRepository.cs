@@ -8,16 +8,6 @@ using System.Linq;
 using System.Net;
 using System.Web;
 
-using Amazon;
-using Amazon.EC2;
-using Amazon.EC2.Model;
-using Amazon.SimpleDB;
-using Amazon.SimpleDB.Model;
-using Amazon.S3;
-using Amazon.S3.Model;
-using Amazon.SimpleNotificationService;
-using Amazon.SimpleNotificationService.Model;
-
 // This class tells the controller how to process the HTTP commands
 
 namespace HomeAutomationServer.Services
@@ -104,47 +94,43 @@ namespace HomeAutomationServer.Services
         //Sends an updated position to the decison system
         public bool OnUpdatePosition(JObject model)
         {
-            WebRequest request = WebRequest.Create("http://54.152.190.217:8085/LocationChange");
-            request.ContentType = "application/json";
-            request.Method = "POST";
-
-            using (var streamWriter = new StreamWriter(request.GetRequestStream()))
-            {
-                streamWriter.Write(model.ToString());
-                streamWriter.Flush();
-                streamWriter.Close();
-            }
-
             try
             {
-                using (HttpWebResponse response = request.GetResponse() as HttpWebResponse)
+                WebRequest request = WebRequest.Create("http://54.152.190.217:8085/LocationChange");
+                request.ContentType = "application/json";
+                request.Method = "POST";
+
+                using (var streamWriter = new StreamWriter(request.GetRequestStream()))
                 {
-                    if (response.StatusCode != HttpStatusCode.OK)
-                        throw new Exception(String.Format(
-                        "Server error (HTTP {0}: {1}).",
-                        response.StatusCode,
-                        response.StatusDescription));
+                    streamWriter.Write(model.ToString());
+                    streamWriter.Flush();
+                    streamWriter.Close();
                 }
+
+                try
+                {
+                    using (HttpWebResponse response = request.GetResponse() as HttpWebResponse)
+                    {
+                        if (response.StatusCode != HttpStatusCode.OK)
+                            throw new Exception(String.Format(
+                            "Server error (HTTP {0}: {1}).",
+                            response.StatusCode,
+                            response.StatusDescription));
+                    }
+                }
+                catch (WebException we)
+                {
+                    File.AppendAllText("HomeAutomationServer/logfile.txt", "Could not Post data to Decision System: " + we.Message);
+                    return false;
+                }
+
             }
-            catch (WebException we)
+
+            catch (SystemException ex)
             {
-                // always catches this exception even when the Jtoken is sent properly. 
-                // Gets an error saying Connection was closed.
-                //return false;
+                File.AppendAllText("HomeAutomationServer/logfile.txt", ex.Message);
+                return false;
             }
-
-           // try
-           // {
-                AmazonSimpleNotificationServiceClient snsClient = new AmazonSimpleNotificationServiceClient("AKIAJM2E3LGZHJYGFSQQ", "p3Qi8DAXj+XHAH+ny7HrlRyleBs5V5DJv77zKK3T", Amazon.RegionEndpoint.USEast1);
-
-                //ListPlatformApplicationsResponse appsResponse = snsClient.ListPlatformApplications();
-                snsClient.Publish("arn:aws:sns:us-east-1:336632281456:MyTopic", "Hello World");
-//            }
-
-  //          catch (Exception e)
-    //        {
-               // Console.WriteLine(e.ToString());
-      //      }
 
             return true;
         }
