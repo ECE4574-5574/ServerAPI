@@ -36,7 +36,7 @@ namespace HomeAutomationServer.Services
             return null;
         }
 
-        public JObject SaveSpace(string houseid, string spaceid, JToken model)
+        public JObject SaveSpace(JToken model)
         {
             /*WebRequest request = WebRequest.Create("http://54.152.190.217:8081/HI/" + houseid);
             request.Method = "GET";
