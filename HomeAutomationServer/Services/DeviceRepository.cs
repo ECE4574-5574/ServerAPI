@@ -19,104 +19,149 @@ namespace HomeAutomationServer.Services
 
         public JObject GetDevice(string houseid, string spaceid, string deviceid)       // Return device
         {
-           WebRequest request = WebRequest.Create(storageURL + "/DD" + houseid + "/" + spaceid + "/" + deviceid);
-           request.Method = "GET";
+            try
+            {
+                WebRequest request = WebRequest.Create(storageURL + "/DD" + houseid + "/" + spaceid + "/" + deviceid);
+                request.Method = "GET";
 
-           using (HttpWebResponse response = request.GetResponse() as HttpWebResponse)
-           {
-               if (response.StatusCode != HttpStatusCode.OK)
-                   throw new Exception(String.Format(
-                   "Server error (HTTP {0}: {1}).",
-                   response.StatusCode,
-                   response.StatusDescription));
-               var stream = response.GetResponseStream();
-               var reader = new StreamReader(stream);
+                using (HttpWebResponse response = request.GetResponse() as HttpWebResponse)
+                {
+                    if (response.StatusCode != HttpStatusCode.OK)
+                        throw new Exception(String.Format(
+                        "Server error (HTTP {0}: {1}).",
+                        response.StatusCode,
+                        response.StatusDescription));
+                    var stream = response.GetResponseStream();
+                    var reader = new StreamReader(stream);
 
-               string deviceString = reader.ReadToEnd();
-               return JObject.Parse(deviceString);
-           }
+                    string deviceString = reader.ReadToEnd();
+                    return JObject.Parse(deviceString);
+                }
+            }
+
+            catch(SystemException ex)
+            {
+                File.AppendAllText("HomeAutomationSystem/logfile.txt", "Could not parse data with appropriate keys: " + ex.Message);
+                return null;
+            }
         }
 
         public JArray GetDevice(string houseid, string spaceid)            // Return devices in space
         {
-            WebRequest request = WebRequest.Create(storageURL + "RD/" + houseid + "/" + spaceid);
-           request.Method = "GET";
+            try
+            {
+                WebRequest request = WebRequest.Create(storageURL + "RD/" + houseid + "/" + spaceid);
+                request.Method = "GET";
 
-           using (HttpWebResponse response = request.GetResponse() as HttpWebResponse)
-           {
-               if (response.StatusCode != HttpStatusCode.OK)
-                   throw new Exception(String.Format(
-                   "Server error (HTTP {0}: {1}).",
-                   response.StatusCode,
-                   response.StatusDescription));
-               var stream = response.GetResponseStream();
-               var reader = new StreamReader(stream);
+                using (HttpWebResponse response = request.GetResponse() as HttpWebResponse)
+                {
+                    if (response.StatusCode != HttpStatusCode.OK)
+                        throw new Exception(String.Format(
+                        "Server error (HTTP {0}: {1}).",
+                        response.StatusCode,
+                        response.StatusDescription));
+                    var stream = response.GetResponseStream();
+                    var reader = new StreamReader(stream);
 
-               string deviceString = reader.ReadToEnd();
-               return JArray.Parse(deviceString);
-           }
+                    string deviceString = reader.ReadToEnd();
+                    return JArray.Parse(deviceString);
+                }
+            }
+
+            catch (SystemException ex)
+            {
+                File.AppendAllText("HomeAutomationSystem/logfile.txt", "Could not parse data with appropriate keys: " + ex.Message);
+                return null;
+            }
         }
 
         public JArray GetDevice(string houseid, string spaceid, int type)      // Return devices in space by type
         {
-            WebRequest request = WebRequest.Create(storageURL + "RT/" + houseid + "/" + spaceid + "/" + type);
-            request.Method = "GET";
-
-            using (HttpWebResponse response = request.GetResponse() as HttpWebResponse)
+            try
             {
-                if (response.StatusCode != HttpStatusCode.OK)
-                    throw new Exception(String.Format(
-                    "Server error (HTTP {0}: {1}).",
-                    response.StatusCode,
-                    response.StatusDescription));
-                var stream = response.GetResponseStream();
-                var reader = new StreamReader(stream);
+                WebRequest request = WebRequest.Create(storageURL + "RT/" + houseid + "/" + spaceid + "/" + type);
+                request.Method = "GET";
 
-                string deviceString = reader.ReadToEnd();
-                return JArray.Parse(deviceString);
+                using (HttpWebResponse response = request.GetResponse() as HttpWebResponse)
+                {
+                    if (response.StatusCode != HttpStatusCode.OK)
+                        throw new Exception(String.Format(
+                        "Server error (HTTP {0}: {1}).",
+                        response.StatusCode,
+                        response.StatusDescription));
+                    var stream = response.GetResponseStream();
+                    var reader = new StreamReader(stream);
+
+                    string deviceString = reader.ReadToEnd();
+                    return JArray.Parse(deviceString);
+                }
+            }
+
+            catch (SystemException ex)
+            {
+                File.AppendAllText("HomeAutomationSystem/logfile.txt", "Could not parse data with appropriate keys: " + ex.Message);
+                return null;
             }
         }
 
         public JArray GetDevice(string houseid)            // Return devices in house
         {
-            WebRequest request = WebRequest.Create(storageURL + "HD/" + houseid);
-            request.Method = "GET";
-
-            using (HttpWebResponse response = request.GetResponse() as HttpWebResponse)
+            try
             {
-                if (response.StatusCode != HttpStatusCode.OK)
-                    throw new Exception(String.Format(
-                    "Server error (HTTP {0}: {1}).",
-                    response.StatusCode,
-                    response.StatusDescription));
-                var stream = response.GetResponseStream();
-                var reader = new StreamReader(stream);
+                WebRequest request = WebRequest.Create(storageURL + "HD/" + houseid);
+                request.Method = "GET";
 
-                string deviceString = reader.ReadToEnd();
-                return JArray.Parse(deviceString);
+                using (HttpWebResponse response = request.GetResponse() as HttpWebResponse)
+                {
+                    if (response.StatusCode != HttpStatusCode.OK)
+                        throw new Exception(String.Format(
+                        "Server error (HTTP {0}: {1}).",
+                        response.StatusCode,
+                        response.StatusDescription));
+                    var stream = response.GetResponseStream();
+                    var reader = new StreamReader(stream);
+
+                    string deviceString = reader.ReadToEnd();
+                    return JArray.Parse(deviceString);
+                }
+            }
+
+            catch (SystemException ex)
+            {
+                File.AppendAllText("HomeAutomationSystem/logfile.txt", "Could not parse data with appropriate keys: " + ex.Message);
+                return null;
             }
         }
 
         public JArray GetDevice(string houseid, int type)          // Return devices in house by type
         {
-            WebRequest request = WebRequest.Create(storageURL + "HT/" + houseid + "/" + type);
-            request.Method = "GET";
-
-            using (HttpWebResponse response = request.GetResponse() as HttpWebResponse)
+            try
             {
-                if (response.StatusCode != HttpStatusCode.OK)
-                    throw new Exception(String.Format(
-                    "Server error (HTTP {0}: {1}).",
-                    response.StatusCode,
-                    response.StatusDescription));
-                var stream = response.GetResponseStream();
-                var reader = new StreamReader(stream);
+                WebRequest request = WebRequest.Create(storageURL + "HT/" + houseid + "/" + type);
+                request.Method = "GET";
 
-                string deviceString = reader.ReadToEnd();
-                return JArray.Parse(deviceString);
+                using (HttpWebResponse response = request.GetResponse() as HttpWebResponse)
+                {
+                    if (response.StatusCode != HttpStatusCode.OK)
+                        throw new Exception(String.Format(
+                        "Server error (HTTP {0}: {1}).",
+                        response.StatusCode,
+                        response.StatusDescription));
+                    var stream = response.GetResponseStream();
+                    var reader = new StreamReader(stream);
+
+                    string deviceString = reader.ReadToEnd();
+                    return JArray.Parse(deviceString);
+                }
+            }
+
+            catch (SystemException ex)
+            {
+                File.AppendAllText("HomeAutomationSystem/logfile.txt", "Could not parse data with appropriate keys: " + ex.Message);
+                return null;
             }
         }
-
+        
         public int SaveDevice(JObject model)
         {
             string houseId, roomId, deviceType;
