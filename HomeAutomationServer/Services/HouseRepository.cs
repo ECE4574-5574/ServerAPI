@@ -7,6 +7,7 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Web;
+using HomeAutomationServer.Models;
 
 // This class tells the controller how to process the HTTP commands
 
@@ -14,26 +15,29 @@ namespace HomeAutomationServer.Services
 {
 	public class HouseRepository
 	{
-		public JObject GetHouse (string id)
+		private string pathName = "HomeAutomationServer/logfile.txt";
+
+		public JObject GetHouse(string id)
 		{
-			WebRequest request = WebRequest.Create (DeviceRepository.storageURL + "/HI/" + id);
+			WebRequest request = WebRequest.Create(DeviceRepository.storageURL + "/HI/" + id);
 			request.Method = "GET";
 
-			using (HttpWebResponse response = request.GetResponse () as HttpWebResponse) {
-				if (response.StatusCode != HttpStatusCode.OK)
-					throw new Exception (String.Format (
+			using(HttpWebResponse response = request.GetResponse() as HttpWebResponse)
+			{
+				if(response.StatusCode != HttpStatusCode.OK)
+					throw new Exception(String.Format(
 						"Server error (HTTP {0}: {1}).",
 						response.StatusCode,
 						response.StatusDescription));
-				var stream = response.GetResponseStream ();
-				var reader = new StreamReader (stream);
+				var stream = response.GetResponseStream();
+				var reader = new StreamReader(stream);
 
-				string houseString = reader.ReadToEnd ();
-				return JObject.Parse (houseString);
+				string houseString = reader.ReadToEnd();
+				return JObject.Parse(houseString);
 			}
 		}
 
-		public bool postState (JObject deviceBlob)
+		public bool postState(JObject deviceBlob)
 		{
 
 			//POST UD/HOUSEID/ROOMID/DEVICEID
@@ -42,23 +46,37 @@ namespace HomeAutomationServer.Services
 			string roomID;
 			string deviceID;
 
-			houseID = deviceBlob.GetValue ("HOUSEID").ToString ();
-			roomID = deviceBlob.GetValue ("ROOMID").ToString ();
-			deviceID = deviceBlob.GetValue ("DEVICEID").ToString ();
+			houseID = deviceBlob.GetValue("HOUSEID").ToString();
+			roomID = deviceBlob.GetValue("ROOMID").ToString();
+			deviceID = deviceBlob.GetValue("DEVICEID").ToString();
 
-			WebRequest request = WebRequest.Create (DeviceRepository.storageURL + "UD/" + houseID + "/" + roomID + "/" + deviceID);
+			WebRequest request = WebRequest.Create(DeviceRepository.storageURL + "UD/" + houseID + "/" + roomID + "/" + deviceID);
 			request.ContentType = "application/json";
 			request.Method = "POST";
 
-			using (var streamWriter = new StreamWriter (request.GetRequestStream ())) {
-				streamWriter.Write (deviceBlob.ToString ());
-				streamWriter.Flush ();
-				streamWriter.Close ();
+			using(var streamWriter = new StreamWriter(request.GetRequestStream()))
+			{
+				streamWriter.Write(deviceBlob.ToString());
+				streamWriter.Flush();
+				streamWriter.Close();
+
+				try
+				{
+					if(!AppCache.AddDeviceBlob(deviceBlob))
+						throw new Exception("AppCache add device failed when adding: " + deviceBlob.ToString());
+				}
+				catch(Exception ex)
+				{
+					File.AppendAllText(pathName, ex.Message);
+					return false;
+				}
 			}
-				
-			using (HttpWebResponse response = request.GetResponse () as HttpWebResponse) {
-				if (response.StatusCode != HttpStatusCode.OK) {
-					throw new Exception (String.Format (
+
+			using(HttpWebResponse response = request.GetResponse() as HttpWebResponse)
+			{
+				if(response.StatusCode != HttpStatusCode.OK)
+				{
+					throw new Exception(String.Format(
 						"Server error (HTTP {0}: {1}).",
 						response.StatusCode,
 						response.StatusDescription));
@@ -108,7 +126,7 @@ namespace HomeAutomationServer.Services
             return null;
         }*/
 
-		public JObject DeleteHouse (string houseid)
+		public JObject DeleteHouse(string houseid)
 		{
 			/*WebRequest request = WebRequest.Create("http://54.152.190.217:8081/H/" + houseid);
            request.Method = "DELETE";

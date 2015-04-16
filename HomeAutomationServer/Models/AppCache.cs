@@ -9,47 +9,47 @@ using HomeAutomationServer.Filters;
 
 namespace HomeAutomationServer.Models
 {
-    public class AppCache  // A cache to temporarily store app information while waiting on 
-    {                      // information request.
-        // A JSON array of device blobs
-        private JArray deviceBlobs = new JArray();
-        // add any other JArrays containing blobs here
-        
-        ////////////////////////////////////////////////////////////////////////////////////////
-        //
-        // deviceBlobs methods
+	public static class AppCache  // A cache to temporarily store app information while waiting on 
+	{                      // information request.
+		// A JSON array of device blobs
+		private static JArray deviceBlobs = new JArray();
+		// add any other JArrays containing blobs here
 
-        public bool AddDeviceBlob(JObject blob)
-        {
-            deviceBlobs[(string)blob["deviceID"]] = blob;
-            
-            if (deviceBlobs[(string)blob["deviceID"]] == blob)
-                return true;
+		////////////////////////////////////////////////////////////////////////////////////////
+		//
+		// deviceBlobs methods
 
-            return false;
-        }
+		public static bool AddDeviceBlob(JObject blob)
+		{
+			deviceBlobs[(string)blob["deviceID"]] = blob;
 
-        public JToken GetDeviceBlob(string deviceID)
-        {
-            JToken blob = deviceBlobs[deviceID];
-            deviceBlobs[deviceID].Remove();
-            return blob;
-        }
+			if (deviceBlobs[(string)blob["deviceID"]] == blob)
+				return true;
 
-        public JArray GetAllBlobs()
-        {
-            JArray blobs = deviceBlobs;
-            deviceBlobs.RemoveAll();
-            return blobs;
-        }
+			return false;
+		}
 
-        public int GetBlobCount()
-        {
-            return deviceBlobs.Count;
-        }
+		public static JToken GetDeviceBlob(string deviceID)
+		{
+			JToken blob = deviceBlobs[deviceID];
+			deviceBlobs[deviceID].Remove();
+			return blob;
+		}
 
-        ////////////////////////////////////////////////////////////////////////////////////////
-        //
-        // other blob methods
-    }
+		public static JArray GetAllBlobs()
+		{
+			JArray blobs = deviceBlobs;
+			deviceBlobs.RemoveAll();
+			return blobs;
+		}
+
+		public static int GetBlobCount()
+		{
+			return deviceBlobs.Count;
+		}
+
+		////////////////////////////////////////////////////////////////////////////////////////
+		//
+		// other blob methods
+	}
 }
