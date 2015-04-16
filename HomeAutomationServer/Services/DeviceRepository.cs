@@ -54,14 +54,7 @@ namespace HomeAutomationServer.Services
                             fstream.Write(info, 0, info.Length);
                         }
                     }
-                    else
-                    {
-                        using (FileStream fstream = File.OpenWrite(path))
-                        {
-                            Byte[] info = new UTF8Encoding(true).GetBytes("Device -- Failed to get device data: " + ex.Message);
-                            fstream.Write(info, 0, info.Length);
-                        }
-                    }
+                    else File.AppendAllText(path, "\nDevice -- Failed to get device data: " + ex.Message);
 
                     return null;
                 }
@@ -78,14 +71,7 @@ namespace HomeAutomationServer.Services
                         fstream.Write(info, 0, info.Length);
                     }
                 }
-                else
-                {
-                    using (FileStream fstream = File.OpenWrite(path))
-                    {
-                        Byte[] info = new UTF8Encoding(true).GetBytes("Device -- Failed to get information from the Storage: " + ex.Message);
-                        fstream.Write(info, 0, info.Length);
-                    }
-                }
+                else File.AppendAllText(path, "\nDevice -- Failed to get information from the Storage: " + ex.Message);
                 return null;
             }
         }
@@ -125,14 +111,7 @@ namespace HomeAutomationServer.Services
                             fstream.Write(info, 0, info.Length);
                         }
                     }
-                    else
-                    {
-                        using (FileStream fstream = File.OpenWrite(path))
-                        {
-                            Byte[] info = new UTF8Encoding(true).GetBytes("Device -- Failed to get device data: " + ex.Message);
-                            fstream.Write(info, 0, info.Length);
-                        }
-                    }
+                    else File.AppendAllText(path, "\nDevice -- Failed to get device data: " + ex.Message);
 
                     return null;
                 }
@@ -149,14 +128,7 @@ namespace HomeAutomationServer.Services
                         fstream.Write(info, 0, info.Length);
                     }
                 }
-                else
-                {
-                    using (FileStream fstream = File.OpenWrite(path))
-                    {
-                        Byte[] info = new UTF8Encoding(true).GetBytes("Device -- Failed to create URL with the data provided: " + ex.Message);
-                        fstream.Write(info, 0, info.Length);
-                    }
-                }
+                else File.AppendAllText(path, "\nDevice -- Failed to create URL with the data provided: " + ex.Message);
                 return null;
             }
         }
@@ -196,14 +168,7 @@ namespace HomeAutomationServer.Services
                             fstream.Write(info, 0, info.Length);
                         }
                     }
-                    else
-                    {
-                        using (FileStream fstream = File.OpenWrite(path))
-                        {
-                            Byte[] info = new UTF8Encoding(true).GetBytes("Device -- Failed to get device data: " + ex.Message);
-                            fstream.Write(info, 0, info.Length);
-                        }
-                    }
+                    else File.AppendAllText(path, "\nDevice -- Failed to get device data: " + ex.Message);
 
                     return null;
                 }
@@ -216,18 +181,11 @@ namespace HomeAutomationServer.Services
                     Directory.CreateDirectory(@"C:\ServerAPILogFile");
                     using (FileStream fstream = File.Create(path))
                     {
-                        Byte[] info = new UTF8Encoding(true).GetBytes("Failed to create URL with the data provided: " + ex.Message);
+                        Byte[] info = new UTF8Encoding(true).GetBytes("Device -- Failed to create URL with the data provided: " + ex.Message);
                         fstream.Write(info, 0, info.Length);
                     }
                 }
-                else
-                {
-                    using (FileStream fstream = File.OpenWrite(path))
-                    {
-                        Byte[] info = new UTF8Encoding(true).GetBytes("Failed to create URL with the data provided: " + ex.Message);
-                        fstream.Write(info, 0, info.Length);
-                    }
-                }
+                else File.AppendAllText(path, "\nDevice -- Failed to create URL with the data provided: " + ex.Message);
                 return null;
             }
         }
@@ -267,14 +225,7 @@ namespace HomeAutomationServer.Services
                             fstream.Write(info, 0, info.Length);
                         }
                     }
-                    else
-                    {
-                        using (FileStream fstream = File.OpenWrite(path))
-                        {
-                            Byte[] info = new UTF8Encoding(true).GetBytes("Device -- Failed to get device data: " + ex.Message);
-                            fstream.Write(info, 0, info.Length);
-                        }
-                    }
+                    else File.AppendAllText(path, "\nDevice -- Failed to get device data: " + ex.Message);
 
                     return null;
                 }
@@ -287,18 +238,11 @@ namespace HomeAutomationServer.Services
                     Directory.CreateDirectory(@"C:\ServerAPILogFile");
                     using (FileStream fstream = File.Create(path))
                     {
-                        Byte[] info = new UTF8Encoding(true).GetBytes("Failed to create URL with the data provided: " + ex.Message);
+                        Byte[] info = new UTF8Encoding(true).GetBytes("Device -- Failed to create URL with the data provided: " + ex.Message);
                         fstream.Write(info, 0, info.Length);
                     }
                 }
-                else
-                {
-                    using (FileStream fstream = File.OpenWrite(path))
-                    {
-                        Byte[] info = new UTF8Encoding(true).GetBytes("Failed to create URL with the data provided: " + ex.Message);
-                        fstream.Write(info, 0, info.Length);
-                    }
-                }
+                else File.AppendAllText(path, "\nDevice -- Failed to create URL with the data provided: " + ex.Message);
                 return null;
             }
         }
@@ -338,14 +282,7 @@ namespace HomeAutomationServer.Services
                             fstream.Write(info, 0, info.Length);
                         }
                     }
-                    else
-                    {
-                        using (FileStream fstream = File.OpenWrite(path))
-                        {
-                            Byte[] info = new UTF8Encoding(true).GetBytes("Device -- Failed to Get device data: " + ex.Message);
-                            fstream.Write(info, 0, info.Length);
-                        }
-                    }
+                    else File.AppendAllText(path, "\nDevice -- Failed to Get device data: " + ex.Message);
 
                     return null;
                 }
@@ -362,14 +299,7 @@ namespace HomeAutomationServer.Services
                         fstream.Write(info, 0, info.Length);
                     }
                 }
-                else
-                {
-                    using (FileStream fstream = File.OpenWrite(path))
-                    {
-                        Byte[] info = new UTF8Encoding(true).GetBytes("Device -- Failed to create URL with data provided: " + ex.Message);
-                        fstream.Write(info, 0, info.Length);
-                    }
-                }
+                else File.AppendAllText(path, "\nDevice -- Failed to create URL with data provided: " + ex.Message);
                 return null;
             }
         }
@@ -423,14 +353,7 @@ namespace HomeAutomationServer.Services
                             fstream.Write(info, 0, info.Length);
                         }
                     }
-                    else
-                    {
-                        using (FileStream fstream = File.OpenWrite(path))
-                        {
-                            Byte[] info = new UTF8Encoding(true).GetBytes("Device -- Failed to Post data to the Storage: " + ex.Message);
-                            fstream.Write(info, 0, info.Length);
-                        }
-                    }
+                    else File.AppendAllText(path, "\nDevice -- Failed to Post data to the Storage: " + ex.Message);
 
                     return 0;
                 }
@@ -447,15 +370,7 @@ namespace HomeAutomationServer.Services
                         fstream.Write(info, 0, info.Length);
                     }
                 }
-                else
-                {
-                    using (FileStream fstream = File.OpenWrite(path))
-                    {
-                        Byte[] info = new UTF8Encoding(true).GetBytes("Device -- Failed to create URL with data provided: " + ex.Message);
-                        fstream.Write(info, 0, info.Length);
-                    }
-                }
-
+                else File.AppendAllText(path, "\nDevice -- Failed to create URL with data provided: " + ex.Message);
                 return 0;
             }
 
