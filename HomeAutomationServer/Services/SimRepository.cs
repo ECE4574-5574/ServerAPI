@@ -8,12 +8,13 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Web;
+using System.Text;
 
 namespace HomeAutomationServer.Services
 {
     public class SimRepository
     {
-        private string pathName = "HomeAutomationServer/logfile.txt";
+        private string path = @"C:\ServerAPILogFile\logfile.txt";
 
         public bool sendConfigData(JObject model)
         {
@@ -43,24 +44,40 @@ namespace HomeAutomationServer.Services
                     }
                 }
 
-                catch (WebException ex)
+                catch (Exception ex)
                 {
-                    File.AppendAllText(pathName, "Could not Post data to Decision System: " + ex.Message);
+                    if (!File.Exists(path))
+                    {
+                        using (FileStream fstream = File.Create(path))
+                        {
+                            Byte[] info = new UTF8Encoding(true).GetBytes("Failed to Post Sim config info to Decision System: " + ex.Message);
+                            fstream.Write(info, 0, info.Length);
+                        }
+                    }
+                    else
+                    {
+                        using (FileStream fstream = File.OpenWrite(path))
+                        {
+                            Byte[] info = new UTF8Encoding(true).GetBytes("Failed to Post Sim config info to Decision System: " + ex.Message);
+                            fstream.Write(info, 0, info.Length);
+                        }
+                    }
                     return false;
                 }
 
-                /*request = WebRequest.Create("");    // Send to storage
+                request = WebRequest.Create("http://172.31.26.85:8080/U/SimHarness");    // Send to storage
                 request.ContentType = "application/json";
                 request.Method = "POST";
 
-                using (var streamWriter = new StreamWriter(request.GetRequestStream()))
-                {
-                    streamWriter.Write(model.ToString());
-                    streamWriter.Close();
-                }
-
                 try
                 {
+                    using (var streamWriter = new StreamWriter(request.GetRequestStream()))
+                    {
+                        streamWriter.Write(model.ToString());
+                        streamWriter.Close();
+                    }
+
+
                     using (var response = request.GetResponse() as HttpWebResponse)
                     {
                         if (response.StatusCode != HttpStatusCode.OK)
@@ -75,14 +92,44 @@ namespace HomeAutomationServer.Services
 
                 catch (WebException ex)
                 {
-                    File.AppendAllText(pathName, "Could not Post data to Storage: " + ex.Message);
+                    if (!File.Exists(path))
+                    {
+                        using (FileStream fstream = File.Create(path))
+                        {
+                            Byte[] info = new UTF8Encoding(true).GetBytes("Failed to send data to the Storage: " + ex.Message);
+                            fstream.Write(info, 0, info.Length);
+                        }
+                    }
+                    else
+                    {
+                        using (FileStream fstream = File.OpenWrite(path))
+                        {
+                            Byte[] info = new UTF8Encoding(true).GetBytes("Failed to send to the Storage: " + ex.Message);
+                            fstream.Write(info, 0, info.Length);
+                        }
+                    }
                     return false;
-                }*/
+                }
             }
 
             catch (SystemException ex)
             {
-                File.AppendAllText(pathName, ex.Message);
+                if (!File.Exists(path))
+                {
+                    using (FileStream fstream = File.Create(path))
+                    {
+                        Byte[] info = new UTF8Encoding(true).GetBytes("Failed to parse model with appropriate keys: " + ex.Message);
+                        fstream.Write(info, 0, info.Length);
+                    }
+                }
+                else
+                {
+                    using (FileStream fstream = File.OpenWrite(path))
+                    {
+                        Byte[] info = new UTF8Encoding(true).GetBytes("Failed to parse model with appropriate keys: " + ex.Message);
+                        fstream.Write(info, 0, info.Length);
+                    }
+                }
                 return false;
             }
 
