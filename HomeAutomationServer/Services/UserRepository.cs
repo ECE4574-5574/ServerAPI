@@ -52,14 +52,7 @@ namespace HomeAutomationServer.Services
                             fstream.Write(info, 0, info.Length);
                         }
                     }
-                    else
-                    {
-                        using (FileStream fstream = File.OpenWrite(path))
-                        {
-                            Byte[] info = new UTF8Encoding(true).GetBytes("Could not Get user information from Storage: " + ex.Message);
-                            fstream.Write(info, 0, info.Length);
-                        }
-                    }
+                    else File.AppendAllText(path, "\nUpdateLocation -- Could not create the URL with the data provided: " + ex.Message);
 
                     return null;
                 }
@@ -76,14 +69,7 @@ namespace HomeAutomationServer.Services
                         fstream.Write(info, 0, info.Length);
                     }
                 }
-                else
-                {
-                    using (FileStream fstream = File.OpenWrite(path))
-                    {
-                        Byte[] info = new UTF8Encoding(true).GetBytes("UserGet -- Could not create URL from data provided: " + ex.Message);
-                        fstream.Write(info, 0, info.Length);
-                    }
-                }
+                else File.AppendAllText(path, "\nUpdateLocation -- Could not create the URL with the data provided: " + ex.Message);
 
                 return null;
             }
@@ -127,14 +113,8 @@ namespace HomeAutomationServer.Services
                             fstream.Write(info, 0, info.Length);
                         }
                     }
-                    else
-                    {
-                        using (FileStream fstream = File.OpenWrite(path))
-                        {
-                            Byte[] info = new UTF8Encoding(true).GetBytes("Could not post user information to the Storage: " + we.Message);
-                            fstream.Write(info, 0, info.Length);
-                        }
-                    }
+                    else File.AppendAllText(path, "\nUpdateLocation -- Could not create the URL with the data provided: " + we.Message);
+
                     return false;
                 }
             }
@@ -150,14 +130,8 @@ namespace HomeAutomationServer.Services
                         fstream.Write(info, 0, info.Length);
                     }
                 }
-                else
-                {
-                    using (FileStream fstream = File.OpenWrite(path))
-                    {
-                        Byte[] info = new UTF8Encoding(true).GetBytes("UserPost -- Could not create URL from data provided: " + ex.Message);
-                        fstream.Write(info, 0, info.Length);
-                    }
-                }
+                else File.AppendAllText(path, "\nUpdateLocation -- Could not create the URL with the data provided: " + ex.Message);
+
 
                 return false;
             }
@@ -220,21 +194,15 @@ namespace HomeAutomationServer.Services
                         Directory.CreateDirectory(@"C:\ServerAPILogFile");
                         using (FileStream fstream = File.Create(path))
                         {
-                            Byte[] info = new UTF8Encoding(true).GetBytes("Could not post location change to Decision System: " + we.Message);
+                            Byte[] info = new UTF8Encoding(true).GetBytes("UpdateLocation -- Could not post location change to Decision System: " + we.Message);
                             fstream.Write(info, 0, info.Length);
                         }
                     }
-                    else
-                    {
-                        using (FileStream fstream = File.OpenWrite(path))
-                        {
-                            Byte[] info = new UTF8Encoding(true).GetBytes("Could not post location change to Decision System: " + we.Message);
-                            fstream.Write(info, 0, info.Length);
-                        }
-                    }
-                    return false;
-                }
+                    else File.AppendAllText(path, "\nUpdateLocation -- Could not create the URL with the data provided: " + we.Message);
 
+                    return false;
+
+                }
             }
 
             catch (SystemException ex)
@@ -244,18 +212,12 @@ namespace HomeAutomationServer.Services
                     Directory.CreateDirectory(@"C:\ServerAPILogFile");
                     using (FileStream fstream = File.Create(path))
                     {
-                        Byte[] info = new UTF8Encoding(true).GetBytes("Could not create the URL with the data provided: " + ex.Message);
+                        Byte[] info = new UTF8Encoding(true).GetBytes("UpdateLocation -- Could not create the URL with the data provided: " + ex.Message);
                         fstream.Write(info, 0, info.Length);
                     }
                 }
-                else
-                {
-                    using (FileStream fstream = File.OpenWrite(path))
-                    {
-                        Byte[] info = new UTF8Encoding(true).GetBytes("Could not create the URL with the data provided: " + ex.Message);
-                        fstream.Write(info, 0, info.Length);
-                    }
-                }
+                else File.AppendAllText(path, "\nUpdateLocation -- Could not create the URL with the data provided: " + ex.Message);
+
                 return false;
             }
 
