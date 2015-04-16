@@ -9,6 +9,16 @@ using System.Linq;
 using System.Net;
 using System.Web;
 
+using Amazon;
+using Amazon.EC2;
+using Amazon.EC2.Model;
+using Amazon.SimpleDB;
+using Amazon.SimpleDB.Model;
+using Amazon.S3;
+using Amazon.S3.Model;
+using Amazon.SimpleNotificationService;
+using Amazon.SimpleNotificationService.Model;
+
 namespace HomeAutomationServer.Services
 {
     public class DecisionRepository
