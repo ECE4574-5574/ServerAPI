@@ -25,7 +25,7 @@ namespace HomeAutomationServer.Controllers
         [Route("timeframe")]
         public bool Post([FromBody] JObject model)
         {
-            return simRepo.sendTimeFrame(model);
+            return simRepo.sendConfigData(model);
         }
 
     }
