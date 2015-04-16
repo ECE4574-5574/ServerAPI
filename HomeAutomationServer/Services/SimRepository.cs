@@ -48,9 +48,10 @@ namespace HomeAutomationServer.Services
                 {
                     if (!File.Exists(path))
                     {
+                        Directory.CreateDirectory(@"C:\ServerAPILogFile");
                         using (FileStream fstream = File.Create(path))
                         {
-                            Byte[] info = new UTF8Encoding(true).GetBytes("Failed to Post Sim config info to Decision System: " + ex.Message);
+                            Byte[] info = new UTF8Encoding(true).GetBytes("SimConfig -- Failed to Post Sim config info to Decision System: " + ex.Message);
                             fstream.Write(info, 0, info.Length);
                         }
                     }
@@ -58,7 +59,7 @@ namespace HomeAutomationServer.Services
                     {
                         using (FileStream fstream = File.OpenWrite(path))
                         {
-                            Byte[] info = new UTF8Encoding(true).GetBytes("Failed to Post Sim config info to Decision System: " + ex.Message);
+                            Byte[] info = new UTF8Encoding(true).GetBytes("SimConfig -- Failed to Post Sim config info to Decision System: " + ex.Message);
                             fstream.Write(info, 0, info.Length);
                         }
                     }
@@ -94,9 +95,10 @@ namespace HomeAutomationServer.Services
                 {
                     if (!File.Exists(path))
                     {
+                        Directory.CreateDirectory(@"C:\ServerAPILogFile");
                         using (FileStream fstream = File.Create(path))
                         {
-                            Byte[] info = new UTF8Encoding(true).GetBytes("Failed to send data to the Storage: " + ex.Message);
+                            Byte[] info = new UTF8Encoding(true).GetBytes("SimConfig -- Failed to send data to the Storage: " + ex.Message);
                             fstream.Write(info, 0, info.Length);
                         }
                     }
@@ -104,7 +106,7 @@ namespace HomeAutomationServer.Services
                     {
                         using (FileStream fstream = File.OpenWrite(path))
                         {
-                            Byte[] info = new UTF8Encoding(true).GetBytes("Failed to send to the Storage: " + ex.Message);
+                            Byte[] info = new UTF8Encoding(true).GetBytes("SimConfig -- Failed to send data to the Storage: " + ex.Message);
                             fstream.Write(info, 0, info.Length);
                         }
                     }
@@ -116,9 +118,10 @@ namespace HomeAutomationServer.Services
             {
                 if (!File.Exists(path))
                 {
+                    Directory.CreateDirectory(@"C:\ServerAPILogFile");
                     using (FileStream fstream = File.Create(path))
                     {
-                        Byte[] info = new UTF8Encoding(true).GetBytes("Failed to parse model with appropriate keys: " + ex.Message);
+                        Byte[] info = new UTF8Encoding(true).GetBytes("SimConfig -- Failed to parse model with appropriate keys: " + ex.Message);
                         fstream.Write(info, 0, info.Length);
                     }
                 }
@@ -126,7 +129,7 @@ namespace HomeAutomationServer.Services
                 {
                     using (FileStream fstream = File.OpenWrite(path))
                     {
-                        Byte[] info = new UTF8Encoding(true).GetBytes("Failed to parse model with appropriate keys: " + ex.Message);
+                        Byte[] info = new UTF8Encoding(true).GetBytes("SimConfig -- Failed to parse model with appropriate keys: " + ex.Message);
                         fstream.Write(info, 0, info.Length);
                     }
                 }
