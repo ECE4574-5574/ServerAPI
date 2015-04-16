@@ -17,6 +17,8 @@ namespace HomeAutomationServer.Services
         public static string decisionURL = "http://LocalHost:8081/";
         public static string storageURL = "http://54.152.190.217:8080/";
 
+        private string pathName = "HomeAutomationServer/logfile.txt";
+
         public JObject GetDevice(string houseid, string spaceid, string deviceid)       // Return device
         {
             try
@@ -70,7 +72,7 @@ namespace HomeAutomationServer.Services
 
             catch (SystemException ex)
             {
-                File.AppendAllText("HomeAutomationSystem/logfile.txt", "Could not parse data with appropriate keys: " + ex.Message);
+                File.AppendAllText(pathName, "Could not parse data with appropriate keys: " + ex.Message);
                 return null;
             }
         }
@@ -99,7 +101,7 @@ namespace HomeAutomationServer.Services
 
             catch (SystemException ex)
             {
-                File.AppendAllText("HomeAutomationSystem/logfile.txt", "Could not parse data with appropriate keys: " + ex.Message);
+                File.AppendAllText(pathName, "Could not parse data with appropriate keys: " + ex.Message);
                 return null;
             }
         }
@@ -128,7 +130,7 @@ namespace HomeAutomationServer.Services
 
             catch (SystemException ex)
             {
-                File.AppendAllText("HomeAutomationSystem/logfile.txt", "Could not parse data with appropriate keys: " + ex.Message);
+                File.AppendAllText(pathName, "Could not parse data with appropriate keys: " + ex.Message);
                 return null;
             }
         }
@@ -157,7 +159,7 @@ namespace HomeAutomationServer.Services
 
             catch (SystemException ex)
             {
-                File.AppendAllText("HomeAutomationSystem/logfile.txt", "Could not parse data with appropriate keys: " + ex.Message);
+                File.AppendAllText(pathName, "Could not parse data with appropriate keys: " + ex.Message);
                 return null;
             }
         }
