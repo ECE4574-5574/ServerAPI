@@ -1,4 +1,5 @@
 using HomeAutomationServer.Services;
+using HomeAutomationServer.Models;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
@@ -12,65 +13,76 @@ namespace HomeAutomationServer.Services
 {
     public class SimRepository
     {
-        public bool sendTimeFrame(JObject model)
+        private string pathName = "HomeAutomationServer/logfile.txt";
+
+        public bool sendConfigData(JObject model)
         {
-            WebRequest request = WebRequest.Create("http://54.152.190.217:8085/TimeConfig");
-            request.ContentType = "application/json";
-            request.Method = "POST";
-
-            using (var streamWriter = new StreamWriter(request.GetRequestStream()))
-            {
-                streamWriter.Write(model.ToString());
-                streamWriter.Close();
-            }
-
             try
             {
-                using (var response = request.GetResponse() as HttpWebResponse)
+                WebRequest request = WebRequest.Create("http://54.152.190.217:8085/TimeConfig");
+                request.ContentType = "application/json";
+                request.Method = "POST";
+
+                using (var streamWriter = new StreamWriter(request.GetRequestStream()))
                 {
-                    if (response.StatusCode != HttpStatusCode.OK)
+                    streamWriter.Write(model.ToString());
+                    streamWriter.Close();
+                }
+
+                try
+                {
+                    using (var response = request.GetResponse() as HttpWebResponse)
                     {
-                        throw new Exception(String.Format(
-                        "Server error (HTTP {0}: {1}).",
-                        response.StatusCode,
-                        response.StatusDescription));
+                        if (response.StatusCode != HttpStatusCode.OK)
+                        {
+                            throw new Exception(String.Format(
+                            "Server error (HTTP {0}: {1}).",
+                            response.StatusCode,
+                            response.StatusDescription));
+                        }
                     }
                 }
-            }
 
-            catch (WebException ex)
-            {
-                File.AppendAllText("HomeAutomationServer/logfile.txt", "Failed sending time config to Decision: " + ex.Message);
-                return false;
-            }
-
-            request = WebRequest.Create("");
-            request.ContentType = "application/json";
-            request.Method = "POST";
-
-            using (var streamWriter = new StreamWriter(request.GetRequestStream()))
-            {
-                streamWriter.Write(model.ToString());
-                streamWriter.Close();
-            }
-
-            try
-            {
-                using (var response = request.GetResponse() as HttpWebResponse)
+                catch (WebException ex)
                 {
-                    if (response.StatusCode != HttpStatusCode.OK)
+                    File.AppendAllText(pathName, "Could not Post data to Decision System: " + ex.Message);
+                    return false;
+                }
+
+                /*request = WebRequest.Create("");    // Send to storage
+                request.ContentType = "application/json";
+                request.Method = "POST";
+
+                using (var streamWriter = new StreamWriter(request.GetRequestStream()))
+                {
+                    streamWriter.Write(model.ToString());
+                    streamWriter.Close();
+                }
+
+                try
+                {
+                    using (var response = request.GetResponse() as HttpWebResponse)
                     {
-                        throw new Exception(String.Format(
-                        "Server error (HTTP {0}: {1}).",
-                        response.StatusCode,
-                        response.StatusDescription));
+                        if (response.StatusCode != HttpStatusCode.OK)
+                        {
+                            throw new Exception(String.Format(
+                            "Server error (HTTP {0}: {1}).",
+                            response.StatusCode,
+                            response.StatusDescription));
+                        }
                     }
                 }
+
+                catch (WebException ex)
+                {
+                    File.AppendAllText(pathName, "Could not Post data to Storage: " + ex.Message);
+                    return false;
+                }*/
             }
 
-            catch (WebException ex)
+            catch (SystemException ex)
             {
-                File.AppendAllText("HomeAutomationServer/logfile.txt", "Failed sending time config to Storage: " + ex.Message);
+                File.AppendAllText(pathName, ex.Message);
                 return false;
             }
 
