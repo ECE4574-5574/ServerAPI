@@ -19,56 +19,60 @@ namespace HomeAutomationServer.Services
 
         public JObject GetUser(string username)
         {
-            WebRequest request = WebRequest.Create("http://172.31.26.85:8080/UI/" + username);
-            request.Method = "GET";
-
-            using (HttpWebResponse response = request.GetResponse() as HttpWebResponse)
-            {
-                if (response.StatusCode != HttpStatusCode.OK)
-                    throw new Exception(String.Format(
-                    "Server error (HTTP {0}: {1}).",
-                    response.StatusCode,
-                    response.StatusDescription));
-                var stream = response.GetResponseStream();
-                var reader = new StreamReader(stream);
-
-                string userString = reader.ReadToEnd();
-                return JObject.Parse(userString);
-            }
-        }
-
-        public bool SaveUser(string username, JToken model)
-        {
-            WebRequest request = WebRequest.Create("http://54.152.190.217:8081/U/" + username);
-            request.ContentType = "application/json";
-            request.Method = "POST";
-
-            using (var streamWriter = new StreamWriter(request.GetRequestStream()))
-            {
-                streamWriter.Write(model.ToString());
-                streamWriter.Close();
-            }
-            // request = WebRequest.Create("http://localhost:8081");
-
             try
             {
-                using (HttpWebResponse response = request.GetResponse() as HttpWebResponse)
+                WebRequest request = WebRequest.Create("http://172.31.26.85:8080/UI/" + username);
+                request.Method = "GET";
+
+                try
                 {
-                    if (response.StatusCode != HttpStatusCode.OK)
-                        throw new Exception(String.Format(
-                        "Server error (HTTP {0}: {1}).",
-                        response.StatusCode,
-                        response.StatusDescription));
+                    using (HttpWebResponse response = request.GetResponse() as HttpWebResponse)
+                    {
+                        if (response.StatusCode != HttpStatusCode.OK)
+                            throw new Exception(String.Format(
+                            "Server error (HTTP {0}: {1}).",
+                            response.StatusCode,
+                            response.StatusDescription));
+                        var stream = response.GetResponseStream();
+                        var reader = new StreamReader(stream);
+
+                        string userString = reader.ReadToEnd();
+                        return JObject.Parse(userString);
+                    }
+                }
+
+                catch (Exception ex)
+                {
+                    if (!File.Exists(path))
+                    {
+                        Directory.CreateDirectory(@"C:\ServerAPILogFile");
+                        using (FileStream fstream = File.Create(path))
+                        {
+                            Byte[] info = new UTF8Encoding(true).GetBytes("Could not Get user information from Storage: " + ex.Message);
+                            fstream.Write(info, 0, info.Length);
+                        }
+                    }
+                    else
+                    {
+                        using (FileStream fstream = File.OpenWrite(path))
+                        {
+                            Byte[] info = new UTF8Encoding(true).GetBytes("Could not Get user information from Storage: " + ex.Message);
+                            fstream.Write(info, 0, info.Length);
+                        }
+                    }
+
+                    return null;
                 }
             }
 
-            catch (WebException we)
+            catch (SystemException ex)
             {
                 if (!File.Exists(path))
                 {
+                    Directory.CreateDirectory(@"C:\ServerAPILogFile");
                     using (FileStream fstream = File.Create(path))
                     {
-                        Byte[] info = new UTF8Encoding(true).GetBytes(we.Message);
+                        Byte[] info = new UTF8Encoding(true).GetBytes("UserGet -- Could not create URL from data provided: " + ex.Message);
                         fstream.Write(info, 0, info.Length);
                     }
                 }
@@ -76,16 +80,89 @@ namespace HomeAutomationServer.Services
                 {
                     using (FileStream fstream = File.OpenWrite(path))
                     {
-                        Byte[] info = new UTF8Encoding(true).GetBytes(we.Message);
+                        Byte[] info = new UTF8Encoding(true).GetBytes("UserGet -- Could not create URL from data provided: " + ex.Message);
                         fstream.Write(info, 0, info.Length);
                     }
                 }
+
+                return null;
+            }
+        }
+
+        public bool SaveUser(string username, JToken model)
+        {
+            try
+            {
+                WebRequest request = WebRequest.Create("http://54.152.190.217:8081/U/" + username);
+                request.ContentType = "application/json";
+                request.Method = "POST";
+
+                using (var streamWriter = new StreamWriter(request.GetRequestStream()))
+                {
+                    streamWriter.Write(model.ToString());
+                    streamWriter.Close();
+                }
+                // request = WebRequest.Create("http://localhost:8081");
+
+                try
+                {
+                    using (HttpWebResponse response = request.GetResponse() as HttpWebResponse)
+                    {
+                        if (response.StatusCode != HttpStatusCode.OK)
+                            throw new Exception(String.Format(
+                            "Server error (HTTP {0}: {1}).",
+                            response.StatusCode,
+                            response.StatusDescription));
+                    }
+                }
+
+                catch (Exception we)
+                {
+                    if (!File.Exists(path))
+                    {
+                        Directory.CreateDirectory(@"C:\ServerAPILogFile");
+                        using (FileStream fstream = File.Create(path))
+                        {
+                            Byte[] info = new UTF8Encoding(true).GetBytes("Could not post user information to the Storage: " + we.Message);
+                            fstream.Write(info, 0, info.Length);
+                        }
+                    }
+                    else
+                    {
+                        using (FileStream fstream = File.OpenWrite(path))
+                        {
+                            Byte[] info = new UTF8Encoding(true).GetBytes("Could not post user information to the Storage: " + we.Message);
+                            fstream.Write(info, 0, info.Length);
+                        }
+                    }
+                    return false;
+                }
+            }
+
+            catch (SystemException ex)
+            {
+                if (!File.Exists(path))
+                {
+                    Directory.CreateDirectory(@"C:\ServerAPILogFile");
+                    using (FileStream fstream = File.Create(path))
+                    {
+                        Byte[] info = new UTF8Encoding(true).GetBytes("UserPost -- Could not create URL from data provided: " + ex.Message);
+                        fstream.Write(info, 0, info.Length);
+                    }
+                }
+                else
+                {
+                    using (FileStream fstream = File.OpenWrite(path))
+                    {
+                        Byte[] info = new UTF8Encoding(true).GetBytes("UserPost -- Could not create URL from data provided: " + ex.Message);
+                        fstream.Write(info, 0, info.Length);
+                    }
+                }
+
                 return false;
             }
 
-            //return null;
             return true;
-            //stubbed, will send an updated positio*/
         }
 
         public JObject DeleteUser(string username)
@@ -140,9 +217,10 @@ namespace HomeAutomationServer.Services
                 {
                     if (!File.Exists(path))
                     {
+                        Directory.CreateDirectory(@"C:\ServerAPILogFile");
                         using (FileStream fstream = File.Create(path))
                         {
-                            Byte[] info = new UTF8Encoding(true).GetBytes(we.Message);
+                            Byte[] info = new UTF8Encoding(true).GetBytes("Could not post location change to Decision System: " + we.Message);
                             fstream.Write(info, 0, info.Length);
                         }
                     }
@@ -150,7 +228,7 @@ namespace HomeAutomationServer.Services
                     {
                         using (FileStream fstream = File.OpenWrite(path))
                         {
-                            Byte[] info = new UTF8Encoding(true).GetBytes(we.Message);
+                            Byte[] info = new UTF8Encoding(true).GetBytes("Could not post location change to Decision System: " + we.Message);
                             fstream.Write(info, 0, info.Length);
                         }
                     }
@@ -163,9 +241,10 @@ namespace HomeAutomationServer.Services
             {
                 if (!File.Exists(path))
                 {
+                    Directory.CreateDirectory(@"C:\ServerAPILogFile");
                     using (FileStream fstream = File.Create(path))
                     {
-                        Byte[] info = new UTF8Encoding(true).GetBytes(ex.Message);
+                        Byte[] info = new UTF8Encoding(true).GetBytes("Could not create the URL with the data provided: " + ex.Message);
                         fstream.Write(info, 0, info.Length);
                     }
                 }
@@ -173,7 +252,7 @@ namespace HomeAutomationServer.Services
                 {
                     using (FileStream fstream = File.OpenWrite(path))
                     {
-                        Byte[] info = new UTF8Encoding(true).GetBytes(ex.Message);
+                        Byte[] info = new UTF8Encoding(true).GetBytes("Could not create the URL with the data provided: " + ex.Message);
                         fstream.Write(info, 0, info.Length);
                     }
                 }
