@@ -25,6 +25,7 @@ namespace HomeAutomationServer.Services
     {
         private string houseApiHost = "http://house_address:house_port/device/";
         private string storageUrl = "";
+        private string pathName = "HomeAutomationServer/logfile.txt";
         private AppCache appCache = new AppCache();
 
         public bool StateUpdate(JObject model)
@@ -81,7 +82,7 @@ namespace HomeAutomationServer.Services
 
                 catch (WebException ex)
                 {
-                    File.AppendAllText("HomeAutomationServer/logfile.txt", "Storage POST device request: " + ex.Message);
+                    File.AppendAllText(pathName, "Storage POST device request: " + ex.Message);
                     return false;
                 }
 
@@ -93,7 +94,7 @@ namespace HomeAutomationServer.Services
 
                 catch (Exception ex)
                 {
-                    File.AppendAllText("HomeAutomationServer/logfile.txt", ex.Message);
+                    File.AppendAllText(pathName, ex.Message);
                     return false;
                 }
                 
@@ -105,7 +106,7 @@ namespace HomeAutomationServer.Services
 
                 catch (Exception ex)
                 {
-                    File.AppendAllText("HomeAutomationServer/logfile.txt", "Could not send Push Notification: " + ex.Message);
+                    File.AppendAllText(pathName, "Could not send Push Notification: " + ex.Message);
                     return false;
                 }
 
@@ -113,7 +114,7 @@ namespace HomeAutomationServer.Services
 
             catch(SystemException ex)
             {
-                File.AppendAllText("HomeAutomationServer/logfile.txt", "Could not parse the JSON data with the appropriate keys: " + ex.Message);
+                File.AppendAllText(pathName, "Could not parse the JSON data with the appropriate keys: " + ex.Message);
                 return false;
             }
 
@@ -150,14 +151,14 @@ namespace HomeAutomationServer.Services
 
                 catch (WebException ex)
                 {
-                    File.AppendAllText("HomeAutomationServer/logfile.txt", "House GET device request: " + ex.Message);
+                    File.AppendAllText(pathName, "House GET device request: " + ex.Message);
                     return (bool)model["Enabled"];
                 }
             }
 
             catch (SystemException ex)
             {
-                File.AppendAllText("HomeAutomationServer/logfile.txt", "Could not parse the JSON data with the appropriate keys: " + ex.Message);
+                File.AppendAllText(pathName, "Could not parse the JSON data with the appropriate keys: " + ex.Message);
                 return (bool)model["Enabled"];
             }
         }
