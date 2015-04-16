@@ -86,6 +86,18 @@ namespace HomeAutomationServer.Services
                     File.AppendAllText("HomeAutomationServer/logfile.txt", ex.Message);
                     return false;
                 }
+                
+                try
+                {
+                    AmazonSimpleNotificationServiceClient snsClient = new AmazonSimpleNotificationServiceClient("AKIAJM2E3LGZHJYGFSQQ", "p3Qi8DAXj+XHAH+ny7HrlRyleBs5V5DJv77zKK3T", Amazon.RegionEndpoint.USEast1);
+                    snsClient.Publish("arn:aws:sns:us-east-1:336632281456:MyTopic", "New Device Updates");
+                }
+
+                catch (Exception ex)
+                {
+                    File.AppendAllText("HomeAutomationServer/logfile.txt", "Could not send Push Notification: " + ex.Message);
+                    return false;
+                }
 
             }
 
