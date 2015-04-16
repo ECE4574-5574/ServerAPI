@@ -55,7 +55,7 @@ namespace HomeAutomationServer.Services
 
                 catch (WebException ex)
                 {
-                    File.AppendAllText("HomeAutomationServer/logfile.txt", "House POST device request: " + ex.Message);
+                    File.AppendAllText(pathName, "House POST device request: " + ex.Message);
                     return false;
                 }
 
