@@ -8,6 +8,7 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Web;
+using System.Text;
 
 using Amazon;
 using Amazon.EC2;
@@ -24,9 +25,9 @@ namespace HomeAutomationServer.Services
     public class DecisionRepository
     {
         private string houseApiHost = "http://house_address:house_port/device/";
-        private string storageUrl = "";
-        private string pathName = "HomeAutomationServer/logfile.txt";
+        private string storageUrl = "http://172.31.26.85:8080/";
         private AppCache appCache = new AppCache();
+        private string path = @"C:\ServerAPILogFile\logfile.txt";
 
         public bool StateUpdate(JObject model)
         {
@@ -53,9 +54,24 @@ namespace HomeAutomationServer.Services
                     }
                 }
 
-                catch (WebException ex)
+                catch (Exception ex)
                 {
-                    File.AppendAllText(pathName, "House POST device request: " + ex.Message);
+                    if (!File.Exists(path))
+                    {
+                        using (FileStream fstream = File.Create(path))
+                        {
+                            Byte[] info = new UTF8Encoding(true).GetBytes("Failed to send data to the House System: " + ex.Message);
+                            fstream.Write(info, 0, info.Length);
+                        }
+                    }
+                    else
+                    {
+                        using (FileStream fstream = File.OpenWrite(path))
+                        {
+                            Byte[] info = new UTF8Encoding(true).GetBytes("Failed to send to the House System: " + ex.Message);
+                            fstream.Write(info, 0, info.Length);
+                        }
+                    }
                     return false;
                 }
 
@@ -80,9 +96,24 @@ namespace HomeAutomationServer.Services
                     }
                 }
 
-                catch (WebException ex)
+                catch (Exception ex)
                 {
-                    File.AppendAllText(pathName, "Storage POST device request: " + ex.Message);
+                    if (!File.Exists(path))
+                    {
+                        using (FileStream fstream = File.Create(path))
+                        {
+                            Byte[] info = new UTF8Encoding(true).GetBytes("Failed to send data to the Storage: " + ex.Message);
+                            fstream.Write(info, 0, info.Length);
+                        }
+                    }
+                    else
+                    {
+                        using (FileStream fstream = File.OpenWrite(path))
+                        {
+                            Byte[] info = new UTF8Encoding(true).GetBytes("Failed to send data to the Storage: " + ex.Message);
+                            fstream.Write(info, 0, info.Length);
+                        }
+                    }
                     return false;
                 }
 
@@ -94,7 +125,22 @@ namespace HomeAutomationServer.Services
 
                 catch (Exception ex)
                 {
-                    File.AppendAllText(pathName, ex.Message);
+                    if (!File.Exists(path))
+                    {
+                        using (FileStream fstream = File.Create(path))
+                        {
+                            Byte[] info = new UTF8Encoding(true).GetBytes(ex.Message);
+                            fstream.Write(info, 0, info.Length);
+                        }
+                    }
+                    else
+                    {
+                        using (FileStream fstream = File.OpenWrite(path))
+                        {
+                            Byte[] info = new UTF8Encoding(true).GetBytes(ex.Message);
+                            fstream.Write(info, 0, info.Length);
+                        }
+                    }
                     return false;
                 }
                 
@@ -106,7 +152,22 @@ namespace HomeAutomationServer.Services
 
                 catch (Exception ex)
                 {
-                    File.AppendAllText(pathName, "Could not send Push Notification: " + ex.Message);
+                    if (!File.Exists(path))
+                    {
+                        using (FileStream fstream = File.Create(path))
+                        {
+                            Byte[] info = new UTF8Encoding(true).GetBytes("Could not send Push Notification: " + ex.Message);
+                            fstream.Write(info, 0, info.Length);
+                        }
+                    }
+                    else
+                    {
+                        using (FileStream fstream = File.OpenWrite(path))
+                        {
+                            Byte[] info = new UTF8Encoding(true).GetBytes("Could not send Push Notification: " + ex.Message);
+                            fstream.Write(info, 0, info.Length);
+                        }
+                    }
                     return false;
                 }
 
@@ -114,7 +175,22 @@ namespace HomeAutomationServer.Services
 
             catch(SystemException ex)
             {
-                File.AppendAllText(pathName, "Could not parse the JSON data with the appropriate keys: " + ex.Message);
+                if (!File.Exists(path))
+                {
+                    using (FileStream fstream = File.Create(path))
+                    {
+                        Byte[] info = new UTF8Encoding(true).GetBytes("Could not create the specified url with the data provided: " + ex.Message);
+                        fstream.Write(info, 0, info.Length);
+                    }
+                }
+                else
+                {
+                    using (FileStream fstream = File.OpenWrite(path))
+                    {
+                        Byte[] info = new UTF8Encoding(true).GetBytes("Could not create the specified url with the data provided: " + ex.Message);
+                        fstream.Write(info, 0, info.Length);
+                    }
+                }
                 return false;
             }
 
@@ -149,16 +225,46 @@ namespace HomeAutomationServer.Services
                     }
                 }
 
-                catch (WebException ex)
+                catch (Exception ex)
                 {
-                    File.AppendAllText(pathName, "House GET device request: " + ex.Message);
+                    if (!File.Exists(path))
+                    {
+                        using (FileStream fstream = File.Create(path))
+                        {
+                            Byte[] info = new UTF8Encoding(true).GetBytes("Could not Get the data from the House System: " + ex.Message);
+                            fstream.Write(info, 0, info.Length);
+                        }
+                    }
+                    else
+                    {
+                        using (FileStream fstream = File.OpenWrite(path))
+                        {
+                            Byte[] info = new UTF8Encoding(true).GetBytes("Could not Get the data from the House System: " + ex.Message);
+                            fstream.Write(info, 0, info.Length);
+                        }
+                    }
                     return (bool)model["Enabled"];
                 }
             }
 
             catch (SystemException ex)
             {
-                File.AppendAllText(pathName, "Could not parse the JSON data with the appropriate keys: " + ex.Message);
+                if (!File.Exists(path))
+                {
+                    using (FileStream fstream = File.Create(path))
+                    {
+                        Byte[] info = new UTF8Encoding(true).GetBytes("Could not create the specified url with the data provided: " + ex.Message);
+                        fstream.Write(info, 0, info.Length);
+                    }
+                }
+                else
+                {
+                    using (FileStream fstream = File.OpenWrite(path))
+                    {
+                        Byte[] info = new UTF8Encoding(true).GetBytes("Could not create the specified url with the data provided: " + ex.Message);
+                        fstream.Write(info, 0, info.Length);
+                    }
+                }
                 return (bool)model["Enabled"];
             }
         }
