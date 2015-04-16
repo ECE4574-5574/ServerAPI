@@ -1,4 +1,4 @@
-﻿using HomeAutomationServer.Services;
+using HomeAutomationServer.Services;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
@@ -7,6 +7,7 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Web;
+using System.Text;
 
 // This class tells the controller how to process the HTTP commands
 
@@ -14,9 +15,11 @@ namespace HomeAutomationServer.Services
 {
     public class UserRepository
     {
+        private string path = @"C:\ServerAPILogFile\logfile.txt";
+
         public JObject GetUser(string username)
         {
-            WebRequest request = WebRequest.Create("http://54.152.190.217:8080/UI/" + username);
+            WebRequest request = WebRequest.Create("http://172.31.26.85:8080/UI/" + username);
             request.Method = "GET";
 
             using (HttpWebResponse response = request.GetResponse() as HttpWebResponse)
@@ -61,8 +64,23 @@ namespace HomeAutomationServer.Services
 
             catch (WebException we)
             {
-                // always catches this exception even when the Jtoken is sent properly. 
-                // Gets an error saying Connection was closed.
+                if (!File.Exists(path))
+                {
+                    using (FileStream fstream = File.Create(path))
+                    {
+                        Byte[] info = new UTF8Encoding(true).GetBytes(we.Message);
+                        fstream.Write(info, 0, info.Length);
+                    }
+                }
+                else
+                {
+                    using (FileStream fstream = File.OpenWrite(path))
+                    {
+                        Byte[] info = new UTF8Encoding(true).GetBytes(we.Message);
+                        fstream.Write(info, 0, info.Length);
+                    }
+                }
+                return false;
             }
 
             //return null;
@@ -120,7 +138,22 @@ namespace HomeAutomationServer.Services
                 }
                 catch (WebException we)
                 {
-                    File.AppendAllText("HomeAutomationServer/logfile.txt", "Could not Post data to Decision System: " + we.Message);
+                    if (!File.Exists(path))
+                    {
+                        using (FileStream fstream = File.Create(path))
+                        {
+                            Byte[] info = new UTF8Encoding(true).GetBytes(we.Message);
+                            fstream.Write(info, 0, info.Length);
+                        }
+                    }
+                    else
+                    {
+                        using (FileStream fstream = File.OpenWrite(path))
+                        {
+                            Byte[] info = new UTF8Encoding(true).GetBytes(we.Message);
+                            fstream.Write(info, 0, info.Length);
+                        }
+                    }
                     return false;
                 }
 
@@ -128,7 +161,22 @@ namespace HomeAutomationServer.Services
 
             catch (SystemException ex)
             {
-                File.AppendAllText("HomeAutomationServer/logfile.txt", ex.Message);
+                if (!File.Exists(path))
+                {
+                    using (FileStream fstream = File.Create(path))
+                    {
+                        Byte[] info = new UTF8Encoding(true).GetBytes(ex.Message);
+                        fstream.Write(info, 0, info.Length);
+                    }
+                }
+                else
+                {
+                    using (FileStream fstream = File.OpenWrite(path))
+                    {
+                        Byte[] info = new UTF8Encoding(true).GetBytes(ex.Message);
+                        fstream.Write(info, 0, info.Length);
+                    }
+                }
                 return false;
             }
 
