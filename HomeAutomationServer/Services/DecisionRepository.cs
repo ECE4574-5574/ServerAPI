@@ -65,14 +65,7 @@ namespace HomeAutomationServer.Services
                             fstream.Write(info, 0, info.Length);
                         }
                     }
-                    else
-                    {
-                        using (FileStream fstream = File.OpenWrite(path))
-                        {
-                            Byte[] info = new UTF8Encoding(true).GetBytes("Decision -- Failed to send to the House System: " + ex.Message);
-                            fstream.Write(info, 0, info.Length);
-                        }
-                    }
+                    else File.AppendAllText(path, "\nDecision -- Failed to send data to the House System: " + ex.Message);
                     return false;
                 }
 
@@ -108,14 +101,7 @@ namespace HomeAutomationServer.Services
                             fstream.Write(info, 0, info.Length);
                         }
                     }
-                    else
-                    {
-                        using (FileStream fstream = File.OpenWrite(path))
-                        {
-                            Byte[] info = new UTF8Encoding(true).GetBytes("Decision -- Failed to send data to the Storage: " + ex.Message);
-                            fstream.Write(info, 0, info.Length);
-                        }
-                    }
+                    else File.AppendAllText(path, "\nDecision -- Failed to send data to the Storage: " + ex.Message);
                     return false;
                 }
 
@@ -136,14 +122,7 @@ namespace HomeAutomationServer.Services
                             fstream.Write(info, 0, info.Length);
                         }
                     }
-                    else
-                    {
-                        using (FileStream fstream = File.OpenWrite(path))
-                        {
-                            Byte[] info = new UTF8Encoding(true).GetBytes(ex.Message);
-                            fstream.Write(info, 0, info.Length);
-                        }
-                    }
+                    else File.AppendAllText(path, "\n" + ex.Message);
                     return false;
                 }
                 
@@ -164,14 +143,7 @@ namespace HomeAutomationServer.Services
                             fstream.Write(info, 0, info.Length);
                         }
                     }
-                    else
-                    {
-                        using (FileStream fstream = File.OpenWrite(path))
-                        {
-                            Byte[] info = new UTF8Encoding(true).GetBytes("Decision -- Could not send Push Notification: " + ex.Message);
-                            fstream.Write(info, 0, info.Length);
-                        }
-                    }
+                    else File.AppendAllText(path, "\nDecision -- Could not send Push Notification: " + ex.Message);
                     return false;
                 }
 
@@ -188,14 +160,7 @@ namespace HomeAutomationServer.Services
                         fstream.Write(info, 0, info.Length);
                     }
                 }
-                else
-                {
-                    using (FileStream fstream = File.OpenWrite(path))
-                    {
-                        Byte[] info = new UTF8Encoding(true).GetBytes("Decision -- Could not create the specified url with the data provided: " + ex.Message);
-                        fstream.Write(info, 0, info.Length);
-                    }
-                }
+                else File.AppendAllText(path, "\nDecision -- Could not create the specified url with the data provided: " + ex.Message);
                 return false;
             }
 
@@ -241,14 +206,7 @@ namespace HomeAutomationServer.Services
                             fstream.Write(info, 0, info.Length);
                         }
                     }
-                    else
-                    {
-                        using (FileStream fstream = File.OpenWrite(path))
-                        {
-                            Byte[] info = new UTF8Encoding(true).GetBytes("Decision -- Could not Get the data from the House System: " + ex.Message);
-                            fstream.Write(info, 0, info.Length);
-                        }
-                    }
+                    else File.AppendAllText(path, "\nDecision -- Could not Get the data from the House System: " + ex.Message);
                     return (bool)model["Enabled"];
                 }
             }
@@ -264,14 +222,7 @@ namespace HomeAutomationServer.Services
                         fstream.Write(info, 0, info.Length);
                     }
                 }
-                else
-                {
-                    using (FileStream fstream = File.OpenWrite(path))
-                    {
-                        Byte[] info = new UTF8Encoding(true).GetBytes("Decision -- Could not create the specified url with the data provided: " + ex.Message);
-                        fstream.Write(info, 0, info.Length);
-                    }
-                }
+                else File.AppendAllText(path, "\nDecision -- Could not create the specified url with the data provided: " + ex.Message);
                 return (bool)model["Enabled"];
             }
         }
