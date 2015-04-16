@@ -62,14 +62,7 @@ namespace HomeAutomationServer.Services
                             fstream.Write(info, 0, info.Length);
                         }
                     }
-                    else
-                    {
-                        using (FileStream fstream = File.OpenWrite(path))
-                        {
-                            Byte[] info = new UTF8Encoding(true).GetBytes("Failed to Get house data from Storage: " + ex.Message);
-                            fstream.Write(info, 0, info.Length);
-                        }
-                    }
+                    else File.AppendAllText(path, "\nFailed to Get house data from Storage: " + ex.Message);
                     return null;
                 }
             }
@@ -85,14 +78,7 @@ namespace HomeAutomationServer.Services
                         fstream.Write(info, 0, info.Length);
                     }
                 }
-                else
-                {
-                    using (FileStream fstream = File.OpenWrite(path))
-                    {
-                        Byte[] info = new UTF8Encoding(true).GetBytes("GetHouse -- Failed to create URL with the provided data: " + ex.Message);
-                        fstream.Write(info, 0, info.Length);
-                    }
-                }
+                else File.AppendAllText(path, "\nGetHouse -- Failed to create URL with the provided data: " + ex.Message);
                 return null;
             }
 		}
@@ -148,14 +134,7 @@ namespace HomeAutomationServer.Services
                             fstream.Write(info, 0, info.Length);
                         }
                     }
-                    else
-                    {
-                        using (FileStream fstream = File.OpenWrite(path))
-                        {
-                            Byte[] info = new UTF8Encoding(true).GetBytes("House -- Failed to Post state change to Storage: " + ex.Message);
-                            fstream.Write(info, 0, info.Length);
-                        }
-                    }
+                    else File.AppendAllText(path, "\nHouse -- Failed to Post state change to Storage: " + ex.Message);
                     return false;
                 }
 
@@ -173,14 +152,7 @@ namespace HomeAutomationServer.Services
                         fstream.Write(info, 0, info.Length);
                     }
                 }
-                else
-                {
-                    using (FileStream fstream = File.OpenWrite(path))
-                    {
-                        Byte[] info = new UTF8Encoding(true).GetBytes("DeviceStateHouse -- Failed to create URL from data provided: " + ex.Message);
-                        fstream.Write(info, 0, info.Length);
-                    }
-                }
+                else File.AppendAllText(path, "\nDeviceStateHouse -- Failed to create URL from data provided: " + ex.Message);
                 return false;
             }
 
