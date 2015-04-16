@@ -58,9 +58,10 @@ namespace HomeAutomationServer.Services
                 {
                     if (!File.Exists(path))
                     {
+                        Directory.CreateDirectory(@"C:\ServerAPILogFile");
                         using (FileStream fstream = File.Create(path))
                         {
-                            Byte[] info = new UTF8Encoding(true).GetBytes("Failed to send data to the House System: " + ex.Message);
+                            Byte[] info = new UTF8Encoding(true).GetBytes("Decision -- Failed to send data to the House System: " + ex.Message);
                             fstream.Write(info, 0, info.Length);
                         }
                     }
@@ -68,7 +69,7 @@ namespace HomeAutomationServer.Services
                     {
                         using (FileStream fstream = File.OpenWrite(path))
                         {
-                            Byte[] info = new UTF8Encoding(true).GetBytes("Failed to send to the House System: " + ex.Message);
+                            Byte[] info = new UTF8Encoding(true).GetBytes("Decision -- Failed to send to the House System: " + ex.Message);
                             fstream.Write(info, 0, info.Length);
                         }
                     }
@@ -100,9 +101,10 @@ namespace HomeAutomationServer.Services
                 {
                     if (!File.Exists(path))
                     {
+                        Directory.CreateDirectory(@"C:\ServerAPILogFile");
                         using (FileStream fstream = File.Create(path))
                         {
-                            Byte[] info = new UTF8Encoding(true).GetBytes("Failed to send data to the Storage: " + ex.Message);
+                            Byte[] info = new UTF8Encoding(true).GetBytes("Decision -- Failed to send data to the Storage: " + ex.Message);
                             fstream.Write(info, 0, info.Length);
                         }
                     }
@@ -110,7 +112,7 @@ namespace HomeAutomationServer.Services
                     {
                         using (FileStream fstream = File.OpenWrite(path))
                         {
-                            Byte[] info = new UTF8Encoding(true).GetBytes("Failed to send data to the Storage: " + ex.Message);
+                            Byte[] info = new UTF8Encoding(true).GetBytes("Decision -- Failed to send data to the Storage: " + ex.Message);
                             fstream.Write(info, 0, info.Length);
                         }
                     }
@@ -120,13 +122,14 @@ namespace HomeAutomationServer.Services
                 try
                 {
                     if (!appCache.AddDeviceBlob(model))
-                        throw new Exception("AppCache add device failed when adding: " + model.ToString());
+                        throw new Exception("Decision -- AppCache add device failed when adding: " + model.ToString());
                 }
 
                 catch (Exception ex)
                 {
                     if (!File.Exists(path))
                     {
+                        Directory.CreateDirectory(@"C:\ServerAPILogFile");
                         using (FileStream fstream = File.Create(path))
                         {
                             Byte[] info = new UTF8Encoding(true).GetBytes(ex.Message);
@@ -154,9 +157,10 @@ namespace HomeAutomationServer.Services
                 {
                     if (!File.Exists(path))
                     {
+                        Directory.CreateDirectory(@"C:\ServerAPILogFile");
                         using (FileStream fstream = File.Create(path))
                         {
-                            Byte[] info = new UTF8Encoding(true).GetBytes("Could not send Push Notification: " + ex.Message);
+                            Byte[] info = new UTF8Encoding(true).GetBytes("Decision -- Could not send Push Notification: " + ex.Message);
                             fstream.Write(info, 0, info.Length);
                         }
                     }
@@ -164,7 +168,7 @@ namespace HomeAutomationServer.Services
                     {
                         using (FileStream fstream = File.OpenWrite(path))
                         {
-                            Byte[] info = new UTF8Encoding(true).GetBytes("Could not send Push Notification: " + ex.Message);
+                            Byte[] info = new UTF8Encoding(true).GetBytes("Decision -- Could not send Push Notification: " + ex.Message);
                             fstream.Write(info, 0, info.Length);
                         }
                     }
@@ -177,9 +181,10 @@ namespace HomeAutomationServer.Services
             {
                 if (!File.Exists(path))
                 {
+                    Directory.CreateDirectory(@"C:\ServerAPILogFile");
                     using (FileStream fstream = File.Create(path))
                     {
-                        Byte[] info = new UTF8Encoding(true).GetBytes("Could not create the specified url with the data provided: " + ex.Message);
+                        Byte[] info = new UTF8Encoding(true).GetBytes("Decision -- Could not create the specified url with the data provided: " + ex.Message);
                         fstream.Write(info, 0, info.Length);
                     }
                 }
@@ -187,7 +192,7 @@ namespace HomeAutomationServer.Services
                 {
                     using (FileStream fstream = File.OpenWrite(path))
                     {
-                        Byte[] info = new UTF8Encoding(true).GetBytes("Could not create the specified url with the data provided: " + ex.Message);
+                        Byte[] info = new UTF8Encoding(true).GetBytes("Decision -- Could not create the specified url with the data provided: " + ex.Message);
                         fstream.Write(info, 0, info.Length);
                     }
                 }
@@ -229,9 +234,10 @@ namespace HomeAutomationServer.Services
                 {
                     if (!File.Exists(path))
                     {
+                        Directory.CreateDirectory(@"C:\ServerAPILogFile");
                         using (FileStream fstream = File.Create(path))
                         {
-                            Byte[] info = new UTF8Encoding(true).GetBytes("Could not Get the data from the House System: " + ex.Message);
+                            Byte[] info = new UTF8Encoding(true).GetBytes("Decision -- Could not Get the data from the House System: " + ex.Message);
                             fstream.Write(info, 0, info.Length);
                         }
                     }
@@ -239,7 +245,7 @@ namespace HomeAutomationServer.Services
                     {
                         using (FileStream fstream = File.OpenWrite(path))
                         {
-                            Byte[] info = new UTF8Encoding(true).GetBytes("Could not Get the data from the House System: " + ex.Message);
+                            Byte[] info = new UTF8Encoding(true).GetBytes("Decision -- Could not Get the data from the House System: " + ex.Message);
                             fstream.Write(info, 0, info.Length);
                         }
                     }
@@ -251,9 +257,10 @@ namespace HomeAutomationServer.Services
             {
                 if (!File.Exists(path))
                 {
+                    Directory.CreateDirectory(@"C:\ServerAPILogFile");
                     using (FileStream fstream = File.Create(path))
                     {
-                        Byte[] info = new UTF8Encoding(true).GetBytes("Could not create the specified url with the data provided: " + ex.Message);
+                        Byte[] info = new UTF8Encoding(true).GetBytes("Decision -- Could not create the specified url with the data provided: " + ex.Message);
                         fstream.Write(info, 0, info.Length);
                     }
                 }
@@ -261,7 +268,7 @@ namespace HomeAutomationServer.Services
                 {
                     using (FileStream fstream = File.OpenWrite(path))
                     {
-                        Byte[] info = new UTF8Encoding(true).GetBytes("Could not create the specified url with the data provided: " + ex.Message);
+                        Byte[] info = new UTF8Encoding(true).GetBytes("Decision -- Could not create the specified url with the data provided: " + ex.Message);
                         fstream.Write(info, 0, info.Length);
                     }
                 }
