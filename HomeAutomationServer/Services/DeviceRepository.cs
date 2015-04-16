@@ -117,7 +117,7 @@ namespace HomeAutomationServer.Services
             }
         }
 
-        public int saveDevice(JObject model)
+        public int SaveDevice(JObject model)
         {
             string houseId, roomId, deviceType;
             int deviceId;
