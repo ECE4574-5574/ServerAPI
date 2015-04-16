@@ -26,18 +26,44 @@ namespace HomeAutomationServer.Services
                 WebRequest request = WebRequest.Create(storageURL + "/DD" + houseid + "/" + spaceid + "/" + deviceid);
                 request.Method = "GET";
 
-                using (HttpWebResponse response = request.GetResponse() as HttpWebResponse)
+                try
                 {
-                    if (response.StatusCode != HttpStatusCode.OK)
-                        throw new Exception(String.Format(
-                        "Server error (HTTP {0}: {1}).",
-                        response.StatusCode,
-                        response.StatusDescription));
-                    var stream = response.GetResponseStream();
-                    var reader = new StreamReader(stream);
+                    using (HttpWebResponse response = request.GetResponse() as HttpWebResponse)
+                    {
+                        if (response.StatusCode != HttpStatusCode.OK)
+                            throw new Exception(String.Format(
+                            "Server error (HTTP {0}: {1}).",
+                            response.StatusCode,
+                            response.StatusDescription));
+                        var stream = response.GetResponseStream();
+                        var reader = new StreamReader(stream);
 
-                    string deviceString = reader.ReadToEnd();
-                    return JObject.Parse(deviceString);
+                        string deviceString = reader.ReadToEnd();
+                        return JObject.Parse(deviceString);
+                    }
+                }
+
+                catch (Exception ex)
+                {
+                    if (!File.Exists(path))
+                    {
+                        Directory.CreateDirectory(@"C:\ServerAPILogFile");
+                        using (FileStream fstream = File.Create(path))
+                        {
+                            Byte[] info = new UTF8Encoding(true).GetBytes("Device -- Failed to get device data: " + ex.Message);
+                            fstream.Write(info, 0, info.Length);
+                        }
+                    }
+                    else
+                    {
+                        using (FileStream fstream = File.OpenWrite(path))
+                        {
+                            Byte[] info = new UTF8Encoding(true).GetBytes("Device -- Failed to get device data: " + ex.Message);
+                            fstream.Write(info, 0, info.Length);
+                        }
+                    }
+
+                    return null;
                 }
             }
 
@@ -45,9 +71,10 @@ namespace HomeAutomationServer.Services
             {
                 if (!File.Exists(path))
                 {
+                    Directory.CreateDirectory(@"C:\ServerAPILogFile");
                     using (FileStream fstream = File.Create(path))
                     {
-                        Byte[] info = new UTF8Encoding(true).GetBytes("Failed to get information from the Storage: " + ex.Message);
+                        Byte[] info = new UTF8Encoding(true).GetBytes("Device -- Failed to get information from the Storage: " + ex.Message);
                         fstream.Write(info, 0, info.Length);
                     }
                 }
@@ -55,7 +82,7 @@ namespace HomeAutomationServer.Services
                 {
                     using (FileStream fstream = File.OpenWrite(path))
                     {
-                        Byte[] info = new UTF8Encoding(true).GetBytes("Failed to get information from the Storage: " + ex.Message);
+                        Byte[] info = new UTF8Encoding(true).GetBytes("Device -- Failed to get information from the Storage: " + ex.Message);
                         fstream.Write(info, 0, info.Length);
                     }
                 }
@@ -70,18 +97,44 @@ namespace HomeAutomationServer.Services
                 WebRequest request = WebRequest.Create(storageURL + "RD/" + houseid + "/" + spaceid);
                 request.Method = "GET";
 
-                using (HttpWebResponse response = request.GetResponse() as HttpWebResponse)
+                try
                 {
-                    if (response.StatusCode != HttpStatusCode.OK)
-                        throw new Exception(String.Format(
-                        "Server error (HTTP {0}: {1}).",
-                        response.StatusCode,
-                        response.StatusDescription));
-                    var stream = response.GetResponseStream();
-                    var reader = new StreamReader(stream);
+                    using (HttpWebResponse response = request.GetResponse() as HttpWebResponse)
+                    {
+                        if (response.StatusCode != HttpStatusCode.OK)
+                            throw new Exception(String.Format(
+                            "Server error (HTTP {0}: {1}).",
+                            response.StatusCode,
+                            response.StatusDescription));
+                        var stream = response.GetResponseStream();
+                        var reader = new StreamReader(stream);
 
-                    string deviceString = reader.ReadToEnd();
-                    return JArray.Parse(deviceString);
+                        string deviceString = reader.ReadToEnd();
+                        return JArray.Parse(deviceString);
+                    }
+                }
+
+                catch(Exception ex)
+                {
+                    if (!File.Exists(path))
+                    {
+                        Directory.CreateDirectory(@"C:\ServerAPILogFile");
+                        using (FileStream fstream = File.Create(path))
+                        {
+                            Byte[] info = new UTF8Encoding(true).GetBytes("Device -- Failed to get device data: " + ex.Message);
+                            fstream.Write(info, 0, info.Length);
+                        }
+                    }
+                    else
+                    {
+                        using (FileStream fstream = File.OpenWrite(path))
+                        {
+                            Byte[] info = new UTF8Encoding(true).GetBytes("Device -- Failed to get device data: " + ex.Message);
+                            fstream.Write(info, 0, info.Length);
+                        }
+                    }
+
+                    return null;
                 }
             }
 
@@ -89,9 +142,10 @@ namespace HomeAutomationServer.Services
             {
                 if (!File.Exists(path))
                 {
+                    Directory.CreateDirectory(@"C:\ServerAPILogFile");
                     using (FileStream fstream = File.Create(path))
                     {
-                        Byte[] info = new UTF8Encoding(true).GetBytes("Failed to get information from the Storage: " + ex.Message);
+                        Byte[] info = new UTF8Encoding(true).GetBytes("Device -- Failed to create URL with the data provided: " + ex.Message);
                         fstream.Write(info, 0, info.Length);
                     }
                 }
@@ -99,7 +153,7 @@ namespace HomeAutomationServer.Services
                 {
                     using (FileStream fstream = File.OpenWrite(path))
                     {
-                        Byte[] info = new UTF8Encoding(true).GetBytes("Failed to get information from the Storage: " + ex.Message);
+                        Byte[] info = new UTF8Encoding(true).GetBytes("Device -- Failed to create URL with the data provided: " + ex.Message);
                         fstream.Write(info, 0, info.Length);
                     }
                 }
@@ -114,18 +168,44 @@ namespace HomeAutomationServer.Services
                 WebRequest request = WebRequest.Create(storageURL + "RT/" + houseid + "/" + spaceid + "/" + type);
                 request.Method = "GET";
 
-                using (HttpWebResponse response = request.GetResponse() as HttpWebResponse)
+                try
                 {
-                    if (response.StatusCode != HttpStatusCode.OK)
-                        throw new Exception(String.Format(
-                        "Server error (HTTP {0}: {1}).",
-                        response.StatusCode,
-                        response.StatusDescription));
-                    var stream = response.GetResponseStream();
-                    var reader = new StreamReader(stream);
+                    using (HttpWebResponse response = request.GetResponse() as HttpWebResponse)
+                    {
+                        if (response.StatusCode != HttpStatusCode.OK)
+                            throw new Exception(String.Format(
+                            "Server error (HTTP {0}: {1}).",
+                            response.StatusCode,
+                            response.StatusDescription));
+                        var stream = response.GetResponseStream();
+                        var reader = new StreamReader(stream);
 
-                    string deviceString = reader.ReadToEnd();
-                    return JArray.Parse(deviceString);
+                        string deviceString = reader.ReadToEnd();
+                        return JArray.Parse(deviceString);
+                    }
+                }
+
+                catch (Exception ex)
+                {
+                    if (!File.Exists(path))
+                    {
+                        Directory.CreateDirectory(@"C:\ServerAPILogFile");
+                        using (FileStream fstream = File.Create(path))
+                        {
+                            Byte[] info = new UTF8Encoding(true).GetBytes("Device -- Failed to get device data: " + ex.Message);
+                            fstream.Write(info, 0, info.Length);
+                        }
+                    }
+                    else
+                    {
+                        using (FileStream fstream = File.OpenWrite(path))
+                        {
+                            Byte[] info = new UTF8Encoding(true).GetBytes("Device -- Failed to get device data: " + ex.Message);
+                            fstream.Write(info, 0, info.Length);
+                        }
+                    }
+
+                    return null;
                 }
             }
 
@@ -133,9 +213,10 @@ namespace HomeAutomationServer.Services
             {
                 if (!File.Exists(path))
                 {
+                    Directory.CreateDirectory(@"C:\ServerAPILogFile");
                     using (FileStream fstream = File.Create(path))
                     {
-                        Byte[] info = new UTF8Encoding(true).GetBytes("Failed to get information from the Storage: " + ex.Message);
+                        Byte[] info = new UTF8Encoding(true).GetBytes("Failed to create URL with the data provided: " + ex.Message);
                         fstream.Write(info, 0, info.Length);
                     }
                 }
@@ -143,7 +224,7 @@ namespace HomeAutomationServer.Services
                 {
                     using (FileStream fstream = File.OpenWrite(path))
                     {
-                        Byte[] info = new UTF8Encoding(true).GetBytes("Failed to get information from the Storage: " + ex.Message);
+                        Byte[] info = new UTF8Encoding(true).GetBytes("Failed to create URL with the data provided: " + ex.Message);
                         fstream.Write(info, 0, info.Length);
                     }
                 }
@@ -158,18 +239,44 @@ namespace HomeAutomationServer.Services
                 WebRequest request = WebRequest.Create(storageURL + "HD/" + houseid);
                 request.Method = "GET";
 
-                using (HttpWebResponse response = request.GetResponse() as HttpWebResponse)
+                try
                 {
-                    if (response.StatusCode != HttpStatusCode.OK)
-                        throw new Exception(String.Format(
-                        "Server error (HTTP {0}: {1}).",
-                        response.StatusCode,
-                        response.StatusDescription));
-                    var stream = response.GetResponseStream();
-                    var reader = new StreamReader(stream);
+                    using (HttpWebResponse response = request.GetResponse() as HttpWebResponse)
+                    {
+                        if (response.StatusCode != HttpStatusCode.OK)
+                            throw new Exception(String.Format(
+                            "Server error (HTTP {0}: {1}).",
+                            response.StatusCode,
+                            response.StatusDescription));
+                        var stream = response.GetResponseStream();
+                        var reader = new StreamReader(stream);
 
-                    string deviceString = reader.ReadToEnd();
-                    return JArray.Parse(deviceString);
+                        string deviceString = reader.ReadToEnd();
+                        return JArray.Parse(deviceString);
+                    }
+                }
+
+                catch (Exception ex)
+                {
+                    if (!File.Exists(path))
+                    {
+                        Directory.CreateDirectory(@"C:\ServerAPILogFile");
+                        using (FileStream fstream = File.Create(path))
+                        {
+                            Byte[] info = new UTF8Encoding(true).GetBytes("Device -- Failed to get device data: " + ex.Message);
+                            fstream.Write(info, 0, info.Length);
+                        }
+                    }
+                    else
+                    {
+                        using (FileStream fstream = File.OpenWrite(path))
+                        {
+                            Byte[] info = new UTF8Encoding(true).GetBytes("Device -- Failed to get device data: " + ex.Message);
+                            fstream.Write(info, 0, info.Length);
+                        }
+                    }
+
+                    return null;
                 }
             }
 
@@ -177,9 +284,10 @@ namespace HomeAutomationServer.Services
             {
                 if (!File.Exists(path))
                 {
+                    Directory.CreateDirectory(@"C:\ServerAPILogFile");
                     using (FileStream fstream = File.Create(path))
                     {
-                        Byte[] info = new UTF8Encoding(true).GetBytes("Failed to get information from the Storage: " + ex.Message);
+                        Byte[] info = new UTF8Encoding(true).GetBytes("Failed to create URL with the data provided: " + ex.Message);
                         fstream.Write(info, 0, info.Length);
                     }
                 }
@@ -187,7 +295,7 @@ namespace HomeAutomationServer.Services
                 {
                     using (FileStream fstream = File.OpenWrite(path))
                     {
-                        Byte[] info = new UTF8Encoding(true).GetBytes("Failed to get information from the Storage: " + ex.Message);
+                        Byte[] info = new UTF8Encoding(true).GetBytes("Failed to create URL with the data provided: " + ex.Message);
                         fstream.Write(info, 0, info.Length);
                     }
                 }
@@ -223,9 +331,10 @@ namespace HomeAutomationServer.Services
                 {
                     if (!File.Exists(path))
                     {
+                        Directory.CreateDirectory(@"C:\ServerAPILogFile");
                         using (FileStream fstream = File.Create(path))
                         {
-                            Byte[] info = new UTF8Encoding(true).GetBytes("Failed to Get data: " + ex.Message);
+                            Byte[] info = new UTF8Encoding(true).GetBytes("Device -- Failed to Get device data: " + ex.Message);
                             fstream.Write(info, 0, info.Length);
                         }
                     }
@@ -233,7 +342,7 @@ namespace HomeAutomationServer.Services
                     {
                         using (FileStream fstream = File.OpenWrite(path))
                         {
-                            Byte[] info = new UTF8Encoding(true).GetBytes("Failed to Get data: " + ex.Message);
+                            Byte[] info = new UTF8Encoding(true).GetBytes("Device -- Failed to Get device data: " + ex.Message);
                             fstream.Write(info, 0, info.Length);
                         }
                     }
@@ -248,7 +357,8 @@ namespace HomeAutomationServer.Services
                 {
                     using (FileStream fstream = File.Create(path))
                     {
-                        Byte[] info = new UTF8Encoding(true).GetBytes("Failed to create URL with data provided: " + ex.Message);
+                        Directory.CreateDirectory(@"C:\ServerAPILogFile");
+                        Byte[] info = new UTF8Encoding(true).GetBytes("Device -- Failed to create URL with data provided: " + ex.Message);
                         fstream.Write(info, 0, info.Length);
                     }
                 }
@@ -256,7 +366,7 @@ namespace HomeAutomationServer.Services
                 {
                     using (FileStream fstream = File.OpenWrite(path))
                     {
-                        Byte[] info = new UTF8Encoding(true).GetBytes("Failed to create URL with data provided: " + ex.Message);
+                        Byte[] info = new UTF8Encoding(true).GetBytes("Device -- Failed to create URL with data provided: " + ex.Message);
                         fstream.Write(info, 0, info.Length);
                     }
                 }
@@ -306,9 +416,10 @@ namespace HomeAutomationServer.Services
                 {
                     if (!File.Exists(path))
                     {
+                        Directory.CreateDirectory(@"C:\ServerAPILogFile");
                         using (FileStream fstream = File.Create(path))
                         {
-                            Byte[] info = new UTF8Encoding(true).GetBytes("Failed to Post data to the Storage: " + ex.Message);
+                            Byte[] info = new UTF8Encoding(true).GetBytes("Device -- Failed to Post data to the Storage: " + ex.Message);
                             fstream.Write(info, 0, info.Length);
                         }
                     }
@@ -316,7 +427,7 @@ namespace HomeAutomationServer.Services
                     {
                         using (FileStream fstream = File.OpenWrite(path))
                         {
-                            Byte[] info = new UTF8Encoding(true).GetBytes("Failed to Post data to the Storage: " + ex.Message);
+                            Byte[] info = new UTF8Encoding(true).GetBytes("Device -- Failed to Post data to the Storage: " + ex.Message);
                             fstream.Write(info, 0, info.Length);
                         }
                     }
@@ -331,7 +442,8 @@ namespace HomeAutomationServer.Services
                 {
                     using (FileStream fstream = File.Create(path))
                     {
-                        Byte[] info = new UTF8Encoding(true).GetBytes("Failed to create URL with data provided: " + ex.Message);
+                        Directory.CreateDirectory(@"C:\ServerAPILogFile");
+                        Byte[] info = new UTF8Encoding(true).GetBytes("Device -- Failed to create URL with data provided: " + ex.Message);
                         fstream.Write(info, 0, info.Length);
                     }
                 }
@@ -339,7 +451,7 @@ namespace HomeAutomationServer.Services
                 {
                     using (FileStream fstream = File.OpenWrite(path))
                     {
-                        Byte[] info = new UTF8Encoding(true).GetBytes("Failed to create URL with data provided: " + ex.Message);
+                        Byte[] info = new UTF8Encoding(true).GetBytes("Device -- Failed to create URL with data provided: " + ex.Message);
                         fstream.Write(info, 0, info.Length);
                     }
                 }
