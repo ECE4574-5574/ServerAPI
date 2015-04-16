@@ -1,4 +1,4 @@
-﻿using HomeAutomationServer.Services;
+using HomeAutomationServer.Services;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
@@ -7,6 +7,7 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Web;
+using System.Text;
 
 //This class serves as the data storage space. It is just a list of Device items that are regenerated from the cache
 
@@ -15,9 +16,8 @@ namespace HomeAutomationServer.Services
     public class DeviceRepository
     {
         public static string decisionURL = "http://LocalHost:8081/";
-        public static string storageURL = "http://54.152.190.217:8080/";
-
-        private string pathName = "HomeAutomationServer/logfile.txt";
+        public static string storageURL = "http://172.31.26.85:8080/";
+        private string path = @"C:\ServerAPILogFile\logfile.txt";
 
         public JObject GetDevice(string houseid, string spaceid, string deviceid)       // Return device
         {
@@ -43,7 +43,22 @@ namespace HomeAutomationServer.Services
 
             catch(SystemException ex)
             {
-                File.AppendAllText("HomeAutomationSystem/logfile.txt", "Could not parse data with appropriate keys: " + ex.Message);
+                if (!File.Exists(path))
+                {
+                    using (FileStream fstream = File.Create(path))
+                    {
+                        Byte[] info = new UTF8Encoding(true).GetBytes("Failed to get information from the Storage: " + ex.Message);
+                        fstream.Write(info, 0, info.Length);
+                    }
+                }
+                else
+                {
+                    using (FileStream fstream = File.OpenWrite(path))
+                    {
+                        Byte[] info = new UTF8Encoding(true).GetBytes("Failed to get information from the Storage: " + ex.Message);
+                        fstream.Write(info, 0, info.Length);
+                    }
+                }
                 return null;
             }
         }
@@ -72,7 +87,22 @@ namespace HomeAutomationServer.Services
 
             catch (SystemException ex)
             {
-                File.AppendAllText(pathName, "Could not parse data with appropriate keys: " + ex.Message);
+                if (!File.Exists(path))
+                {
+                    using (FileStream fstream = File.Create(path))
+                    {
+                        Byte[] info = new UTF8Encoding(true).GetBytes("Failed to get information from the Storage: " + ex.Message);
+                        fstream.Write(info, 0, info.Length);
+                    }
+                }
+                else
+                {
+                    using (FileStream fstream = File.OpenWrite(path))
+                    {
+                        Byte[] info = new UTF8Encoding(true).GetBytes("Failed to get information from the Storage: " + ex.Message);
+                        fstream.Write(info, 0, info.Length);
+                    }
+                }
                 return null;
             }
         }
@@ -101,7 +131,22 @@ namespace HomeAutomationServer.Services
 
             catch (SystemException ex)
             {
-                File.AppendAllText(pathName, "Could not parse data with appropriate keys: " + ex.Message);
+                if (!File.Exists(path))
+                {
+                    using (FileStream fstream = File.Create(path))
+                    {
+                        Byte[] info = new UTF8Encoding(true).GetBytes("Failed to get information from the Storage: " + ex.Message);
+                        fstream.Write(info, 0, info.Length);
+                    }
+                }
+                else
+                {
+                    using (FileStream fstream = File.OpenWrite(path))
+                    {
+                        Byte[] info = new UTF8Encoding(true).GetBytes("Failed to get information from the Storage: " + ex.Message);
+                        fstream.Write(info, 0, info.Length);
+                    }
+                }
                 return null;
             }
         }
@@ -130,7 +175,22 @@ namespace HomeAutomationServer.Services
 
             catch (SystemException ex)
             {
-                File.AppendAllText(pathName, "Could not parse data with appropriate keys: " + ex.Message);
+                if (!File.Exists(path))
+                {
+                    using (FileStream fstream = File.Create(path))
+                    {
+                        Byte[] info = new UTF8Encoding(true).GetBytes("Failed to get information from the Storage: " + ex.Message);
+                        fstream.Write(info, 0, info.Length);
+                    }
+                }
+                else
+                {
+                    using (FileStream fstream = File.OpenWrite(path))
+                    {
+                        Byte[] info = new UTF8Encoding(true).GetBytes("Failed to get information from the Storage: " + ex.Message);
+                        fstream.Write(info, 0, info.Length);
+                    }
+                }
                 return null;
             }
         }
@@ -142,58 +202,151 @@ namespace HomeAutomationServer.Services
                 WebRequest request = WebRequest.Create(storageURL + "HT/" + houseid + "/" + type);
                 request.Method = "GET";
 
-                using (HttpWebResponse response = request.GetResponse() as HttpWebResponse)
+                try
                 {
-                    if (response.StatusCode != HttpStatusCode.OK)
-                        throw new Exception(String.Format(
-                        "Server error (HTTP {0}: {1}).",
-                        response.StatusCode,
-                        response.StatusDescription));
-                    var stream = response.GetResponseStream();
-                    var reader = new StreamReader(stream);
+                    using (HttpWebResponse response = request.GetResponse() as HttpWebResponse)
+                    {
+                        if (response.StatusCode != HttpStatusCode.OK)
+                            throw new Exception(String.Format(
+                            "Server error (HTTP {0}: {1}).",
+                            response.StatusCode,
+                            response.StatusDescription));
+                        var stream = response.GetResponseStream();
+                        var reader = new StreamReader(stream);
 
-                    string deviceString = reader.ReadToEnd();
-                    return JArray.Parse(deviceString);
+                        string deviceString = reader.ReadToEnd();
+                        return JArray.Parse(deviceString);
+                    }
+                }
+
+                catch (Exception ex)
+                {
+                    if (!File.Exists(path))
+                    {
+                        using (FileStream fstream = File.Create(path))
+                        {
+                            Byte[] info = new UTF8Encoding(true).GetBytes("Failed to Get data: " + ex.Message);
+                            fstream.Write(info, 0, info.Length);
+                        }
+                    }
+                    else
+                    {
+                        using (FileStream fstream = File.OpenWrite(path))
+                        {
+                            Byte[] info = new UTF8Encoding(true).GetBytes("Failed to Get data: " + ex.Message);
+                            fstream.Write(info, 0, info.Length);
+                        }
+                    }
+
+                    return null;
                 }
             }
 
             catch (SystemException ex)
             {
-                File.AppendAllText(pathName, "Could not parse data with appropriate keys: " + ex.Message);
+                if (!File.Exists(path))
+                {
+                    using (FileStream fstream = File.Create(path))
+                    {
+                        Byte[] info = new UTF8Encoding(true).GetBytes("Failed to create URL with data provided: " + ex.Message);
+                        fstream.Write(info, 0, info.Length);
+                    }
+                }
+                else
+                {
+                    using (FileStream fstream = File.OpenWrite(path))
+                    {
+                        Byte[] info = new UTF8Encoding(true).GetBytes("Failed to create URL with data provided: " + ex.Message);
+                        fstream.Write(info, 0, info.Length);
+                    }
+                }
                 return null;
             }
         }
         
-        public int SaveDevice(JObject model)
+        public UInt64 SaveDevice(JObject model)
         {
-            string houseId, roomId, deviceType;
-            int deviceId;
-            houseId = model.GetValue("HOUSEID").ToString();
-            roomId = model.GetValue("ROOMID").ToString();
-            deviceType = model.GetValue("DEVICETYPE").ToString();
+            UInt64 houseId, roomId, deviceType;
+            UInt64 deviceId;
+            houseId = (UInt64)model["HouseID"];
+            roomId = (UInt64)model["RoomID"];
+            deviceType = (UInt64)model["Type"];
 
-            WebRequest request = WebRequest.Create(storageURL + "D/" + houseId + "/" + roomId + "/" + deviceType);
-            request.Method = "POST";
-            
-            using (var streamWriter = new StreamWriter(request.GetRequestStream()))
+            try
             {
-                streamWriter.Write(model.ToString());
-                streamWriter.Flush();
-                streamWriter.Close();
-            }
-            using (HttpWebResponse response = request.GetResponse() as HttpWebResponse)
-            {
-                if (response.StatusCode != HttpStatusCode.OK)
-                    throw new Exception(String.Format(
-                    "Server error (HTTP {0}: {1}).",
-                    response.StatusCode,
-                    response.StatusDescription));
-                var stream = response.GetResponseStream();
-                var reader = new StreamReader(stream);
+                WebRequest request = WebRequest.Create(storageURL + "D/" + houseId + "/" + roomId + "/" + deviceType);
+                request.Method = "POST";
 
-                deviceId = int.Parse(reader.ReadToEnd());
-                //JObject houseObject = JObject.Parse(deviceString);
+                try
+                {
+
+                    using (var streamWriter = new StreamWriter(request.GetRequestStream()))
+                    {
+                        streamWriter.Write(model.ToString());
+                        streamWriter.Flush();
+                        streamWriter.Close();
+                    }
+
+                    using (HttpWebResponse response = request.GetResponse() as HttpWebResponse)
+                    {
+                        if (response.StatusCode != HttpStatusCode.OK)
+                            throw new Exception(String.Format(
+                            "Server error (HTTP {0}: {1}).",
+                            response.StatusCode,
+                            response.StatusDescription));
+                        var stream = response.GetResponseStream();
+                        var reader = new StreamReader(stream);
+
+                        deviceId = UInt64.Parse(reader.ReadToEnd());
+                        //JObject houseObject = JObject.Parse(deviceString);
+                    }
+                }
+
+                catch (Exception ex)
+                {
+                    if (!File.Exists(path))
+                    {
+                        using (FileStream fstream = File.Create(path))
+                        {
+                            Byte[] info = new UTF8Encoding(true).GetBytes("Failed to Post data to the Storage: " + ex.Message);
+                            fstream.Write(info, 0, info.Length);
+                        }
+                    }
+                    else
+                    {
+                        using (FileStream fstream = File.OpenWrite(path))
+                        {
+                            Byte[] info = new UTF8Encoding(true).GetBytes("Failed to Post data to the Storage: " + ex.Message);
+                            fstream.Write(info, 0, info.Length);
+                        }
+                    }
+
+                    return 0;
+                }
             }
+
+            catch (SystemException ex)
+            {
+                if (!File.Exists(path))
+                {
+                    using (FileStream fstream = File.Create(path))
+                    {
+                        Byte[] info = new UTF8Encoding(true).GetBytes("Failed to create URL with data provided: " + ex.Message);
+                        fstream.Write(info, 0, info.Length);
+                    }
+                }
+                else
+                {
+                    using (FileStream fstream = File.OpenWrite(path))
+                    {
+                        Byte[] info = new UTF8Encoding(true).GetBytes("Failed to create URL with data provided: " + ex.Message);
+                        fstream.Write(info, 0, info.Length);
+                    }
+                }
+
+                return 0;
+            }
+
             return deviceId;
         }
 
