@@ -143,7 +143,7 @@ namespace HomeAutomationServer.Controllers
         [Route("space")]
         public bool PostSpace([FromBody] JObject model)                  // HTTP POST - posts a new space
         {
-            return spaceRepository.SaveSpace(model);
+            return spaceRepository.SaveSpace(model) != null;
         }
 
         // DELETE api/space/houseid/spaceid
