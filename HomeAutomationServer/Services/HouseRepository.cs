@@ -1,4 +1,4 @@
-﻿using HomeAutomationServer.Services;
+using HomeAutomationServer.Services;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
@@ -7,7 +7,18 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Web;
-using HomeAutomationServer.Models;
+
+using System.Text;
+
+using Amazon;
+using Amazon.EC2;
+using Amazon.EC2.Model;
+using Amazon.SimpleDB;
+using Amazon.SimpleDB.Model;
+using Amazon.S3;
+using Amazon.S3.Model;
+using Amazon.SimpleNotificationService;
+using Amazon.SimpleNotificationService.Model;
 
 // This class tells the controller how to process the HTTP commands
 
@@ -15,26 +26,62 @@ namespace HomeAutomationServer.Services
 {
 	public class HouseRepository
 	{
-		private string pathName = "HomeAutomationServer/logfile.txt";
+        private string path = @"C:\ServerAPILogFile\logfile.txt";
 
-		public JObject GetHouse(string id)
+		public JObject GetHouse (string id)
 		{
-			WebRequest request = WebRequest.Create(DeviceRepository.storageURL + "/HI/" + id);
-			request.Method = "GET";
+            try
+            {
+                WebRequest request = WebRequest.Create(DeviceRepository.storageURL + "/HI/" + id);
+                request.Method = "GET";
 
-			using(HttpWebResponse response = request.GetResponse() as HttpWebResponse)
-			{
-				if(response.StatusCode != HttpStatusCode.OK)
-					throw new Exception(String.Format(
-						"Server error (HTTP {0}: {1}).",
-						response.StatusCode,
-						response.StatusDescription));
-				var stream = response.GetResponseStream();
-				var reader = new StreamReader(stream);
+                try
+                {
+                    using (HttpWebResponse response = request.GetResponse() as HttpWebResponse)
+                    {
+                        if (response.StatusCode != HttpStatusCode.OK)
+                            throw new Exception(String.Format(
+                                "Server error (HTTP {0}: {1}).",
+                                response.StatusCode,
+                                response.StatusDescription));
+                        var stream = response.GetResponseStream();
+                        var reader = new StreamReader(stream);
 
-				string houseString = reader.ReadToEnd();
-				return JObject.Parse(houseString);
-			}
+                        string houseString = reader.ReadToEnd();
+                        return JObject.Parse(houseString);
+                    }
+                }
+
+                catch (Exception ex)
+                {
+                    if (!File.Exists(path))
+                    {
+                        Directory.CreateDirectory(@"C:\ServerAPILogFile");
+                        using (FileStream fstream = File.Create(path))
+                        {
+                            Byte[] info = new UTF8Encoding(true).GetBytes("Failed to Get house data from Storage: " + ex.Message);
+                            fstream.Write(info, 0, info.Length);
+                        }
+                    }
+                    else File.AppendAllText(path, "\nFailed to Get house data from Storage: " + ex.Message);
+                    return null;
+                }
+            }
+
+            catch (SystemException ex)
+            {
+                if (!File.Exists(path))
+                {
+                    Directory.CreateDirectory(@"C:\ServerAPILogFile");
+                    using (FileStream fstream = File.Create(path))
+                    {
+                        Byte[] info = new UTF8Encoding(true).GetBytes("GetHouse -- Failed to create URL with the provided data: " + ex.Message);
+                        fstream.Write(info, 0, info.Length);
+                    }
+                }
+                else File.AppendAllText(path, "\nGetHouse -- Failed to create URL with the provided data: " + ex.Message);
+                return null;
+            }
 		}
 
 		public bool postState(JObject deviceBlob)
@@ -42,47 +89,75 @@ namespace HomeAutomationServer.Services
 
 			//POST UD/HOUSEID/ROOMID/DEVICEID
 
-			string houseID;
-			string roomID;
-			string deviceID;
+			UInt64 houseID;
+			UInt64 roomID;
+			UInt64 deviceID;
 
-			houseID = deviceBlob.GetValue("HOUSEID").ToString();
-			roomID = deviceBlob.GetValue("ROOMID").ToString();
-			deviceID = deviceBlob.GetValue("DEVICEID").ToString();
+			houseID = (UInt64)deviceBlob["HouseID"];
+			roomID = (UInt64)deviceBlob["RoomID"];
+			deviceID = (UInt64)deviceBlob["DeviceID"];
 
-			WebRequest request = WebRequest.Create(DeviceRepository.storageURL + "UD/" + houseID + "/" + roomID + "/" + deviceID);
-			request.ContentType = "application/json";
-			request.Method = "POST";
+            try
+            {
+                WebRequest request = WebRequest.Create(DeviceRepository.storageURL + "UD/" + houseID + "/" + roomID + "/" + deviceID);
+                request.ContentType = "application/json";
+                request.Method = "POST";
 
-			using(var streamWriter = new StreamWriter(request.GetRequestStream()))
-			{
-				streamWriter.Write(deviceBlob.ToString());
-				streamWriter.Flush();
-				streamWriter.Close();
+                try
+                {
+                    using (var streamWriter = new StreamWriter(request.GetRequestStream()))
+                    {
+                        streamWriter.Write(deviceBlob.ToString());
+                        streamWriter.Flush();
+                        streamWriter.Close();
+                    }
 
-				try
-				{
-					if(!AppCache.AddDeviceBlob(deviceBlob))
-						throw new Exception("AppCache add device failed when adding: " + deviceBlob.ToString());
-				}
-				catch(Exception ex)
-				{
-					File.AppendAllText(pathName, ex.Message);
-					return false;
-				}
-			}
+                    using (HttpWebResponse response = request.GetResponse() as HttpWebResponse)
+                    {
+                        if (response.StatusCode != HttpStatusCode.OK)
+                        {
+                            throw new Exception(String.Format(
+                                "Server error (HTTP {0}: {1}).",
+                                response.StatusCode,
+                                response.StatusDescription));
+                        }
+                    }
+                }
 
-			using(HttpWebResponse response = request.GetResponse() as HttpWebResponse)
-			{
-				if(response.StatusCode != HttpStatusCode.OK)
-				{
-					throw new Exception(String.Format(
-						"Server error (HTTP {0}: {1}).",
-						response.StatusCode,
-						response.StatusDescription));
-					return false;
-				}
-			}
+                catch (Exception ex)
+                {
+                    if (!File.Exists(path))
+                    {
+                        Directory.CreateDirectory(@"C:\ServerAPILogFile");
+                        using (FileStream fstream = File.Create(path))
+                        {
+                            Byte[] info = new UTF8Encoding(true).GetBytes("House -- Failed to Post state change to Storage: " + ex.Message);
+                            fstream.Write(info, 0, info.Length);
+                        }
+                    }
+                    else File.AppendAllText(path, "\nHouse -- Failed to Post state change to Storage: " + ex.Message);
+                    return false;
+                }
+
+				if(!AppCache.AddDeviceBlob(deviceBlob))
+					throw new Exception("AppCache add device failed when adding: " + deviceBlob.ToString());
+				// ping app here
+            }
+
+            catch (SystemException ex)
+            {
+                if (!File.Exists(path))
+                {
+                    Directory.CreateDirectory(@"C:\ServerAPILogFile");
+                    using (FileStream fstream = File.Create(path))
+                    {
+                        Byte[] info = new UTF8Encoding(true).GetBytes("DeviceStateHouse -- Failed to create URL from data provided: " + ex.Message);
+                        fstream.Write(info, 0, info.Length);
+                    }
+                }
+                else File.AppendAllText(path, "\nDeviceStateHouse -- Failed to create URL from data provided: " + ex.Message);
+                return false;
+            }
 
 			return true;
 		}

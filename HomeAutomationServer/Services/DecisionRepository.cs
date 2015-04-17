@@ -8,6 +8,7 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Web;
+using System.Text;
 
 using Amazon;
 using Amazon.EC2;
@@ -21,145 +22,209 @@ using Amazon.SimpleNotificationService.Model;
 
 namespace HomeAutomationServer.Services
 {
-	public class DecisionRepository
-	{
-		private string houseApiHost = "http://house_address:house_port/device/";
-		private string storageUrl = "";
-		private string pathName = "HomeAutomationServer/logfile.txt";
+    public class DecisionRepository
+    {
+        private string houseApiHost = "http://house_address:house_port/device/";
+        private string storageUrl = "http://172.31.26.85:8080/";
+        private AppCache appCache = new AppCache();
+        private string path = @"C:\ServerAPILogFile\logfile.txt";
 
-		public bool StateUpdate(JObject model)
-		{
-			try
-			{
-				WebRequest request = WebRequest.Create(houseApiHost + "/" + (UInt64)model["HouseID"] + "/" + (UInt64)model["RoomID"] + "/" + (UInt64)model["DeviceID"]);
-				request.Method = "POST";
+        public bool StateUpdate(JObject model)
+        {
+            try
+            {
+                WebRequest request = WebRequest.Create(houseApiHost + "/" + (UInt64)model["HouseID"] + "/" + (UInt64)model["RoomID"] + "/" + (UInt64)model["DeviceID"]);
+                request.Method = "POST";
 
-				using (var streamWriter = new StreamWriter(request.GetRequestStream()))
-				{
-					streamWriter.Write(model.ToString());
-					streamWriter.Close();
-				}
+                using (var streamWriter = new StreamWriter(request.GetRequestStream()))
+                {
+                    streamWriter.Write(model.ToString());
+                    streamWriter.Close();
+                }
 
-				try
-				{
-					using (HttpWebResponse response = request.GetResponse() as HttpWebResponse)
-					{
-						if (response.StatusCode != HttpStatusCode.OK)
-							throw new Exception(String.Format(
-								"Server error (HTTP {0}: {1}).",
-								response.StatusCode,
-								response.StatusDescription));
-					}
-				}
+                try
+                {
+                    using (HttpWebResponse response = request.GetResponse() as HttpWebResponse)
+                    {
+                        if (response.StatusCode != HttpStatusCode.OK)
+                            throw new Exception(String.Format(
+                               "Server error (HTTP {0}: {1}).",
+                               response.StatusCode,
+                               response.StatusDescription));
+                    }
+                }
 
-				catch (WebException ex)
-				{
-					File.AppendAllText(pathName, "House POST device request: " + ex.Message);
-					return false;
-				}
+                catch (Exception ex)
+                {
+                    if (!File.Exists(path))
+                    {
+                        Directory.CreateDirectory(@"C:\ServerAPILogFile");
+                        using (FileStream fstream = File.Create(path))
+                        {
+                            Byte[] info = new UTF8Encoding(true).GetBytes("Decision -- Failed to send data to the House System: " + ex.Message);
+                            fstream.Write(info, 0, info.Length);
+                        }
+                    }
+                    else File.AppendAllText(path, "\nDecision -- Failed to send data to the House System: " + ex.Message);
+                    return false;
+                }
 
-				request = WebRequest.Create(storageUrl + "UD/" + (UInt64)model["HouseID"] + "/" + (UInt64)model["RoomID"] + "/" + (UInt64)model["DeviceID"]);
-				request.Method = "POST";
+                request = WebRequest.Create(storageUrl + "UD/" + (UInt64)model["HouseID"] + "/" + (UInt64)model["RoomID"] + "/" + (UInt64)model["DeviceID"]);
+                request.Method = "POST";
 
-				using (var streamWriter = new StreamWriter(request.GetRequestStream()))
-				{
-					streamWriter.Write(model.ToString());
-					streamWriter.Close();
-				}
+                using (var streamWriter = new StreamWriter(request.GetRequestStream()))
+                {
+                    streamWriter.Write(model.ToString());
+                    streamWriter.Close();
+                }
 
-				try
-				{
-					using (HttpWebResponse response = request.GetResponse() as HttpWebResponse)
-					{
-						if (response.StatusCode != HttpStatusCode.OK)
-							throw new Exception(String.Format(
-								"Server error (HTTP {0}: {1}).",
-								response.StatusCode,
-								response.StatusDescription));
-					}
-				}
+                try
+                {
+                    using (HttpWebResponse response = request.GetResponse() as HttpWebResponse)
+                    {
+                        if (response.StatusCode != HttpStatusCode.OK)
+                            throw new Exception(String.Format(
+                               "Server error (HTTP {0}: {1}).",
+                               response.StatusCode,
+                               response.StatusDescription));
+                    }
+                }
 
-				catch (WebException ex)
-				{
-					File.AppendAllText(pathName, "Storage POST device request: " + ex.Message);
-					return false;
-				}
+                catch (Exception ex)
+                {
+                    if (!File.Exists(path))
+                    {
+                        Directory.CreateDirectory(@"C:\ServerAPILogFile");
+                        using (FileStream fstream = File.Create(path))
+                        {
+                            Byte[] info = new UTF8Encoding(true).GetBytes("Decision -- Failed to send data to the Storage: " + ex.Message);
+                            fstream.Write(info, 0, info.Length);
+                        }
+                    }
+                    else File.AppendAllText(path, "\nDecision -- Failed to send data to the Storage: " + ex.Message);
+                    return false;
+                }
 
-				try
-				{
-					if (!AppCache.AddDeviceBlob(model))
-						throw new Exception("AppCache add device failed when adding: " + model.ToString());
-				}
+                try
+                {
+                    if (!appCache.AddDeviceBlob(model))
+                        throw new Exception("Decision -- AppCache add device failed when adding: " + model.ToString());
+                }
 
-				catch (Exception ex)
-				{
-					File.AppendAllText(pathName, ex.Message);
-					return false;
-				}
+                catch (Exception ex)
+                {
+                    if (!File.Exists(path))
+                    {
+                        Directory.CreateDirectory(@"C:\ServerAPILogFile");
+                        using (FileStream fstream = File.Create(path))
+                        {
+                            Byte[] info = new UTF8Encoding(true).GetBytes(ex.Message);
+                            fstream.Write(info, 0, info.Length);
+                        }
+                    }
+                    else File.AppendAllText(path, "\n" + ex.Message);
+                    return false;
+                }
+                
+                try
+                {
+                    AmazonSimpleNotificationServiceClient snsClient = new AmazonSimpleNotificationServiceClient("AKIAJM2E3LGZHJYGFSQQ", "p3Qi8DAXj+XHAH+ny7HrlRyleBs5V5DJv77zKK3T", Amazon.RegionEndpoint.USEast1);
+                    snsClient.Publish("arn:aws:sns:us-east-1:336632281456:MyTopic", "New Device Updates");
+                }
 
-				try
-				{
-					AmazonSimpleNotificationServiceClient snsClient = new AmazonSimpleNotificationServiceClient("AKIAJM2E3LGZHJYGFSQQ", "p3Qi8DAXj+XHAH+ny7HrlRyleBs5V5DJv77zKK3T", Amazon.RegionEndpoint.USEast1);
-					snsClient.Publish("arn:aws:sns:us-east-1:336632281456:MyTopic", "New Device Updates");
-				}
+                catch (Exception ex)
+                {
+                    if (!File.Exists(path))
+                    {
+                        Directory.CreateDirectory(@"C:\ServerAPILogFile");
+                        using (FileStream fstream = File.Create(path))
+                        {
+                            Byte[] info = new UTF8Encoding(true).GetBytes("Decision -- Could not send Push Notification: " + ex.Message);
+                            fstream.Write(info, 0, info.Length);
+                        }
+                    }
+                    else File.AppendAllText(path, "\nDecision -- Could not send Push Notification: " + ex.Message);
+                    return false;
+                }
 
-				catch (Exception ex)
-				{
-					File.AppendAllText(pathName, "Could not send Push Notification: " + ex.Message);
-					return false;
-				}
+            }
 
-			}
+            catch(SystemException ex)
+            {
+                if (!File.Exists(path))
+                {
+                    Directory.CreateDirectory(@"C:\ServerAPILogFile");
+                    using (FileStream fstream = File.Create(path))
+                    {
+                        Byte[] info = new UTF8Encoding(true).GetBytes("Decision -- Could not create the specified url with the data provided: " + ex.Message);
+                        fstream.Write(info, 0, info.Length);
+                    }
+                }
+                else File.AppendAllText(path, "\nDecision -- Could not create the specified url with the data provided: " + ex.Message);
+                return false;
+            }
 
-			catch(SystemException ex)
-			{
-				File.AppendAllText(pathName, "Could not parse the JSON data with the appropriate keys: " + ex.Message);
-				return false;
-			}
+            return true;
+        }
 
-			return true;
-		}
+        public bool GetState(JObject model)
+        {
+            JObject device = new JObject();
 
-		public bool GetState(JObject model)
-		{
-			JObject device = new JObject();
-
-			try
-			{
-				WebRequest request = WebRequest.Create(houseApiHost + (UInt64)model["HouseID"] + (UInt64)model["RoomID"] + (UInt64)model["DeviceID"]);
-				request.Method = "GET";
+            try
+            {
+                WebRequest request = WebRequest.Create(houseApiHost + (UInt64)model["HouseID"] + (UInt64)model["RoomID"] + (UInt64)model["DeviceID"]);
+                request.Method = "GET";
 
 
-				try
-				{
-					using (HttpWebResponse response = request.GetResponse() as HttpWebResponse)
-					{
-						if (response.StatusCode != HttpStatusCode.OK)
-							throw new Exception(String.Format(
-								"Server error (HTTP {0}: {1}).",
-								response.StatusCode,
-								response.StatusDescription));
-						var stream = response.GetResponseStream();
-						var reader = new StreamReader(stream);
+                try
+                {
+                    using (HttpWebResponse response = request.GetResponse() as HttpWebResponse)
+                    {
+                        if (response.StatusCode != HttpStatusCode.OK)
+                            throw new Exception(String.Format(
+                               "Server error (HTTP {0}: {1}).",
+                               response.StatusCode,
+                               response.StatusDescription));
+                        var stream = response.GetResponseStream();
+                        var reader = new StreamReader(stream);
 
-						string deviceString = reader.ReadToEnd();
-						device = JObject.Parse(deviceString);
-						return (bool)device["Enabled"];
-					}
-				}
+                        string deviceString = reader.ReadToEnd();
+                        device = JObject.Parse(deviceString);
+                        return (bool)device["Enabled"];
+                    }
+                }
 
-				catch (WebException ex)
-				{
-					File.AppendAllText(pathName, "House GET device request: " + ex.Message);
-					return (bool)model["Enabled"];
-				}
-			}
+                catch (Exception ex)
+                {
+                    if (!File.Exists(path))
+                    {
+                        Directory.CreateDirectory(@"C:\ServerAPILogFile");
+                        using (FileStream fstream = File.Create(path))
+                        {
+                            Byte[] info = new UTF8Encoding(true).GetBytes("Decision -- Could not Get the data from the House System: " + ex.Message);
+                            fstream.Write(info, 0, info.Length);
+                        }
+                    }
+                    else File.AppendAllText(path, "\nDecision -- Could not Get the data from the House System: " + ex.Message);
+                    return (bool)model["Enabled"];
+                }
+            }
 
-			catch (SystemException ex)
-			{
-				File.AppendAllText(pathName, "Could not parse the JSON data with the appropriate keys: " + ex.Message);
-				return (bool)model["Enabled"];
-			}
-		}
-	}
+            catch (SystemException ex)
+            {
+                if (!File.Exists(path))
+                {
+                    Directory.CreateDirectory(@"C:\ServerAPILogFile");
+                    using (FileStream fstream = File.Create(path))
+                    {
+                        Byte[] info = new UTF8Encoding(true).GetBytes("Decision -- Could not create the specified url with the data provided: " + ex.Message);
+                        fstream.Write(info, 0, info.Length);
+                    }
+                }
+                else File.AppendAllText(path, "\nDecision -- Could not create the specified url with the data provided: " + ex.Message);
+                return (bool)model["Enabled"];
+            }
+        }
+    }
 }
