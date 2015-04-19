@@ -5,6 +5,7 @@ using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Text;
 using System.Linq;
 using System.Net;
 using System.Web;
@@ -13,7 +14,7 @@ namespace HomeAutomationServer.Services
 {
     public class SimRepository
     {
-        private string pathName = "HomeAutomationServer/logfile.txt";
+        private string path = @"C:\ServerAPILogFile\logfile.txt";
 
         public bool sendConfigData(JObject model)
         {
@@ -23,14 +24,14 @@ namespace HomeAutomationServer.Services
                 request.ContentType = "application/json";
                 request.Method = "POST";
 
-                using (var streamWriter = new StreamWriter(request.GetRequestStream()))
-                {
-                    streamWriter.Write(model.ToString());
-                    streamWriter.Close();
-                }
-
                 try
                 {
+                    using (var streamWriter = new StreamWriter(request.GetRequestStream()))
+                    {
+                        streamWriter.Write(model.ToString());
+                        streamWriter.Close();
+                    }
+
                     using (var response = request.GetResponse() as HttpWebResponse)
                     {
                         if (response.StatusCode != HttpStatusCode.OK)
@@ -43,9 +44,18 @@ namespace HomeAutomationServer.Services
                     }
                 }
 
-                catch (WebException ex)
+                catch (Exception ex)
                 {
-                    File.AppendAllText(pathName, "Could not Post data to Decision System: " + ex.Message);
+                    if (!File.Exists(path))
+                    {
+                        Directory.CreateDirectory(@"C:\ServerAPILogFile");
+                        using (FileStream fstream = File.Create(path))
+                        {
+                            Byte[] info = new UTF8Encoding(true).GetBytes("Sim -- Failed to Post dat to the Decision System: " + ex.Message);
+                            fstream.Write(info, 0, info.Length);
+                        }
+                    }
+                    else File.AppendAllText(path, "\nSim -- Could not Post data to the Decision System: " + ex.Message);
                     return false;
                 }
 
@@ -73,16 +83,34 @@ namespace HomeAutomationServer.Services
                     }
                 }
 
-                catch (WebException ex)
+                catch (Exception ex)
                 {
-                    File.AppendAllText(pathName, "Could not Post data to Storage: " + ex.Message);
+                 * if (!File.Exists(path))
+                   {
+                        Directory.CreateDirectory(@"C:\ServerAPILogFile");
+                        using (FileStream fstream = File.Create(path))
+                        {
+                          Byte[] info = new UTF8Encoding(true).GetBytes("Sim -- Failed to Post data to Storage: " + ex.Message);
+                          fstream.Write(info, 0, info.Length);
+                        }
+                    }
+                    else File.AppendAllText(path, "\nCould not Post data to Storage: " + ex.Message);
                     return false;
                 }*/
             }
 
             catch (SystemException ex)
             {
-                File.AppendAllText(pathName, ex.Message);
+                if (!File.Exists(path))
+                {
+                    Directory.CreateDirectory(@"C:\ServerAPILogFile");
+                    using (FileStream fstream = File.Create(path))
+                    {
+                        Byte[] info = new UTF8Encoding(true).GetBytes("Sim -- Failed to create URL with the provided information: " + ex.Message);
+                        fstream.Write(info, 0, info.Length);
+                    }
+                }
+                File.AppendAllText(path, "\nSim -- Failed to create URL with the provided information: " + ex.Message);
                 return false;
             }
 
