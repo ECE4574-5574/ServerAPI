@@ -15,7 +15,7 @@ namespace HomeAutomationServer.Controllers
     public class AppController : ApiController
     {
         private UserRepository userRepository = new UserRepository();
-        //private AppCache appCache = new AppCache(); Appcache is static so no need to define
+        private AppCache appCache = new AppCache(); Appcache is static so no need to define
 
         ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         //
