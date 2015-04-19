@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Net;
 using System.IO;
@@ -53,7 +53,7 @@ namespace HomeAutomationTest
             catch (WebException we)
             {
                 Console.WriteLine("TestPostOnSimHarness failed.");
-                Assert.Fail();
+                Assert.Fail("Web exception occurred. HTTP Request failed");
             }
 
             request = WebRequest.Create(URI + "/api/sim/timeframe");
@@ -256,6 +256,7 @@ namespace HomeAutomationTest
             {
                 Console.WriteLine("TestDeleteUser failed.");
                 Console.Write(we.Message);
+                Assert.Fail("Web Exception occurred");
             }
 
             // ADDING A VALID USER TO THE SERVER 
