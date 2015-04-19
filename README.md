@@ -97,6 +97,10 @@ Updates the user position and location time stamp to the user, requires JSON obj
 POST api/app/user/devicetoken/{username}
 Posts the devicetoken for a given user.
 
+POST api/app/user/brighten
+A request from the App system to make something brighter near their location. Information provided in a JSON.
+Returns a bool that is true if the information was posted, false if not.
+
 ---Device---
 
 GET api/app/device/{deviceid}
