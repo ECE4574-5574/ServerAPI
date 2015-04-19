@@ -170,7 +170,7 @@ namespace HomeAutomationServer.Services
             int deviceId;
             houseId = model.GetValue("HOUSEID").ToString();
             roomId = model.GetValue("ROOMID").ToString();
-            deviceType = model.GetValue("DEVICETYPE").ToString();
+            deviceType = model.GetValue("TYPE").ToString();
 
             WebRequest request = WebRequest.Create(storageURL + "D/" + houseId + "/" + roomId + "/" + deviceType);
             request.Method = "POST";
