@@ -1,4 +1,5 @@
 using HomeAutomationServer.Services;
+using HomeAutomationServer.Models;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
@@ -7,18 +8,9 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Web;
-
 using System.Text;
 
-using Amazon;
-using Amazon.EC2;
-using Amazon.EC2.Model;
-using Amazon.SimpleDB;
-using Amazon.SimpleDB.Model;
-using Amazon.S3;
-using Amazon.S3.Model;
-using Amazon.SimpleNotificationService;
-using Amazon.SimpleNotificationService.Model;
+
 
 // This class tells the controller how to process the HTTP commands
 
@@ -82,20 +74,20 @@ namespace HomeAutomationServer.Services
                 else File.AppendAllText(path, "\nGetHouse -- Failed to create URL with the provided data: " + ex.Message);
                 return null;
             }
-		}
+	}
 
-		public bool postState(JObject deviceBlob)
-		{
+	public bool PostState(JObject deviceBlob)
+	{
 
-			//POST UD/HOUSEID/ROOMID/DEVICEID
+	    //POST UD/HOUSEID/ROOMID/DEVICEID
 
-			UInt64 houseID;
-			UInt64 roomID;
-			UInt64 deviceID;
+	    UInt64 houseID;
+	    UInt64 roomID;
+	    UInt64 deviceID;
 
-			houseID = (UInt64)deviceBlob["HouseID"];
-			roomID = (UInt64)deviceBlob["RoomID"];
-			deviceID = (UInt64)deviceBlob["DeviceID"];
+	    houseID = (UInt64)deviceBlob["houseID"];
+	    roomID = (UInt64)deviceBlob["roomID"];
+	    deviceID = (UInt64)deviceBlob["deviceID"];
 
             try
             {
@@ -139,10 +131,26 @@ namespace HomeAutomationServer.Services
                     return false;
                 }
 
-				if(!AppCache.AddDeviceBlob(deviceBlob))
-					throw new Exception("AppCache add device failed when adding: " + deviceBlob.ToString());
-				// ping app here
-            }
+		try 
+		{
+		    if(!AppCache.AddDeviceBlob(deviceBlob))
+		        throw new Exception("AppCache add device failed when adding: " + deviceBlob.ToString());
+		}		
+		catch
+		{
+		    if (!File.Exists(path))
+                    {
+                        Directory.CreateDirectory(@"C:\ServerAPILogFile");
+                        using (FileStream fstream = File.Create(path))
+                        {
+                            Byte[] info = new UTF8Encoding(true).GetBytes("House -- " + ex.Message);
+                            fstream.Write(info, 0, info.Length);
+                        }
+                    }
+                    else File.AppendAllText(path, "\House -- " + ex.Message);
+                    return false;
+		}
+	    }
 
             catch (SystemException ex)
             {
@@ -159,8 +167,8 @@ namespace HomeAutomationServer.Services
                 return false;
             }
 
-			return true;
-		}
+	    return true;
+	}
 
 		/*public JObject SaveHouse(string houseId, JToken model)
         {
