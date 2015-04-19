@@ -10,16 +10,6 @@ using System.Net;
 using System.Web;
 using System.Text;
 
-using Amazon;
-using Amazon.EC2;
-using Amazon.EC2.Model;
-using Amazon.SimpleDB;
-using Amazon.SimpleDB.Model;
-using Amazon.S3;
-using Amazon.S3.Model;
-using Amazon.SimpleNotificationService;
-using Amazon.SimpleNotificationService.Model;
-
 using HomeAutomationServer.Models;
 
 namespace HomeAutomationServer.Services
@@ -126,28 +116,6 @@ namespace HomeAutomationServer.Services
                     else File.AppendAllText(path, "\n" + ex.Message);
                     return false;
                 }
-                
-                try
-                {
-                    AmazonSimpleNotificationServiceClient snsClient = new AmazonSimpleNotificationServiceClient("AKIAJM2E3LGZHJYGFSQQ", "p3Qi8DAXj+XHAH+ny7HrlRyleBs5V5DJv77zKK3T", Amazon.RegionEndpoint.USEast1);
-                    snsClient.Publish("arn:aws:sns:us-east-1:336632281456:MyTopic", "New Device Updates");
-                }
-
-                catch (Exception ex)
-                {
-                    if (!File.Exists(path))
-                    {
-                        Directory.CreateDirectory(@"C:\ServerAPILogFile");
-                        using (FileStream fstream = File.Create(path))
-                        {
-                            Byte[] info = new UTF8Encoding(true).GetBytes("Decision -- Could not send Push Notification: " + ex.Message);
-                            fstream.Write(info, 0, info.Length);
-                        }
-                    }
-                    else File.AppendAllText(path, "\nDecision -- Could not send Push Notification: " + ex.Message);
-                    return false;
-                }
-
             }
 
             catch(SystemException ex)
