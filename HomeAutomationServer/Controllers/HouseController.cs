@@ -11,17 +11,22 @@ using HomeAutomationServer.Services;
 
 namespace HomeAutomationServer.Controllers
 {
-	[RoutePrefix("api/house")]
-	public class HouseControllerNew : Controller
+    [RoutePrefix("api/house")]
+    public class HouseControllerNew : Controller
+    {
+    	private HouseRepository house = new HouseRepository();
+	
+	// POST api/house/device/state
+	/// <summary>
+        //  The house posts an updated device blob to the system (persistent storage and state queue)
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns>Returns true if posted, false if not.</returns>
+	[Route("device/state")]	
+	public bool postState(JObject deviceBlob)
 	{
-		private HouseRepository house = new HouseRepository();
-
-		// the house posts an updated device blob to the system (persistent storage and state queue)
-		[Route("device/state")]	
-		public bool postState(JObject deviceBlob)
-		{
-			return house.postState(deviceBlob);
-		}
-
+	    return house.PostState(deviceBlob);
 	}
+
+    }
 }
