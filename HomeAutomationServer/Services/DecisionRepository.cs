@@ -26,7 +26,6 @@ namespace HomeAutomationServer.Services
     {
         private string houseApiHost = "http://house_address:house_port/device/";
         private string storageUrl = "http://172.31.26.85:8080/";
-        private AppCache appCache = new AppCache();
         private string path = @"C:\ServerAPILogFile\logfile.txt";
 
         public bool StateUpdate(JObject model)
@@ -107,7 +106,7 @@ namespace HomeAutomationServer.Services
 
                 try
                 {
-                    if (!appCache.AddDeviceBlob(model))
+                    if (!AppCache.AddDeviceBlob(model))
                         throw new Exception("Decision -- AppCache add device failed when adding: " + model.ToString());
                 }
 
