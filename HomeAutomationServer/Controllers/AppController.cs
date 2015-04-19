@@ -15,6 +15,7 @@ namespace HomeAutomationServer.Controllers
     public class AppController : ApiController
     {
         private UserRepository userRepository = new UserRepository();
+        private AppCache appCache = new AppCache();
 
         ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         //
@@ -50,7 +51,7 @@ namespace HomeAutomationServer.Controllers
         [Route("device/{deviceid}")]
         public JToken GetDevice(string deviceid)
         {
-			return AppCache.GetDeviceBlob(deviceid);
+            return appCache.GetDeviceBlob(deviceid);
         }
 
         // GET api/app/device
@@ -61,7 +62,7 @@ namespace HomeAutomationServer.Controllers
         [Route("device")]
         public JArray GetDevices()
         {
-			return AppCache.GetAllBlobs();
+            return appCache.GetAllBlobs();
         }
 
         // GET api/app/device/count
@@ -72,7 +73,20 @@ namespace HomeAutomationServer.Controllers
         [Route("device/count")]
         public int GetDeviceCount()
         {
-			return AppCache.GetBlobCount();
+            return appCache.GetBlobCount();
+        }
+
+        // POST api/app/user/brighten
+        /// <summary>
+        /// A request from the App system to make something brighter near their location. Information provided 
+        /// in a JSON. 
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns>Returns true or false, depeding if the information got sent or not.</returns>
+        [Route("user/brighten")]
+        public bool MakeBrighter([FromBody] JObject model)
+        {
+            return userRepository.Brighten(model);
         }
     }
 }
