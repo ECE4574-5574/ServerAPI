@@ -20,6 +20,8 @@ using Amazon.S3.Model;
 using Amazon.SimpleNotificationService;
 using Amazon.SimpleNotificationService.Model;
 
+using HomeAutomationServer.Models;
+
 namespace HomeAutomationServer.Services
 {
     public class DecisionRepository
