@@ -97,7 +97,7 @@ namespace HomeAutomationServer.Controllers
         /// <param name="model"></param>
         /// <returns>Returns true if posted, false if not.</returns>
         [Route("device")]
-        public int PostDevice([FromBody] JObject model)
+        public UInt64 PostDevice([FromBody] JObject model)
         {
             return deviceRepository.SaveDevice(model);
         }
