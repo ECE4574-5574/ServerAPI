@@ -19,7 +19,6 @@ namespace HomeAutomationServer.Services
 	public class HouseRepository
 	{
         private string path = @"C:\ServerAPILogFile\logfile.txt";
-        AppCache appCache;
 
 		public JObject GetHouse (string id)
 		{
@@ -134,7 +133,7 @@ namespace HomeAutomationServer.Services
 
 		try 
 		{
-		    if(!appCache.AddDeviceBlob(deviceBlob))
+		    if(!AppCache.AddDeviceBlob(deviceBlob))
 		        throw new Exception("AppCache add device failed when adding: " + deviceBlob.ToString());
 		}		
 		catch (Exception ex)
