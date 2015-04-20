@@ -76,7 +76,7 @@ namespace HomeAutomationServer.Services
             }
 	}
 
-	    public bool PostState(JObject deviceBlob)
+	public bool PostState(JObject deviceBlob)
 	{
 
 	    //POST UD/HOUSEID/ROOMID/DEVICEID
@@ -170,7 +170,7 @@ namespace HomeAutomationServer.Services
 	    return true;
 	}
 
-		public UInt64 SaveHouse(JToken model)
+	public UInt64 SaveHouse(JToken model)
         {
             UInt64 houseId;
             
@@ -202,10 +202,10 @@ namespace HomeAutomationServer.Services
             return houseId;
         }
 
-		public JObject DeleteHouse(string houseid)
-		{
-			/*WebRequest request = WebRequest.Create("http://54.152.190.217:8081/H/" + houseid);
-           request.Method = "DELETE";
+	public JObject DeleteHouse(string houseid)
+	{
+		/*WebRequest request = WebRequest.Create("http://54.152.190.217:8081/H/" + houseid);
+           	request.Method = "DELETE";
 
            using (HttpWebResponse response = request.GetResponse() as HttpWebResponse)
            {
