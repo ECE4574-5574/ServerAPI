@@ -10,14 +10,13 @@ using System.Net;
 using System.Web;
 using System.Text;
 
-using HomeAutomationServer.Models;
+//using HomeAutomationServer.Models;
 
 namespace HomeAutomationServer.Services
 {
     public class DecisionRepository
     {
         private string houseApiHost = "http://house_address:house_port/device/";
-        private string storageUrl = "http://172.31.26.85:8080/";
         private string path = @"C:\ServerAPILogFile\logfile.txt";
 
         public bool StateUpdate(JObject model)
@@ -60,7 +59,7 @@ namespace HomeAutomationServer.Services
                     return false;
                 }
 
-                request = WebRequest.Create(storageUrl + "UD/" + (UInt64)model["HouseID"] + "/" + (UInt64)model["RoomID"] + "/" + (UInt64)model["DeviceID"]);
+                request = WebRequest.Create(DeviceRepository.storageURL + "UD/" + (UInt64)model["HouseID"] + "/" + (UInt64)model["RoomID"] + "/" + (UInt64)model["DeviceID"]);
                 request.Method = "POST";
 
                 using (var streamWriter = new StreamWriter(request.GetRequestStream()))
