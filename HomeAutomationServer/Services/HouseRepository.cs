@@ -176,7 +176,7 @@ namespace HomeAutomationServer.Services
             WebRequest request = WebRequest.Create("http://54.152.190.217:8081/H/" + houseId);
             request.ContentType = "application/json";
             request.Method = "POST";
-            
+
             using (var streamWriter = new StreamWriter(request.GetRequestStream()))
             {
                 streamWriter.Write(model.ToString());
