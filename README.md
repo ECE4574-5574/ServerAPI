@@ -36,13 +36,12 @@ POST api/storage/device
 Posts a device with the JSON object data given.
 Data should be in the following format:
 {
-	"HOUSEID" : <house-id>
-	"ROOMID" : <room-id>
-	"DEVICETYPE": <devicetype>
+	"houseID" : <house-id>
+	"roomID" : <room-id>
+	"Type": <devicetype>
 	<any other JSON blob you want to store>: <value>
 }
 ROOMID 0 indicates that the device is stored directly in the house.
-
 Returns a unique ID for this device as a description while giving the status(in the given house/room)
 
 DELETE api/storage/device/{houseid}/{spaceid}/{deviceid}	
@@ -118,3 +117,12 @@ Get the count of the pending JSON device data.
 
 POST api/sim/timeframe	
 Post the information via JSON data regarding the SimHarneses time frame configurations to the Decision Making System.
+
+-------------------------------------------------------------------------------------------------------------------------
+
+***House***
+
+POST api/house/device/state
+Post and updated device blob to the system (persistent storage and app cache/queue)
+
+-------------------------------------------------------------------------------------------------------------------------
