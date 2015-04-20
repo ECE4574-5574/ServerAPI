@@ -21,10 +21,10 @@ using Amazon.SimpleNotificationService.Model;
 
 namespace HomeAutomationServer.Models
 {
-    public class AppCache  // A cache to temporarily store app information while waiting on 
+    static public class AppCache  // A cache to temporarily store app information while waiting on 
     {                      // information request.
 
-        private string path = @"C:\ServerAPILogFile\logfile.txt";
+        private static string path = @"C:\ServerAPILogFile\logfile.txt";
         // A JSON array of device blobs
         private static JArray deviceBlobs = new JArray();
         // add any other JArrays containing blobs here
@@ -33,7 +33,7 @@ namespace HomeAutomationServer.Models
         //
         // deviceBlobs methods
 
-        public bool AddDeviceBlob(JObject blob)
+        static public bool AddDeviceBlob(JObject blob)
         {
             deviceBlobs[(string)blob["deviceID"]] = blob;
 
@@ -66,21 +66,21 @@ namespace HomeAutomationServer.Models
             return false;
         }
 
-        public JToken GetDeviceBlob(string deviceID)
+        static public JToken GetDeviceBlob(string deviceID)
         {
             JToken blob = deviceBlobs[deviceID];
             deviceBlobs[deviceID].Remove();
             return blob;
         }
 
-        public JArray GetAllBlobs()
+        static public JArray GetAllBlobs()
         {
             JArray blobs = deviceBlobs;
             deviceBlobs.RemoveAll();
             return blobs;
         }
 
-        public int GetBlobCount()
+        static public int GetBlobCount()
         {
             return deviceBlobs.Count;
         }
