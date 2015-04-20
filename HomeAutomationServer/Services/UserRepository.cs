@@ -16,12 +16,18 @@ namespace HomeAutomationServer.Services
     public class UserRepository
     {
         private string path = "ServerAPILogFile\logfile.txt";
+        // deviceRepo has static url
+        private string dm_url = DeviceRepository.decisionURL;
+		private string pss_url = DeviceRepository.storageURL;
 
         public JObject GetUser(string username)
         {
+            #if DEBUG
+            return new JObject.Parse('{"name": "user"}');
+            #else
             try
             {
-                WebRequest request = WebRequest.Create("http://172.31.26.85:8080/UI/" + username);
+				WebRequest request = WebRequest.Create(pss_url + username);
                 request.Method = "GET";
 
                 try
@@ -73,13 +79,18 @@ namespace HomeAutomationServer.Services
 
                 return null;
             }
+
+            #endif
         }
 
         public bool SaveUser(string username, JToken model)
         {
+			#if DEBUG
+			return true;
+			#else
             try
             {
-                WebRequest request = WebRequest.Create("http://54.152.190.217:8081/U/" + username);
+				WebRequest request = WebRequest.Create(pss_url + username);
                 request.ContentType = "application/json";
                 request.Method = "POST";
 
@@ -136,6 +147,8 @@ namespace HomeAutomationServer.Services
                 return false;
             }
 
+			#endif
+
             return true;
         }
 
@@ -163,9 +176,12 @@ namespace HomeAutomationServer.Services
         //Sends an updated position to the decison system
         public bool OnUpdatePosition(JObject model)
         {
+			#if DEBUG
+			return true;
+			#else
             try
             {
-                WebRequest request = WebRequest.Create(DeviceRepository.decisionURL +"LocationChange");
+				WebRequest request = WebRequest.Create(dm_url +"LocationChange");
                 request.ContentType = "application/json";
                 request.Method = "POST";
 
@@ -221,15 +237,21 @@ namespace HomeAutomationServer.Services
                 return false;
             }
 
+			#endif
+
             return true;
         }
 
         //Sends an updated position to the decison system and needs the nearest object to be brightened that can be brightened
         public bool Brighten(JObject model)
         {
+			#if DEBUG
+			return true;
+			#else
+
             try
             {
-                WebRequest request = WebRequest.Create("http://54.152.190.217:8085/LocationChange");
+				WebRequest request = WebRequest.Create(dm_url + "LocationChange");
                 request.ContentType = "application/json";
                 request.Method = "POST";
 
@@ -284,6 +306,8 @@ namespace HomeAutomationServer.Services
 
                 return false;
             }
+
+			#endif
 
             return true;
         }
