@@ -170,15 +170,19 @@ namespace HomeAutomationServer.Services
 	    return true;
 	}
 
-		/*public JObject SaveHouse(string houseId, JToken model)
+	public UInt64 SaveHouse(JToken model)
         {
-            WebRequest request = WebRequest.Create("http://54.152.190.217:8081/H/" + houseId);
+            UInt64 houseId;
+            
+            WebRequest request = WebRequest.Create(DeviceRepository.storageURL + "H");
             request.ContentType = "application/json";
             request.Method = "POST";
             
             using (var streamWriter = new StreamWriter(request.GetRequestStream()))
             {
                 streamWriter.Write(model.ToString());
+                streamWriter.Flush();
+                streamWriter.Close();
             }
 
             using (HttpWebResponse response = request.GetResponse() as HttpWebResponse)
@@ -188,31 +192,20 @@ namespace HomeAutomationServer.Services
                     "Server error (HTTP {0}: {1}).",
                     response.StatusCode,
                     response.StatusDescription));
-            }
 
-            request = WebRequest.Create("http://54.152.190.217:8081/HI/" + houseId);
-            request.Method = "GET";
-
-            using (HttpWebResponse response = request.GetResponse() as HttpWebResponse)
-            {
-                if (response.StatusCode != HttpStatusCode.OK)
-                    throw new Exception(String.Format(
-                    "Server error (HTTP {0}: {1}).",
-                    response.StatusCode,
-                    response.StatusDescription));
                 var stream = response.GetResponseStream();
                 var reader = new StreamReader(stream);
 
-                string houseString = reader.ReadToEnd();
-                return JObject.Parse(houseString);
+                houseId = UInt64.Parse(reader.ReadToEnd());
             }
-            return null;
-        }*/
 
-		public JObject DeleteHouse(string houseid)
-		{
-			/*WebRequest request = WebRequest.Create("http://54.152.190.217:8081/H/" + houseid);
-           request.Method = "DELETE";
+            return houseId;
+        }
+
+	public JObject DeleteHouse(string houseid)
+	{
+		/*WebRequest request = WebRequest.Create("http://54.152.190.217:8081/H/" + houseid);
+           	request.Method = "DELETE";
 
            using (HttpWebResponse response = request.GetResponse() as HttpWebResponse)
            {

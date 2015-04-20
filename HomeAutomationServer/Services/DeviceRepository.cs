@@ -15,8 +15,8 @@ namespace HomeAutomationServer.Services
 {
     public class DeviceRepository
     {
-        public static string decisionURL = "http://LocalHost:8081/";
-        public static string storageURL = "http://54.152.190.217:8080/";
+        public static string decisionURL = "http://52.5.152.139:8085/";
+        public static string storageURL = "http://ec2-52-11-96-207.us-west-2.compute.amazonaws.com:8080/";
 
         private string path = @"C:\ServerAPILogFile\logfile.txt";
 

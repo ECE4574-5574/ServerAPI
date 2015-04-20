@@ -165,7 +165,7 @@ namespace HomeAutomationServer.Services
         {
             try
             {
-                WebRequest request = WebRequest.Create("http://54.152.190.217:8085/LocationChange");
+                WebRequest request = WebRequest.Create(DeviceRepository.decisionURL +"LocationChange");
                 request.ContentType = "application/json";
                 request.Method = "POST";
 
