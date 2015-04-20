@@ -154,8 +154,13 @@ namespace HomeAutomationServer.Services
 
 		try 
 		{
+			#if DEBUG
+			if(!AppCache.AddDeviceBlob_DEBUG(deviceBlob))
+				throw new Exception("AppCache add device failed when adding: " + deviceBlob.ToString());
+			#else
 		    if(!AppCache.AddDeviceBlob(deviceBlob))
 		        throw new Exception("AppCache add device failed when adding: " + deviceBlob.ToString());
+			#endif
 		}		
 		catch (Exception ex)
 		{
