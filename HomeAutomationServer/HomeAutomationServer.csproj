@@ -162,6 +162,7 @@
     <Compile Include="Controllers\StorageController.cs" />
     <Compile Include="Filters\ForceHttpsAttribute.cs" />
     <Compile Include="Filters\LearningAuthorizeAttribute.cs" />
+    <Compile Include="Models\NotificationManager.cs" />
     <Compile Include="Services\DataContractJsonSerializer.cs" />
     <Compile Include="Services\DecisionRepository.cs" />
     <Compile Include="Services\ServerIdentityService.cs" />
