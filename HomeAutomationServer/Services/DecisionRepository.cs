@@ -97,8 +97,13 @@ namespace HomeAutomationServer.Services
 
                 try
                 {
+					#if DEBUG
+					if (!AppCache.AddDeviceBlob_DEBUG(model))
+						throw new Exception("Decision -- AppCache add device failed when adding: " + model.ToString());
+					#else
                     if (!AppCache.AddDeviceBlob(model))
-                        throw new Exception("Decision -- AppCache add device failed when adding: " + model.ToString());
+                        throw new Exception("Decision -- AppCache add device failed when adding: " + model.ToString());	
+					#endif
                 }
 
                 catch (Exception ex)
