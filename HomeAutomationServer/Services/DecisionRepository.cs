@@ -36,9 +36,12 @@ namespace HomeAutomationServer.Services
 			}
 
 			#else
+            houseId = (UInt64)model["houseID"]; // houseID is the correct key and is type UInt64
+			roomId = (UInt64)model["roomID"];   // roomID is the correct key and is type UInt64
+			deviceType = (string)model["Type"]; // Type is the correct key and is type string
             try
             {
-				WebRequest request = WebRequest.Create(houseApiHost + "/" + houseId + "/" + roomId + "/" + deviceId);
+				WebRequest request = WebRequest.Create(houseApiHost + "/" + houseId + "/" + roomId + "/" + deviceType);
                 request.Method = "POST";
 
                 using (var streamWriter = new StreamWriter(request.GetRequestStream()))
@@ -112,13 +115,13 @@ namespace HomeAutomationServer.Services
 
                 try
                 {
-					#if DEBUG
+#if DEBUG
 					if (!AppCache.AddDeviceBlob_DEBUG(model))
 						throw new Exception("Decision -- AppCache add device failed when adding: " + model.ToString());
-					#else
+#else
                     if (!AppCache.AddDeviceBlob(model))
                         throw new Exception("Decision -- AppCache add device failed when adding: " + model.ToString());	
-					#endif
+#endif
                 }
 
                 catch (Exception ex)
@@ -151,7 +154,7 @@ namespace HomeAutomationServer.Services
                 else File.AppendAllText(path, "\nDecision -- Could not create the specified url with the data provided: " + ex.Message);
                 return false;
             }
-			#endif
+#endif
 
             return true;
         }
