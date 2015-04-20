@@ -86,6 +86,16 @@ namespace HomeAutomationServer.Services
         public bool SaveUser(string username, JToken model)
         {
 			#if DEBUG
+            try
+            {
+                string userID = (string)model["userID"]; // houseID is the correct key and is type UInt64
+                string passWord = (string)model["Password"];   // roomID is the correct key and is type UInt64
+                int[] houseIDs = (int[])model["houseIDs"]; // Type is the correct key and is type string
+            }
+            catch (Exception e){ // catches the exception if any of the keys are missing    
+				Console.WriteLine(e.Source);
+                return false;
+            }
 			return true;
 			#else
             try
@@ -177,6 +187,19 @@ namespace HomeAutomationServer.Services
         public bool OnUpdatePosition(JObject model)
         {
 			#if DEBUG
+			try
+			{
+				string time = model["time"];
+				double lat = model["lat"];
+				double lon = model["long"];
+				double alt = model["alt"];
+				string userID = model["userID"];
+			}
+			catch (Exception e){ // catches the exception if any of the keys are missing      
+				Console.WriteLine(e.Source);
+				return false;
+			}
+
 			return true;
 			#else
             try
@@ -246,7 +269,21 @@ namespace HomeAutomationServer.Services
         public bool Brighten(JObject model)
         {
 			#if DEBUG
+			try
+			{
+				string time = model["time"];
+				double lat = model["lat"];
+				double lon = model["long"];
+				double alt = model["alt"];
+				string userID = model["userID"];
+				string command = model["command-string"];
+			}
+			catch (Exception e){ // catches the exception if any of the keys are missing  
+				Console.WriteLine(e.Source);
+				return false;
+			}
 			return true;
+
 			#else
 
             try
