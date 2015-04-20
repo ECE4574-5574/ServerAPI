@@ -15,8 +15,6 @@ namespace HomeAutomationServer.Controllers
     public class AppController : ApiController
     {
         private UserRepository userRepository = new UserRepository();
-        private AppCache appCache = new AppCache(); Appcache is static so no need to define
-
         ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         //
         // User
@@ -51,7 +49,7 @@ namespace HomeAutomationServer.Controllers
         [Route("device/{deviceid}")]
         public JToken GetDevice(string deviceid)
         {
-            return appCache.GetDeviceBlob(deviceid);
+            return AppCache.GetDeviceBlob(deviceid);
         }
 
         // GET api/app/device
@@ -62,7 +60,7 @@ namespace HomeAutomationServer.Controllers
         [Route("device")]
         public JArray GetDevices()
         {
-            return appCache.GetAllBlobs();
+            return AppCache.GetAllBlobs();
         }
 
         // GET api/app/device/count
@@ -73,7 +71,7 @@ namespace HomeAutomationServer.Controllers
         [Route("device/count")]
         public int GetDeviceCount()
         {
-            return appCache.GetBlobCount();
+            return AppCache.GetBlobCount();
         }
 
         // POST api/app/user/brighten
