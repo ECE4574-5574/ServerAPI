@@ -26,7 +26,7 @@ namespace HomeAutomationServer.Models
 
         private string path = @"C:\ServerAPILogFile\logfile.txt";
         // A JSON array of device blobs
-        private JArray deviceBlobs = new JArray();
+        private static JArray deviceBlobs = new JArray();
         // add any other JArrays containing blobs here
         
         ////////////////////////////////////////////////////////////////////////////////////////
