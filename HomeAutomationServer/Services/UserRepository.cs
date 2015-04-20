@@ -288,7 +288,7 @@ namespace HomeAutomationServer.Services
 
             try
             {
-				WebRequest request = WebRequest.Create(dm_url + "LocationChange");
+				WebRequest request = WebRequest.Create(dm_url + "CommandsFromApp");
                 request.ContentType = "application/json";
                 request.Method = "POST";
 
