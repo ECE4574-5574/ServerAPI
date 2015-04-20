@@ -36,7 +36,13 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
+  <PropertyGroup>
+    <StartupObject />
+  </PropertyGroup>
   <ItemGroup>
+    <Reference Include="AWSSDK">
+      <HintPath>..\..\..\..\VTCourses\ECE-5574\Automation_System\ServerAPI\AwsEmptyApp1\AwsEmptyApp1\bin\Debug\AWSSDK.dll</HintPath>
+    </Reference>
     <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Newtonsoft.Json.6.0.8\lib\net45\Newtonsoft.Json.dll</HintPath>
@@ -56,8 +62,10 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
+    <Compile Include="NotificationManager.cs" />
     <Compile Include="TestSimController.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="NotificationManagerTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

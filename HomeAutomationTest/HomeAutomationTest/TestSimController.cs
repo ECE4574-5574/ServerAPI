@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Net;
 using System.IO;
@@ -13,7 +13,6 @@ namespace HomeAutomationTest
     public class TestSimController
     {
         private string URI = "http://serverapi1.azurewebsites.net";
-        private string uri1 = "http://serverapi1.azurewebsites.net";
 
         [TestMethod]
         public void TestPostTimeFrame()
@@ -104,7 +103,7 @@ namespace HomeAutomationTest
             string password = "password";
 
             // First create a user ...
-            // POST api/storage/user    
+            // POST api/storage/user	
             // Posts the users information provided by JSON object data.
             /*
             WebRequest request = WebRequest.Create(URI + "/api/storage/user/" + username);
@@ -225,7 +224,7 @@ namespace HomeAutomationTest
         [TestMethod]
         public void TestDeleteUser()
         {
-            // DELETE api/storage/api/stroage/user/{username}   
+            // DELETE api/storage/api/stroage/user/{username}	
             // Deletes the user specified by the username.
 
             string username = "idontexist";
@@ -265,7 +264,7 @@ namespace HomeAutomationTest
             string password = "password";
 
             // First create a user ...
-            // POST api/storage/user    
+            // POST api/storage/user	
             // Posts the users information provided by JSON object data.
 
             request = WebRequest.Create(URI + "/api/storage/user/" + username);
@@ -366,7 +365,7 @@ namespace HomeAutomationTest
             string password = "password";
 
             // First create a user ...
-            // POST api/storage/user    
+            // POST api/storage/user	
             // Posts the users information provided by JSON object data.
 
             WebRequest request = WebRequest.Create(URI + "/api/storage/user/" + username);
@@ -545,7 +544,7 @@ namespace HomeAutomationTest
         [TestMethod]
         public void TestDeleteHouse()
         {
-            // DELETE api/storage/house/{houseid}   
+            // DELETE api/storage/house/{houseid}	
             // Deletes the house with the specified houseid.
 
             int houseid = 100;
@@ -582,7 +581,7 @@ namespace HomeAutomationTest
             }
 
             // Posting a house
-            // POST api/storage/house   
+            // POST api/storage/house	
             // Posts the house with the JSON object information provided.
 
             request = WebRequest.Create(URI + "/storage/house/?{houseid=" + houseid + "}");
@@ -658,7 +657,7 @@ namespace HomeAutomationTest
         public void TestPostHouse()
         {
             // Posting a house
-            // POST api/storage/house   
+            // POST api/storage/house	
             // Posts the house with the JSON object information provided.
 
             int houseid = 101;
@@ -854,7 +853,7 @@ namespace HomeAutomationTest
         public void TestPostDevice()
         {
 
-            WebRequest request = WebRequest.Create(uri1 + "/api/storage/device");
+            WebRequest request = WebRequest.Create(URI + "/api/storage/device");
             request.ContentType = "application/json";
             request.Method = "POST";
 
@@ -918,7 +917,7 @@ namespace HomeAutomationTest
         [TestMethod]
         public void TestPostDeviceId()
         {
-            WebRequest request = WebRequest.Create(uri1 + "/api/storage/device");
+            WebRequest request = WebRequest.Create(URI + "/api/storage/device");
             request.ContentType = "application/json";
             request.Method = "POST";
 
@@ -957,7 +956,7 @@ namespace HomeAutomationTest
 
             //Now try to GET DeviceId w/ wrong Data
 
-            request = WebRequest.Create(uri1 + "/api/storage/device/?{houseid=" + 8732 + "/&{roomid=" + 21 + "/&{deviceid=" + 3 + "}");
+            request = WebRequest.Create(URI + "/api/storage/device/?{houseid=" + 8732 + "/&{roomid=" + 21 + "/&{deviceid=" + 3 + "}");
             request.ContentType = "application/json";
             request.Method = "GET";
 
@@ -981,7 +980,7 @@ namespace HomeAutomationTest
 
             // NOW Try to get the CORRECT Device ID Data
 
-            request = WebRequest.Create(uri1 + "/api/storage/device/?{houseid=" + 567 + "/&{roomid=" + 890 + "/&{deviceid=" + 5 + "}");
+            request = WebRequest.Create(URI + "/api/storage/device/?{houseid=" + 567 + "/&{roomid=" + 890 + "/&{deviceid=" + 5 + "}");
             request.ContentType = "application/json";
             request.Method = "GET";
 
@@ -1004,7 +1003,7 @@ namespace HomeAutomationTest
             }
         }
 
-        //GET api/storage/device/{houseid}/{spaceid}    
+        //GET api/storage/device/{houseid}/{spaceid}	
         //Gets all of the devices information with the specified house ID and space ID.
         /// GET FOR ROOM ID (ERROR & OK)
         /// </summary>
@@ -1097,12 +1096,12 @@ namespace HomeAutomationTest
             }
         }
 
-        //GET api/storage/device/{houseid}/{spaceid}/{type} 
+        //GET api/storage/device/{houseid}/{spaceid}/{type}	
         //Gets all of the devices in the space of the type specified, with the provided house ID and space ID.
         [TestMethod]
         public void TestGetDevicedRommType()
         {
-            //FIRST POST Data           
+            //FIRST POST Data			
             WebRequest request = WebRequest.Create(URI + "/api/storage/device");
             request.ContentType = "application/json";
             request.Method = "POST";
@@ -1186,12 +1185,12 @@ namespace HomeAutomationTest
             }
         }
 
-        //GET api/storage/device/{houseid}/{type}   
+        //GET api/storage/device/{houseid}/{type}	
         //Gets all of the devices in the house of the specified type, with the provided house ID.
         [TestMethod]
         public void TestGetDevicesHouseType()
         {
-            //FIRST POST Data           
+            //FIRST POST Data			
             WebRequest request = WebRequest.Create(URI + "/api/storage/device");
             request.ContentType = "application/json";
             request.Method = "POST";
@@ -1230,7 +1229,7 @@ namespace HomeAutomationTest
             }
 
             //TEST Getting CORRECT DATA 
-            request = WebRequest.Create(uri1 + "/api/storage/device/?{houseid=" + 567 + "/&{type=Light}");
+            request = WebRequest.Create(URI + "/api/storage/device/?{houseid=" + 567 + "/&{type=Light}");
             request.ContentType = "application/json";
             request.Method = "GET";
 
@@ -1252,7 +1251,7 @@ namespace HomeAutomationTest
                 Assert.Fail();
             }
             //Test Getting WRONG DATA
-            request = WebRequest.Create(uri1 + "api/storage/device/?{houseid=" + 991 + "/&{type=IDontKnow}");
+            request = WebRequest.Create(URI + "api/storage/device/?{houseid=" + 991 + "/&{type=IDontKnow}");
             request.ContentType = "application/json";
             request.Method = "GET";
 
@@ -1275,13 +1274,13 @@ namespace HomeAutomationTest
             }
         }
 
-        //DELETE api/storage/device/{houseid}/{spaceid}/{deviceid}  
+        //DELETE api/storage/device/{houseid}/{spaceid}/{deviceid}	
         //Deletes a device with the specified house ID, space ID, and device ID provided.
         [TestMethod]
         public void TestDeleteDevice()
         {
 
-            //Test Deleting invalid Data        
+            //Test Deleting invalid Data		
             WebRequest request = WebRequest.Create(URI + "/api/storage/device/?{houseid=" + 111 + "/&{roomid=" + 222 + "/&{deviceid=" + 5 + "}"); request.ContentType = "application/json";
             request.Method = "DELETE";
 
@@ -1366,7 +1365,7 @@ namespace HomeAutomationTest
         /////////////ENDS TEST FROM STORAGE API///////////////////////////////////////
 
         /////////////////////BEGINS TEST FOR SPACE//////////////////////////////
-        //POST api/storage/space    
+        //POST api/storage/space	
         //Posts the space with the JSON object data information provided.
         //Also Test GETS Room
         [TestMethod]
@@ -1462,7 +1461,7 @@ namespace HomeAutomationTest
             }
         }
 
-        //DELETE api/storage/space/{houseid}/{spaceid}  
+        //DELETE api/storage/space/{houseid}/{spaceid}	
         //Deletes the space specified by the houseid and spaceid
         public void TestDeleteRoom()
         {
