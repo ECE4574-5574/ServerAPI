@@ -171,7 +171,7 @@ namespace HomeAutomationServer.Controllers
         /// <param name="houseid"></param>
         /// <returns>Returns the houses information via JSON object data.</returns>
         [Route("house/{houseid}")]
-        public JObject GetHouse(string houseid)
+        public JObject GetHouse(UInt64 houseid)
         {
             return houseRepository.GetHouse(houseid);
         }

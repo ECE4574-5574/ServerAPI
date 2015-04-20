@@ -15,12 +15,18 @@ namespace HomeAutomationServer.Services
     public class SimRepository
     {
         private string path = @"C:\ServerAPILogFile\logfile.txt";
+        // deviceRepo has static url
+        private string dm_url = DeviceRepository.decisionURL;
+        private string pss_url = DeviceRepository.storageURL;
 
         public bool sendConfigData(JObject model)
-        {
+        {           
+            #if DEBUG
+            return true;
+            #else
             try
             {
-                WebRequest request = WebRequest.Create("http://54.152.190.217:8085/TimeConfig");
+                WebRequest request = WebRequest.Create(dm_url + "TimeConfig");
                 request.ContentType = "application/json";
                 request.Method = "POST";
 
@@ -113,6 +119,8 @@ namespace HomeAutomationServer.Services
                 File.AppendAllText(path, "\nSim -- Failed to create URL with the provided information: " + ex.Message);
                 return false;
             }
+
+            #endif
 
             return true;
         }

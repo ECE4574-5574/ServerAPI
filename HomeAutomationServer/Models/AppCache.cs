@@ -33,6 +33,21 @@ namespace HomeAutomationServer.Models
         //
         // deviceBlobs methods
 
+		/*************** DEBUG MODE METHOD *************/
+
+		static public bool AddDeviceBlob_DEBUG(JObject blob)
+		{
+			deviceBlobs[(string)blob["deviceID"]] = blob;
+
+			if (deviceBlobs [(string)blob ["deviceID"]] == blob) {
+				return true;
+			}
+
+			return false;
+		}
+
+		/*************** END DEBUG MODE METHOD *************/
+
         static public bool AddDeviceBlob(JObject blob)
         {
             deviceBlobs[(string)blob["deviceID"]] = blob;
