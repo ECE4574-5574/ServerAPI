@@ -14,7 +14,7 @@ namespace HomeAutomationServer.Services
 {
     public class SimRepository
     {
-        private string path = @"C:\ServerAPILogFile\logfile.txt";
+        private string path = @"ServerAPILogFile\logfile.txt";
 
         public bool sendConfigData(JObject model)
         {
@@ -115,6 +115,26 @@ namespace HomeAutomationServer.Services
             }
 
             return true;
+        }
+
+        public string GetLog()
+        {
+            try
+            {
+                if (!File.Exists(path))
+                {
+                    return "LogFile does not exist";
+                }
+                else
+                {
+                    return File.ReadAllText(path);
+                }
+            }
+
+            catch (Exception ex)
+            {
+                return "Trying to find file gave this exception: " + ex.Message;
+            }
         }
     }
 }
