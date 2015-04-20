@@ -15,7 +15,7 @@ namespace HomeAutomationServer.Services
 {
     public class UserRepository
     {
-        private string path = "ServerAPILogFile\logfile.txt";
+        private string path = @"ServerAPILogFile\logfile.txt";
 
         public JObject GetUser(string username)
         {
