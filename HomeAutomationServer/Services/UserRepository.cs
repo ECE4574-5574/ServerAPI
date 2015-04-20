@@ -276,7 +276,7 @@ namespace HomeAutomationServer.Services
 				double lon = model["long"];
 				double alt = model["alt"];
 				string userID = model["userID"];
-				string command = model["command-string"];
+				string command = model["brightenNearMe"];
 			}
 			catch (Exception e){ // catches the exception if any of the keys are missing  
 				Console.WriteLine(e.Source);
