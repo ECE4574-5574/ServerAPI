@@ -24,7 +24,9 @@ namespace HomeAutomationServer.Services
         public JObject GetUser(string username)
         {
             #if DEBUG
-            return new JObject.Parse('{"name": "user"}');
+            JObject val = new JObject();
+            val["test"] = "test1";
+            return val;
             #else
             try
             {
@@ -91,7 +93,7 @@ namespace HomeAutomationServer.Services
             {
                 string userID = (string)model["userID"]; // houseID is the correct key and is type UInt64
                 string passWord = (string)model["Password"];   // roomID is the correct key and is type UInt64
-                int[] houseIDs = (int[])model["houseIDs"]; // Type is the correct key and is type string
+                //int[] houseIDs = (int[])model["houseIDs"]; // Type is the correct key and is type string
             }
             catch (Exception e){ // catches the exception if any of the keys are missing    
 				Console.WriteLine(e.Source);
@@ -190,11 +192,11 @@ namespace HomeAutomationServer.Services
 			#if DEBUG
 			try
 			{
-				string time = model["time"];
-				double lat = model["lat"];
-				double lon = model["long"];
-				double alt = model["alt"];
-				string userID = model["userID"];
+				string time = model["time"].ToString();
+				double lat = (double) (model["lat"]);
+				double lon = (double)(model["long"]);
+				double alt = (double) model["alt"];
+				string userID = model["userID"].ToString();
 			}
 			catch (Exception e){ // catches the exception if any of the keys are missing      
 				Console.WriteLine(e.Source);
@@ -272,12 +274,12 @@ namespace HomeAutomationServer.Services
 			#if DEBUG
 			try
 			{
-				string time = model["time"];
-				double lat = model["lat"];
-				double lon = model["long"];
-				double alt = model["alt"];
-				string userID = model["userID"];
-				string command = model["brightenNearMe"];
+				string time = model["time"].ToString();
+				double lat = (double) model["lat"];
+				double lon = (double) model["long"];
+				double alt = (double) model["alt"];
+				string userID = model["userID"].ToString();
+				string command = model["brightenNearMe"].ToString();
 			}
 			catch (Exception e){ // catches the exception if any of the keys are missing  
 				Console.WriteLine(e.Source);
