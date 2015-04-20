@@ -19,6 +19,7 @@ namespace HomeAutomationServer.Services
 	public class HouseRepository
 	{
         private string path = @"C:\ServerAPILogFile\logfile.txt";
+        AppCache appCache;
 
 		public JObject GetHouse (string id)
 		{
@@ -133,10 +134,10 @@ namespace HomeAutomationServer.Services
 
 		try 
 		{
-		    if(!AppCache.AddDeviceBlob(deviceBlob))
+		    if(!appCache.AddDeviceBlob(deviceBlob))
 		        throw new Exception("AppCache add device failed when adding: " + deviceBlob.ToString());
 		}		
-		catch
+		catch (Exception ex)
 		{
 		    if (!File.Exists(path))
                     {
@@ -147,7 +148,7 @@ namespace HomeAutomationServer.Services
                             fstream.Write(info, 0, info.Length);
                         }
                     }
-                    else File.AppendAllText(path, "\House -- " + ex.Message);
+                    else File.AppendAllText(path, "\nHouse -- " + ex.Message);
                     return false;
 		}
 	    }
