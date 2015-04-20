@@ -15,7 +15,7 @@ namespace HomeAutomationServer.Services
 {
     public class UserRepository
     {
-        private string path = "ServerAPILogFile\logfile.txt";
+        private string path = @"ServerAPILogFile\logfile.txt";
 
         public JObject GetUser(string username)
         {
@@ -45,7 +45,7 @@ namespace HomeAutomationServer.Services
                 {
                     if (!File.Exists(path))
                     {
-                        Directory.CreateDirectory("ServerAPILogFile");
+                        Directory.CreateDirectory(@"ServerAPILogFile");
                         using (FileStream fstream = File.Create(path))
                         {
                             Byte[] info = new UTF8Encoding(true).GetBytes("Could not Get user information from Storage: " + ex.Message);
@@ -62,7 +62,7 @@ namespace HomeAutomationServer.Services
             {
                 if (!File.Exists(path))
                 {
-                    Directory.CreateDirectory("ServerAPILogFile");
+                    Directory.CreateDirectory(@"ServerAPILogFile");
                     using (FileStream fstream = File.Create(path))
                     {
                         Byte[] info = new UTF8Encoding(true).GetBytes("UserGet -- Could not create URL from data provided: " + ex.Message);
@@ -106,7 +106,7 @@ namespace HomeAutomationServer.Services
                 {
                     if (!File.Exists(path))
                     {
-                        Directory.CreateDirectory("ServerAPILogFile");
+                        Directory.CreateDirectory(@"ServerAPILogFile");
                         using (FileStream fstream = File.Create(path))
                         {
                             Byte[] info = new UTF8Encoding(true).GetBytes("Could not post user information to the Storage: " + we.Message);
@@ -123,7 +123,7 @@ namespace HomeAutomationServer.Services
             {
                 if (!File.Exists(path))
                 {
-                    Directory.CreateDirectory("ServerAPILogFile");
+                    Directory.CreateDirectory(@"ServerAPILogFile");
                     using (FileStream fstream = File.Create(path))
                     {
                         Byte[] info = new UTF8Encoding(true).GetBytes("UserPost -- Could not create URL from data provided: " + ex.Message);
@@ -191,7 +191,7 @@ namespace HomeAutomationServer.Services
                 {
                     if (!File.Exists(path))
                     {
-                        Directory.CreateDirectory("ServerAPILogFile");
+                        Directory.CreateDirectory(@"ServerAPILogFile");
                         using (FileStream fstream = File.Create(path))
                         {
                             Byte[] info = new UTF8Encoding(true).GetBytes("UpdateLocation -- Could not post location change to Decision System: " + we.Message);
@@ -209,7 +209,7 @@ namespace HomeAutomationServer.Services
             {
                 if (!File.Exists(path))
                 {
-                    Directory.CreateDirectory("ServerAPILogFile");
+                    Directory.CreateDirectory(@"ServerAPILogFile");
                     using (FileStream fstream = File.Create(path))
                     {
                         Byte[] info = new UTF8Encoding(true).GetBytes("UpdateLocation -- Could not create the URL with the data provided: " + ex.Message);
@@ -255,7 +255,7 @@ namespace HomeAutomationServer.Services
                 {
                     if (!File.Exists(path))
                     {
-                        Directory.CreateDirectory("ServerAPILogFile");
+                        Directory.CreateDirectory(@"ServerAPILogFile");
                         using (FileStream fstream = File.Create(path))
                         {
                             Byte[] info = new UTF8Encoding(true).GetBytes("Brigthen -- Could not post information to Decision System: " + we.Message);
@@ -273,7 +273,7 @@ namespace HomeAutomationServer.Services
             {
                 if (!File.Exists(path))
                 {
-                    Directory.CreateDirectory("ServerAPILogFile");
+                    Directory.CreateDirectory(@"ServerAPILogFile");
                     using (FileStream fstream = File.Create(path))
                     {
                         Byte[] info = new UTF8Encoding(true).GetBytes("Brigthen -- Could not create the URL with the data provided: " + ex.Message);
