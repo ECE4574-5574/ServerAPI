@@ -7,7 +7,6 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Web;
-using System.Text;
 
 // This class tells the controller how to process the HTTP commands
 
@@ -15,8 +14,6 @@ namespace HomeAutomationServer.Services
 {
     public class UserRepository
     {
-        private string path = @"D:\\Windows\\system32\\ServerAPILogFile\\logfile.txt";
-
         public JObject GetUser(string username)
         {
             try
@@ -43,34 +40,14 @@ namespace HomeAutomationServer.Services
 
                 catch (Exception ex)
                 {
-                    if (!File.Exists(path))
-                    {
-                        Directory.CreateDirectory(@"D:\\Windows\\system32\\ServerAPILogFile");
-                        using (FileStream fstream = File.Create(path))
-                        {
-                            Byte[] info = new UTF8Encoding(true).GetBytes("Could not Get user information from Storage: " + ex.Message);
-                            fstream.Write(info, 0, info.Length);
-                        }
-                    }
-                    else File.AppendAllText(path, "\nUpdateLocation -- Could not create the URL with the data provided: " + ex.Message);
-
+                    LogFile.AddLog("UpdateLocation -- Could not create the URL with the data provided: " + ex.Message + "\n")
                     return null;
                 }
             }
 
             catch (SystemException ex)
             {
-                if (!File.Exists(path))
-                {
-                    Directory.CreateDirectory(@"D:\\Windows\\system32\\ServerAPILogFile");
-                    using (FileStream fstream = File.Create(path))
-                    {
-                        Byte[] info = new UTF8Encoding(true).GetBytes("UserGet -- Could not create URL from data provided: " + ex.Message);
-                        fstream.Write(info, 0, info.Length);
-                    }
-                }
-                else File.AppendAllText(path, "\nUpdateLocation -- Could not create the URL with the data provided: " + ex.Message);
-
+                LogFile.AddLog("UserGet -- Could not create URL from data provided: " + ex.Message + "\n");
                 return null;
             }
         }
@@ -104,35 +81,14 @@ namespace HomeAutomationServer.Services
 
                 catch (Exception we)
                 {
-                    if (!File.Exists(path))
-                    {
-                        Directory.CreateDirectory(@"D:\\Windows\\system32\\ServerAPILogFile");
-                        using (FileStream fstream = File.Create(path))
-                        {
-                            Byte[] info = new UTF8Encoding(true).GetBytes("Could not post user information to the Storage: " + we.Message);
-                            fstream.Write(info, 0, info.Length);
-                        }
-                    }
-                    else File.AppendAllText(path, "\nUpdateLocation -- Could not create the URL with the data provided: " + we.Message);
-
+                    LogFile.AddLog("Could not post user information to the Storage: " + we.Message + "\n");
                     return false;
                 }
             }
 
             catch (SystemException ex)
             {
-                if (!File.Exists(path))
-                {
-                    Directory.CreateDirectory(@"D:\\Windows\\system32\\ServerAPILogFile");
-                    using (FileStream fstream = File.Create(path))
-                    {
-                        Byte[] info = new UTF8Encoding(true).GetBytes("UserPost -- Could not create URL from data provided: " + ex.Message);
-                        fstream.Write(info, 0, info.Length);
-                    }
-                }
-                else File.AppendAllText(path, "\nUpdateLocation -- Could not create the URL with the data provided: " + ex.Message);
-
-
+                LogFile.AddLog("UpdateLocation -- Could not create the URL with the data provided: " + ex.Message + "\n");
                 return false;
             }
 
@@ -189,17 +145,7 @@ namespace HomeAutomationServer.Services
                 }
                 catch (WebException we)
                 {
-                    if (!File.Exists(path))
-                    {
-                        Directory.CreateDirectory(@"D:\\Windows\\system32\\ServerAPILogFile");
-                        using (FileStream fstream = File.Create(path))
-                        {
-                            Byte[] info = new UTF8Encoding(true).GetBytes("UpdateLocation -- Could not post location change to Decision System: " + we.Message);
-                            fstream.Write(info, 0, info.Length);
-                        }
-                    }
-                    else File.AppendAllText(path, "\nUpdateLocation -- Could not create the URL with the data provided: " + we.Message);
-
+                    LogFile.AddLog("UpdateLocation -- Could not create the URL with the data provided: " + we.Message + "\n");
                     return false;
 
                 }
@@ -207,17 +153,7 @@ namespace HomeAutomationServer.Services
 
             catch (SystemException ex)
             {
-                if (!File.Exists(path))
-                {
-                    Directory.CreateDirectory(@"D:\\Windows\\system32\\ServerAPILogFile");
-                    using (FileStream fstream = File.Create(path))
-                    {
-                        Byte[] info = new UTF8Encoding(true).GetBytes("UpdateLocation -- Could not create the URL with the data provided: " + ex.Message);
-                        fstream.Write(info, 0, info.Length);
-                    }
-                }
-                else File.AppendAllText(path, "\nUpdateLocation -- Could not create the URL with the data provided: " + ex.Message);
-
+                LogFile.AddLog("UpdateLocation -- Could not create the URL with the data provided: " + ex.Message + "\n");
                 return false;
             }
 
@@ -253,35 +189,14 @@ namespace HomeAutomationServer.Services
                 }
                 catch (Exception we)
                 {
-                    if (!File.Exists(path))
-                    {
-                        Directory.CreateDirectory(@"D:\\Windows\\system32\\ServerAPILogFile");
-                        using (FileStream fstream = File.Create(path))
-                        {
-                            Byte[] info = new UTF8Encoding(true).GetBytes("Brigthen -- Could not post information to Decision System: " + we.Message);
-                            fstream.Write(info, 0, info.Length);
-                        }
-                    }
-                    else File.AppendAllText(path, "\nBrighten -- Could not post information to Decision System: " + we.Message);
-
+                    LogFile.AddLog("Brighten -- Could not post information to Decision System: " + we.Message + "\n");
                     return false;
-
                 }
             }
 
             catch (SystemException ex)
             {
-                if (!File.Exists(path))
-                {
-                    Directory.CreateDirectory(@"D:\\Windows\\system32\\ServerAPILogFile");
-                    using (FileStream fstream = File.Create(path))
-                    {
-                        Byte[] info = new UTF8Encoding(true).GetBytes("Brigthen -- Could not create the URL with the data provided: " + ex.Message);
-                        fstream.Write(info, 0, info.Length);
-                    }
-                }
-                else File.AppendAllText(path, "\nBrighten -- Could not create the URL with the data provided: " + ex.Message);
-
+                LogFile.AddLog("Brigthen -- Could not create the URL with the data provided: " + ex.Message + "\n")
                 return false;
             }
 
