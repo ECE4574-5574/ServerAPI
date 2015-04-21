@@ -103,6 +103,8 @@ namespace HomeAutomationServer.Services
 			#else
             try
             {
+                string userID = (string)model["userID"]; // houseID is the correct key and is type UInt64
+                string passWord = (string)model["Password"];   // roomID is the correct key and is type UInt64
 				WebRequest request = WebRequest.Create(pss_url + username);
                 request.ContentType = "application/json";
                 request.Method = "POST";
@@ -159,10 +161,8 @@ namespace HomeAutomationServer.Services
 
                 return false;
             }
-
-			#endif
-
             return true;
+#endif
         }
 
         public JObject DeleteUser(string username)
@@ -189,13 +189,14 @@ namespace HomeAutomationServer.Services
         //Sends an updated position to the decison system
         public bool OnUpdatePosition(JObject model)
         {
+
 			#if DEBUG
 			try
 			{
 				string time = model["time"].ToString();
-				double lat = (double) (model["lat"]);
-				double lon = (double)(model["long"]);
-				double alt = (double) model["alt"];
+				string lat = model["lat"].ToString();
+				string lon = model["long"].ToString();
+				string alt = model["alt"].ToString();
 				string userID = model["userID"].ToString();
 			}
 			catch (Exception e){ // catches the exception if any of the keys are missing      
@@ -205,6 +206,11 @@ namespace HomeAutomationServer.Services
 
 			return true;
 			#else
+            string time = model["time"].ToString();
+            string lat = model["lat"].ToString();
+            string lon = model["long"].ToString();
+            string alt = model["alt"].ToString();
+            string userID = model["userID"].ToString();
             try
             {
 				WebRequest request = WebRequest.Create(dm_url +"LocationChange");
@@ -262,10 +268,8 @@ namespace HomeAutomationServer.Services
 
                 return false;
             }
-
-			#endif
-
             return true;
+#endif
         }
 
         //Sends an updated position to the decison system and needs the nearest object to be brightened that can be brightened
@@ -291,7 +295,13 @@ namespace HomeAutomationServer.Services
 
             try
             {
-		WebRequest request = WebRequest.Create(dm_url + "CommandsFromApp");
+                string time = model["time"].ToString();
+				double lat = (double) model["lat"];
+				double lon = (double) model["long"];
+				double alt = (double) model["alt"];
+				string userID = model["userID"].ToString();
+				string command = model["brightenNearMe"].ToString();
+		        WebRequest request = WebRequest.Create(dm_url + "CommandsFromApp");
                 request.ContentType = "application/json";
                 request.Method = "POST";
 
@@ -346,10 +356,8 @@ namespace HomeAutomationServer.Services
 
                 return false;
             }
-
-			#endif
-
             return true;
+#endif
         }
 
         //public Exception UpdateUser(int id, string firstName, string lastName)

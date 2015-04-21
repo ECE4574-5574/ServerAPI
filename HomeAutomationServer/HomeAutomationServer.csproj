@@ -163,6 +163,10 @@
     <Content Include="App.config" />
     <None Include="Properties\PublishProfiles\5574serverapi %282%29.pubxml" />
     <None Include="Properties\PublishProfiles\5574serverapi.pubxml" />
+    <None Include="Properties\PublishProfiles\serverapi1 - FTP.pubxml" />
+    <None Include="Properties\PublishProfiles\serverapi1 - Web Deploy.pubxml" />
+    <None Include="Properties\PublishProfiles\serverapi1d - FTP.pubxml" />
+    <None Include="Properties\PublishProfiles\serverapi1d - Web Deploy.pubxml" />
     <None Include="Scripts\jquery-1.8.2.intellisense.js" />
     <Content Include="Scripts\jquery-1.8.2.js" />
     <Content Include="Scripts\jquery-1.8.2.min.js" />
