@@ -57,19 +57,22 @@ namespace HomeAutomationTest
             }
 
             var appsResponse = snsClient.ListPlatformApplications();
+            int i = 0;
 
             foreach (var app in appsResponse.PlatformApplications)
             {
-
                 var appAttrsRequest = new GetPlatformApplicationAttributesRequest
                 {
                     PlatformApplicationArn = app.PlatformApplicationArn
                 };
 
+                i++;
                 var appAttrsResponse = snsClient.GetPlatformApplicationAttributes(appAttrsRequest);
                 System.Diagnostics.Trace.WriteLine(app.PlatformApplicationArn);
 
             }
+
+            Assert.AreEqual(2, i);
         }
     }
 }

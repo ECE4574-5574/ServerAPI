@@ -114,5 +114,18 @@ namespace HomeAutomationTest
         {
             return username + "_myTopic";
         }
+
+        public void removeNotification(string username)
+        {
+            //arn:aws:sns:us-west-2:336632281456:app/GCM/mobileapp
+            //_platform
+            var request = new DeletePlatformApplicationRequest
+            {
+                PlatformApplicationArn = "arn:aws:sns:us-east-1:80398EXAMPLE:" +
+                  "app/GCM/TimeCardProcessingApplication"
+            };
+
+            snsClient.DeletePlatformApplication(request);
+        }
     }
 }

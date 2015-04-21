@@ -66,6 +66,7 @@
     <Compile Include="TestSimController.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="NotificationManagerTest.cs" />
+    <Compile Include="TestDebugServer.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
