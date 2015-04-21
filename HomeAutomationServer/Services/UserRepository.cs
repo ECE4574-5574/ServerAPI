@@ -1,4 +1,5 @@
 using HomeAutomationServer.Services;
+using HomeAutomationServer.Models;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
