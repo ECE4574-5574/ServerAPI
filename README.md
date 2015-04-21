@@ -46,6 +46,10 @@ Data should be in the following format:
 ROOMID 0 indicates that the device is stored directly in the house.
 Returns a unique ID for this device as a description while giving the status(in the given house/room)
 
+POST api/house/device/state
+Posts the updated device info (blob) to persistent storage and updates the state change cache*
+* The app won't receive the update until it makes a GET request
+
 DELETE api/storage/device/{houseid}/{spaceid}/{deviceid}	
 Deletes a device with the specified house ID, space ID, and device ID provided.
 
@@ -81,10 +85,6 @@ Posts the users information provided by JSON object data.
 
 DELETE api/storage/api/stroage/user/{username}	
 Deletes the user specified by the username.
-
-POST api/house/device/state
-Posts the updated device info (blob) to persistent storage and updates the state change cache*
-* The app won't receive the update until it makes a GET request
 
 ------------------------------------------------------------------------------------------------------------------------
 
