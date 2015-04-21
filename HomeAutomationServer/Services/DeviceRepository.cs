@@ -393,7 +393,7 @@ public UInt64 SaveDevice(JObject model)     // Returns the device ID from the St
 
         public JObject DeleteDevice(string houseid, string spaceid, string deviceid)
         {
-            /*WebRequest request = WebRequest.Create("http://54.152.190.217:8081/HI/" + houseid);
+            /*WebRequest request = WebRequest.Create("http://54.152.190.217:8081/HD/" + houseid);
             request.Method = "GET";
 
             using (HttpWebResponse response = request.GetResponse() as HttpWebResponse)
