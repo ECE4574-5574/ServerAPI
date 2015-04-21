@@ -1,4 +1,5 @@
 using HomeAutomationServer.Services;
+using HomeAutomationServer.Models;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
@@ -7,7 +8,6 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Web;
-using System.Text;
 
 //This class serves as the data storage space. It is just a list of Device items that are regenerated from the cache
 
@@ -15,16 +15,13 @@ namespace HomeAutomationServer.Services
 {
     public class DeviceRepository
     {
-		#if DEBUG
-		public static string decisionURL = "http://localhost:8085/";
-		public static string storageURL = "http://localhost:8080/";
-		#else
+#if DEBUG
+        public static string decisionURL = "http://localhost:8085/";
+        public static string storageURL = "http://localhost:8080/";
+#else
 		public static string decisionURL = "http://52.5.26.12:8085/";
 		public static string storageURL = "http://ec2-52-11-96-207.us-west-2.compute.amazonaws.com:8080/";
 #endif
-
-        private string path = @"C:\ServerAPILogFile\logfile.txt";
-
         public JObject GetDevice(string houseid, string spaceid, string deviceid)       // Return device
         {
             try
@@ -49,34 +46,16 @@ namespace HomeAutomationServer.Services
                     }
                 }
 
-                catch (Exception ex) 
+                catch (Exception ex)
                 {
-                    if (!File.Exists(path))
-                    {
-                        Directory.CreateDirectory(@"C:\ServerAPILogFile");
-                        using (FileStream fstream = File.Create(path))
-                        {
-                            Byte[] info = new UTF8Encoding(true).GetBytes("Device -- Failed to get data to the Storage: " + ex.Message);
-                            fstream.Write(info, 0, info.Length);
-                        }
-                    }
-                    else File.AppendAllText(path, "\nDevice -- Failed to get data to the Storage: " + ex.Message);
+                    LogFile.AddLog("Device -- Failed to get data to the Storage: " + ex.Message + "\n");
                     return null;
                 }
             }
 
-            catch(SystemException ex)
+            catch (SystemException ex)
             {
-                if (!File.Exists(path))
-                {
-                    Directory.CreateDirectory(@"C:\ServerAPILogFile");
-                    using (FileStream fstream = File.Create(path))
-                    {
-                        Byte[] info = new UTF8Encoding(true).GetBytes("Device -- Failed to create request with the URL provided: " + ex.Message);
-                        fstream.Write(info, 0, info.Length);
-                    }
-                }
-                else File.AppendAllText(path, "\nDevice -- Failed to create request with the URL provided: " + ex.Message);
+                LogFile.AddLog("Device -- Failed to create request with the URL provided: " + ex.Message + "\n");
                 return null;
             }
         }
@@ -104,35 +83,17 @@ namespace HomeAutomationServer.Services
                         return JArray.Parse(deviceString);
                     }
                 }
-                
-                catch (Exception ex) 
+
+                catch (Exception ex)
                 {
-                    if (!File.Exists(path))
-                    {
-                        Directory.CreateDirectory(@"C:\ServerAPILogFile");
-                        using (FileStream fstream = File.Create(path))
-                        {
-                            Byte[] info = new UTF8Encoding(true).GetBytes("Device -- Failed to get data to the Storage: " + ex.Message);
-                            fstream.Write(info, 0, info.Length);
-                        }
-                    }
-                    else File.AppendAllText(path, "\nDevice -- Failed to get data to the Storage: " + ex.Message);
+                    LogFile.AddLog("Device -- Failed to get data to the Storage: " + ex.Message + "\n");
                     return null;
                 }
             }
 
             catch (SystemException ex)
             {
-                if (!File.Exists(path))
-                {
-                    Directory.CreateDirectory(@"C:\ServerAPILogFile");
-                    using (FileStream fstream = File.Create(path))
-                    {
-                        Byte[] info = new UTF8Encoding(true).GetBytes("Device -- Failed to create request with the URL provided: " + ex.Message);
-                        fstream.Write(info, 0, info.Length);
-                    }
-                }
-                else File.AppendAllText(path, "\nDevice -- Failed to create request with the URL provided: " + ex.Message);
+                LogFile.AddLog("Device -- Failed to create request with the URL provided: " + ex.Message + "\n");
                 return null;
             }
         }
@@ -161,34 +122,16 @@ namespace HomeAutomationServer.Services
                     }
                 }
 
-                catch (Exception ex) 
+                catch (Exception ex)
                 {
-                    if (!File.Exists(path))
-                    {
-                        Directory.CreateDirectory(@"C:\ServerAPILogFile");
-                        using (FileStream fstream = File.Create(path))
-                        {
-                            Byte[] info = new UTF8Encoding(true).GetBytes("Device -- Failed to get data to the Storage: " + ex.Message);
-                            fstream.Write(info, 0, info.Length);
-                        }
-                    }
-                    else File.AppendAllText(path, "\nDevice -- Failed to get data to the Storage: " + ex.Message);
+                    LogFile.AddLog("Device -- Failed to get data to the Storage: " + ex.Message + "\n");
                     return null;
                 }
             }
 
             catch (SystemException ex)
             {
-                if (!File.Exists(path))
-                {
-                    Directory.CreateDirectory(@"C:\ServerAPILogFile");
-                    using (FileStream fstream = File.Create(path))
-                    {
-                        Byte[] info = new UTF8Encoding(true).GetBytes("Device -- Failed to create request with the URL provided: " + ex.Message);
-                        fstream.Write(info, 0, info.Length);
-                    }
-                }
-                else File.AppendAllText(path, "\nDevice -- Failed to create request with the URL provided: " + ex.Message);
+                LogFile.AddLog("Device -- Failed to create request with the URL provided: " + ex.Message + "\n");
                 return null;
             }
         }
@@ -216,35 +159,17 @@ namespace HomeAutomationServer.Services
                         return JArray.Parse(deviceString);
                     }
                 }
-                
-                catch (Exception ex) 
+
+                catch (Exception ex)
                 {
-                    if (!File.Exists(path))
-                    {
-                        Directory.CreateDirectory(@"C:\ServerAPILogFile");
-                        using (FileStream fstream = File.Create(path))
-                        {
-                            Byte[] info = new UTF8Encoding(true).GetBytes("Device -- Failed to get data to the Storage: " + ex.Message);
-                            fstream.Write(info, 0, info.Length);
-                        }
-                    }
-                    else File.AppendAllText(path, "\nDevice -- Failed to get data to the Storage: " + ex.Message);
+                    LogFile.AddLog("Device -- Failed to get data to the Storage: " + ex.Message + "\n");
                     return null;
                 }
             }
 
             catch (SystemException ex)
             {
-                if (!File.Exists(path))
-                {
-                    Directory.CreateDirectory(@"C:\ServerAPILogFile");
-                    using (FileStream fstream = File.Create(path))
-                    {
-                        Byte[] info = new UTF8Encoding(true).GetBytes("Device -- Failed to create request with the URL provided: " + ex.Message);
-                        fstream.Write(info, 0, info.Length);
-                    }
-                }
-                else File.AppendAllText(path, "\nDevice -- Failed to create request with the URL provided: " + ex.Message);
+                LogFile.AddLog("Device -- Failed to create request with the URL provided: " + ex.Message + "\n");
                 return null;
             }
         }
@@ -275,37 +200,19 @@ namespace HomeAutomationServer.Services
 
                 catch (Exception ex)
                 {
-                    if (!File.Exists(path))
-                    {
-                        Directory.CreateDirectory(@"C:\ServerAPILogFile");
-                        using (FileStream fstream = File.Create(path))
-                        {
-                            Byte[] info = new UTF8Encoding(true).GetBytes("Device -- Failed to get data to the Storage: " + ex.Message);
-                            fstream.Write(info, 0, info.Length);
-                        }
-                    }
-                    else File.AppendAllText(path, "\nDevice -- Failed to get data to the Storage: " + ex.Message);
+                    LogFile.AddLog("Device -- Failed to get data to the Storage: " + ex.Message + "\n");
                     return null;
                 }
             }
 
             catch (SystemException ex)
             {
-                if (!File.Exists(path))
-                {
-                    Directory.CreateDirectory(@"C:\ServerAPILogFile");
-                    using (FileStream fstream = File.Create(path))
-                    {
-                        Byte[] info = new UTF8Encoding(true).GetBytes("Device -- Failed to send GET request with the URL provided: " + ex.Message);
-                        fstream.Write(info, 0, info.Length);
-                    }
-                }
-                else File.AppendAllText(path, "\nDevice -- Failed to send GET request with the URL provided: " + ex.Message);
+                LogFile.AddLog("Device -- Failed to send GET request with the URL provided: " + ex.Message + "\n");
                 return null;
             }
         }
-        
-public UInt64 SaveDevice(JObject model)     // Returns the device ID from the Storage which is type UInt64
+
+        public UInt64 SaveDevice(JObject model)     // Returns the device ID from the Storage which is type UInt64
         {
             UInt64 houseId, roomId;
             string deviceType;
@@ -317,7 +224,9 @@ public UInt64 SaveDevice(JObject model)     // Returns the device ID from the St
                 roomId = (UInt64)model["roomID"];   // roomID is the correct key and is type UInt64
                 deviceType = (string)model["Type"]; // Type is the correct key and is type string
             }
-            catch (Exception ex){ // catches the exception if any of the keys are missing                
+            catch (Exception ex)
+            { // catches the exception if any of the keys are missing      
+                LogFile.AddLog("Device -- Keys are invalid or missing: " + ex.Message + "\n");
                 return 0;
             }
 
@@ -358,32 +267,14 @@ public UInt64 SaveDevice(JObject model)     // Returns the device ID from the St
 
                 catch (Exception ex)
                 {
-                    if (!File.Exists(path))
-                    {
-                        Directory.CreateDirectory(@"C:\ServerAPILogFile");
-                        using (FileStream fstream = File.Create(path))
-                        {
-                            Byte[] info = new UTF8Encoding(true).GetBytes("Device -- Failed to send information to the Storage: " + ex.Message);
-                            fstream.Write(info, 0, info.Length);
-                        }
-                    }
-                    else File.AppendAllText(path, "\nDevice -- Failed to send information to the Storage: " + ex.Message);
+                    LogFile.AddLog("Device -- Failed to send information to the Storage: " + ex.Message + "\n");
                     return 0;
                 }
             }
 
             catch (SystemException ex) 
             {
-                if (!File.Exists(path))
-                {
-                    Directory.CreateDirectory(@"C:\ServerAPILogFile");
-                    using (FileStream fstream = File.Create(path))
-                    {
-                        Byte[] info = new UTF8Encoding(true).GetBytes("Device -- Failed to send POST request with the URL provided: " + ex.Message);
-                        fstream.Write(info, 0, info.Length);
-                    }
-                }
-                else File.AppendAllText(path, "\nDevice -- Failed to send POST request with the URL provided: " + ex.Message);
+                LogFile.AddLog("Device -- Failed to send POST request with the URL provided: " + ex.Message + "\n");
                 return 0;
             }
 
