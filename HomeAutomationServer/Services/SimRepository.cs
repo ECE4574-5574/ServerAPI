@@ -14,10 +14,12 @@ namespace HomeAutomationServer.Services
 {
     public class SimRepository
     {
-        private string path = @"C:\ServerAPILogFile\logfile.txt";
         // deviceRepo has static url
         private string dm_url = DeviceRepository.decisionURL;
         private string pss_url = DeviceRepository.storageURL;
+
+		private string path = @"ServerAPILogFile\logfile.txt";
+
 
         public bool sendConfigData(JObject model)
         {           
@@ -123,6 +125,26 @@ namespace HomeAutomationServer.Services
             #endif
 
             return true;
+        }
+
+        public string GetLog()
+        {
+            try
+            {
+                if (!File.Exists(path))
+                {
+                    return "LogFile does not exist";
+                }
+                else
+                {
+                    return File.ReadAllText(path);
+                }
+            }
+
+            catch (Exception ex)
+            {
+                return "Trying to find file gave this exception: " + ex.Message;
+            }
         }
     }
 }
