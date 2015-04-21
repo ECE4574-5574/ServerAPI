@@ -29,7 +29,7 @@ namespace HomeAutomationServer.Controllers
         /// Gets the logfile count
         /// </summary>
         /// <returns></returns>
-        [Route("count")]
+        [Route("api/logfile/count")]
         public int GetLogCount()
         {
             return LogFile.GetCount();
