@@ -38,7 +38,7 @@ namespace HomeAutomationServer.Services
 
         public JObject SaveSpace(JObject model)
         {
-		sting roomID = model["RoomID"];
+		string roomID = model["RoomID"].ToString();
 		WebRequest request = WebRequest.Create(DeviceRepository.storageURL + "R/" + roomID);
 		request.ContentType = "application/json";
 		

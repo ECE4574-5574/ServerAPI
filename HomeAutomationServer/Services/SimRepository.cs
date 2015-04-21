@@ -82,7 +82,7 @@ namespace HomeAutomationServer.Services
                 {
                     LogFile.AddLog("Could not Post data to Storage: " + ex.Message + "\n"); 
                     return false;
-                }
+                }*/
             }
 
             catch (SystemException ex)

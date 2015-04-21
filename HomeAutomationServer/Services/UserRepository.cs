@@ -51,7 +51,7 @@ namespace HomeAutomationServer.Services
 
                 catch (Exception ex)
                 {
-                    LogFile.AddLog("UpdateLocation -- Could not create the URL with the data provided: " + ex.Message + "\n")
+                    LogFile.AddLog("UpdateLocation -- Could not create the URL with the data provided: " + ex.Message + "\n");
                     return null;
                 }
             }
@@ -164,13 +164,17 @@ namespace HomeAutomationServer.Services
 
 			return true;
 			#else
-            string time = model["time"].ToString();
-            string lat = model["lat"].ToString();
-            string lon = model["long"].ToString();
-            string alt = model["alt"].ToString();
-            string userID = model["userID"].ToString();
+            //string time = model["time"].ToString();
+            
+            //string userID = model["userID"].ToString();
             try
             {
+                double lat = (double)model["lat"];
+                double lon = (double)model["long"];
+                double alt = (double)model["alt"];
+                model["lat"] = lat;
+                model["long"] = lon;
+                model["alt"] = alt;
 				WebRequest request = WebRequest.Create(dm_url +"LocationChange");
                 request.ContentType = "application/json";
                 request.Method = "POST";
@@ -270,7 +274,7 @@ namespace HomeAutomationServer.Services
 
             catch (SystemException ex)
             {
-                LogFile.AddLog("Brigthen -- Could not create the URL with the data provided: " + ex.Message + "\n")
+                LogFile.AddLog("Brigthen -- Could not create the URL with the data provided: " + ex.Message + "\n");
                 return false;
             }
             return true;

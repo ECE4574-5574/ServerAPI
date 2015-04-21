@@ -57,7 +57,7 @@ namespace HomeAutomationServer.Services
 
             catch (SystemException ex)
             {
-                LogFile.AddLog("GetHouse -- Failed to create URL with the provided data: " + ex.Message = "\n");
+                LogFile.AddLog("GetHouse -- Failed to create URL with the provided data: " + ex.Message + "\n");
                 return null;
             }
 #endif
