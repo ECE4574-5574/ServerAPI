@@ -18,8 +18,7 @@ namespace HomeAutomationServer.Controllers
         /// Gets the logfile as a string
         /// </summary>
         /// <returns></returns>
-        [Route("api/logfile")]
-        [HttpGet]
+        [HttpGet, Route("api/logfile")]
         public string Get()
         {
             return LogFile.GetLog();
@@ -30,8 +29,7 @@ namespace HomeAutomationServer.Controllers
         /// Gets the logfile count
         /// </summary>
         /// <returns></returns>
-        [Route("count")]
-        [HttpGet]
+        [HttpGet, ActionName("Count"), Route("api/logfile/count")]
         public int GetCount()
         {
             return LogFile.GetCount();
@@ -41,8 +39,7 @@ namespace HomeAutomationServer.Controllers
         /// <summary>
         /// Deletes the logile
         /// </summary>
-        [Route("api/logfile")]
-        [HttpDelete]
+        [HttpDelete, Route("api/logfile")]
         public void Delete()
         {
             LogFile.DeleteLog();
