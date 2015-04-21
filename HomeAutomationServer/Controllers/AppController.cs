@@ -14,6 +14,7 @@ namespace HomeAutomationServer.Controllers
     [RoutePrefix("api/app")]
     public class AppController : ApiController
     {
+        private SimRepository simRepo = new SimRepository();
         private UserRepository userRepository = new UserRepository();
         ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         //
