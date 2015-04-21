@@ -18,7 +18,7 @@ namespace HomeAutomationServer.Models
 
         static public string GetLog()
         {
-            return logfile.ToString();
+            return string.Join("\n", logfile.ToArray());
         }
 
         static public void DeleteLog()
