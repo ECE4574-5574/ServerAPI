@@ -38,8 +38,10 @@ namespace HomeAutomationServer.Services
 
         public JObject SaveSpace(JObject model)
         {
-			WebRequest request = WebRequest.Create(DeviceRepository.storageURL + "R/" + houseid);
-			request.ContentType = "application/json";
+		sting roomID = model["RoomID"];
+		WebRequest request = WebRequest.Create(DeviceRepository.storageURL + "R/" + roomID);
+		request.ContentType = "application/json";
+		
             request.Method = "POST";
 		
             using (var streamWriter = new StreamWriter(request.GetRequestStream()))
