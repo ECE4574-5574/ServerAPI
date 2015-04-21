@@ -19,9 +19,9 @@ namespace HomeAutomationServer.Services
 		public static string decisionURL = "http://localhost:8085/";
 		public static string storageURL = "http://localhost:8080/";
 		#else
-		public static string decisionURL = "http://52.5.152.139:8085/";
+		public static string decisionURL = "http://52.5.26.12:8085/";
 		public static string storageURL = "http://ec2-52-11-96-207.us-west-2.compute.amazonaws.com:8080/";
-		#endif
+#endif
 
         private string path = @"C:\ServerAPILogFile\logfile.txt";
 
