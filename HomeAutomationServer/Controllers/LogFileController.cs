@@ -19,6 +19,7 @@ namespace HomeAutomationServer.Controllers
         /// </summary>
         /// <returns></returns>
         [Route("api/logfile")]
+        [HttpGet]
         public string Get()
         {
             return LogFile.GetLog();
@@ -30,6 +31,7 @@ namespace HomeAutomationServer.Controllers
         /// </summary>
         /// <returns></returns>
         [Route("count")]
+        [HttpGet]
         public int GetCount()
         {
             return LogFile.GetCount();
@@ -40,6 +42,7 @@ namespace HomeAutomationServer.Controllers
         /// Deletes the logile
         /// </summary>
         [Route("api/logfile")]
+        [HttpDelete]
         public void Delete()
         {
             LogFile.DeleteLog();
