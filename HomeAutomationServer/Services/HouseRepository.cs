@@ -150,7 +150,7 @@ namespace HomeAutomationServer.Services
 #endif
         }
 
-        public UInt64 SaveHouse(JToken model)
+        public UInt64 SaveHouse(JObject model)
         {
             UInt64 houseId;
             WebRequest request = WebRequest.Create(DeviceRepository.storageURL + "H");
