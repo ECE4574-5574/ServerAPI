@@ -8,7 +8,6 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Web;
-using System.Text;
 
 //using HomeAutomationServer.Models;
 
@@ -17,25 +16,27 @@ namespace HomeAutomationServer.Services
     public class DecisionRepository
     {
         private string houseApiHost = "http://house_address:house_port/device/";
-        private string path = @"C:\ServerAPILogFile\logfile.txt";
 
         public bool StateUpdate(JObject model)
         {
-			UInt64 houseId, roomId;
-			string deviceType;
-			UInt64 deviceId;
+            UInt64 houseId, roomId;
+            string deviceType;
+            UInt64 deviceId;
 
-			#if DEBUG
-			try{
-				houseId = (UInt64)model["houseID"]; // houseID is the correct key and is type UInt64
-				roomId = (UInt64)model["roomID"];   // roomID is the correct key and is type UInt64
-				deviceType = (string)model["Type"]; // Type is the correct key and is type string
-			}
-			catch (Exception ex){ // catches the exception if any of the keys are missing                
-				return false;
-			}
+#if DEBUG
+            try
+            {
+                houseId = (UInt64)model["houseID"]; // houseID is the correct key and is type UInt64
+                roomId = (UInt64)model["roomID"];   // roomID is the correct key and is type UInt64
+                deviceType = (string)model["Type"]; // Type is the correct key and is type string
+            }
+            catch (Exception ex)
+            { // catches the exception if any of the keys are missing                
+                LogFile.AddLog("Decision -- Invalid Keys: " + ex.Message + "\n");
+                return false;
+            }
 
-			#else
+#else
             houseId = (UInt64)model["houseID"]; // houseID is the correct key and is type UInt64
 			roomId = (UInt64)model["roomID"];   // roomID is the correct key and is type UInt64
 			deviceType = (string)model["Type"]; // Type is the correct key and is type string
@@ -64,16 +65,7 @@ namespace HomeAutomationServer.Services
 
                 catch (Exception ex)
                 {
-                    if (!File.Exists(path))
-                    {
-                        Directory.CreateDirectory(@"C:\ServerAPILogFile");
-                        using (FileStream fstream = File.Create(path))
-                        {
-                            Byte[] info = new UTF8Encoding(true).GetBytes("Decision -- Failed to send data to the House System: " + ex.Message);
-                            fstream.Write(info, 0, info.Length);
-                        }
-                    }
-                    else File.AppendAllText(path, "\nDecision -- Failed to send data to the House System: " + ex.Message);
+                    LogFile("Decision -- Failed to send data to the House System: " + ex.Message + "\n");
                     return false;
                 }
 
@@ -100,16 +92,7 @@ namespace HomeAutomationServer.Services
 
                 catch (Exception ex)
                 {
-                    if (!File.Exists(path))
-                    {
-                        Directory.CreateDirectory(@"C:\ServerAPILogFile");
-                        using (FileStream fstream = File.Create(path))
-                        {
-                            Byte[] info = new UTF8Encoding(true).GetBytes("Decision -- Failed to send data to the Storage: " + ex.Message);
-                            fstream.Write(info, 0, info.Length);
-                        }
-                    }
-                    else File.AppendAllText(path, "\nDecision -- Failed to send data to the Storage: " + ex.Message);
+                    LogFile.AddLog("Decision -- Failed to send data to the Storage: " + ex.Message + "\n");
                     return false;
                 }
 
@@ -126,32 +109,14 @@ namespace HomeAutomationServer.Services
 
                 catch (Exception ex)
                 {
-                    if (!File.Exists(path))
-                    {
-                        Directory.CreateDirectory(@"C:\ServerAPILogFile");
-                        using (FileStream fstream = File.Create(path))
-                        {
-                            Byte[] info = new UTF8Encoding(true).GetBytes(ex.Message);
-                            fstream.Write(info, 0, info.Length);
-                        }
-                    }
-                    else File.AppendAllText(path, "\n" + ex.Message);
+                    LogFile.AddLog(ex.Message + "\n");
                     return false;
                 }
             }
 
             catch(SystemException ex)
             {
-                if (!File.Exists(path))
-                {
-                    Directory.CreateDirectory(@"C:\ServerAPILogFile");
-                    using (FileStream fstream = File.Create(path))
-                    {
-                        Byte[] info = new UTF8Encoding(true).GetBytes("Decision -- Could not create the specified url with the data provided: " + ex.Message);
-                        fstream.Write(info, 0, info.Length);
-                    }
-                }
-                else File.AppendAllText(path, "\nDecision -- Could not create the specified url with the data provided: " + ex.Message);
+                LogFile.AddLog("Decision -- Could not create the specified url with the data provided: " + ex.Message + "\n");
                 return false;
             }
 #endif
@@ -189,32 +154,14 @@ namespace HomeAutomationServer.Services
 
                 catch (Exception ex)
                 {
-                    if (!File.Exists(path))
-                    {
-                        Directory.CreateDirectory(@"C:\ServerAPILogFile");
-                        using (FileStream fstream = File.Create(path))
-                        {
-                            Byte[] info = new UTF8Encoding(true).GetBytes("Decision -- Could not Get the data from the House System: " + ex.Message);
-                            fstream.Write(info, 0, info.Length);
-                        }
-                    }
-                    else File.AppendAllText(path, "\nDecision -- Could not Get the data from the House System: " + ex.Message);
+                    LogFile.AddLog("Decision -- Could not Get the data from the House System: " + ex.Message + "\n");
                     return (bool)model["Enabled"];
                 }
             }
 
             catch (SystemException ex)
             {
-                if (!File.Exists(path))
-                {
-                    Directory.CreateDirectory(@"C:\ServerAPILogFile");
-                    using (FileStream fstream = File.Create(path))
-                    {
-                        Byte[] info = new UTF8Encoding(true).GetBytes("Decision -- Could not create the specified url with the data provided: " + ex.Message);
-                        fstream.Write(info, 0, info.Length);
-                    }
-                }
-                else File.AppendAllText(path, "\nDecision -- Could not create the specified url with the data provided: " + ex.Message);
+                LogFile.AddLog("Decision -- Could not create the specified url with the data provided: " + ex.Message + "\n");
                 return (bool)model["Enabled"];
             }
         }

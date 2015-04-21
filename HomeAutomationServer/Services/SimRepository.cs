@@ -5,7 +5,6 @@ using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Text;
 using System.Linq;
 using System.Net;
 using System.Web;
@@ -18,14 +17,11 @@ namespace HomeAutomationServer.Services
         private string dm_url = DeviceRepository.decisionURL;
         private string pss_url = DeviceRepository.storageURL;
 
-		private string path = @"ServerAPILogFile\logfile.txt";
-
-
         public bool sendConfigData(JObject model)
-        {           
-            #if DEBUG
+        {
+#if DEBUG
             return true;
-            #else
+#else
             try
             {
                 WebRequest request = WebRequest.Create(dm_url + "TimeConfig");
@@ -54,16 +50,7 @@ namespace HomeAutomationServer.Services
 
                 catch (Exception ex)
                 {
-                    if (!File.Exists(path))
-                    {
-                        Directory.CreateDirectory(@"C:\ServerAPILogFile");
-                        using (FileStream fstream = File.Create(path))
-                        {
-                            Byte[] info = new UTF8Encoding(true).GetBytes("Sim -- Failed to Post dat to the Decision System: " + ex.Message);
-                            fstream.Write(info, 0, info.Length);
-                        }
-                    }
-                    else File.AppendAllText(path, "\nSim -- Could not Post data to the Decision System: " + ex.Message);
+                    LogFile.AddLog("Sim -- Could not Post data to the Decision System: " + ex.Message + "\n");
                     return false;
                 }
 
@@ -93,58 +80,20 @@ namespace HomeAutomationServer.Services
 
                 catch (Exception ex)
                 {
-                 * if (!File.Exists(path))
-                   {
-                        Directory.CreateDirectory(@"C:\ServerAPILogFile");
-                        using (FileStream fstream = File.Create(path))
-                        {
-                          Byte[] info = new UTF8Encoding(true).GetBytes("Sim -- Failed to Post data to Storage: " + ex.Message);
-                          fstream.Write(info, 0, info.Length);
-                        }
-                    }
-                    else File.AppendAllText(path, "\nCould not Post data to Storage: " + ex.Message);
+                    LogFile.AddLog("Could not Post data to Storage: " + ex.Message + "\n"); 
                     return false;
-                }*/
+                }
             }
 
             catch (SystemException ex)
             {
-                if (!File.Exists(path))
-                {
-                    Directory.CreateDirectory(@"C:\ServerAPILogFile");
-                    using (FileStream fstream = File.Create(path))
-                    {
-                        Byte[] info = new UTF8Encoding(true).GetBytes("Sim -- Failed to create URL with the provided information: " + ex.Message);
-                        fstream.Write(info, 0, info.Length);
-                    }
-                }
-                File.AppendAllText(path, "\nSim -- Failed to create URL with the provided information: " + ex.Message);
+                LogFile.AddLog("Sim -- Failed to create URL with the provided information: " + ex.Message + "\n");
                 return false;
             }
 
-            #endif
+#endif
 
             return true;
-        }
-
-        public string GetLog()
-        {
-            try
-            {
-                if (!File.Exists(path))
-                {
-                    return "LogFile does not exist";
-                }
-                else
-                {
-                    return File.ReadAllText(path);
-                }
-            }
-
-            catch (Exception ex)
-            {
-                return "Trying to find file gave this exception: " + ex.Message;
-            }
         }
     }
 }

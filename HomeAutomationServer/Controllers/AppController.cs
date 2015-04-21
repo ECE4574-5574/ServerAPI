@@ -87,16 +87,5 @@ namespace HomeAutomationServer.Controllers
         {
             return userRepository.Brighten(model);
         }
-        
-        // GET api/app/logfile
-        /// <summary>
-        /// Returns a string version of the logfile from the server.
-        /// </summary>
-        /// <returns></returns>
-        [Route("logfile")]
-        public string GetLogFile()
-        {
-            return simRepo.GetLog();
-        }
     }
 }
