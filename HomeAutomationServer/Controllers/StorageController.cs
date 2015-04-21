@@ -1,4 +1,4 @@
-﻿using HomeAutomationServer.Services;
+using HomeAutomationServer.Services;
 using HomeAutomationServer.Models;
 using System;
 using System.Collections.Generic;
@@ -184,9 +184,9 @@ namespace HomeAutomationServer.Controllers
         /// <param name="model"></param>
         /// <returns>Returns true if the house was posted, false if not.</returns>
         [Route("house")]
-        public UInt64 PostHouse([FromBody] JObject model)                  // HTTP POST - posts a new user
+        public bool PostHouse([FromBody] JObject model)                  // HTTP POST - posts a new user
         {
-            return houseRepository.SaveHouse(model);
+            return true; // houseRepository.SaveHouse(houseid, model);
         }
 
         /*// PATCH api/House/
