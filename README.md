@@ -128,3 +128,16 @@ POST api/house/device/state
 Post and updated device blob to the system (persistent storage and app cache/queue)
 
 -------------------------------------------------------------------------------------------------------------------------
+
+***LogFile***
+
+GET api/logfile
+Get the logfile information via a string
+
+GET api/logfile/count
+Get the count of logs in the logfile
+
+DELETE api/logfile
+Delete the logs in the logfile
+
+---------------------------------------------------------------------------------------------------------------------------
