@@ -8,20 +8,17 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Web;
-using System.Text;
-
 
 
 // This class tells the controller how to process the HTTP commands
 
 namespace HomeAutomationServer.Services
 {
-	public class HouseRepository
-	{
-        private string path = @"C:\ServerAPILogFile\logfile.txt";
+    public class HouseRepository
+    {
 
-		public JObject GetHouse (UInt64 id)
-		{
+        public JObject GetHouse(UInt64 id)
+        {
 #if DEBUG
             JObject value = new JObject();
             value["houseID"] = 12;
@@ -53,57 +50,40 @@ namespace HomeAutomationServer.Services
 
                 catch (Exception ex)
                 {
-                    if (!File.Exists(path))
-                    {
-                        Directory.CreateDirectory(@"C:\ServerAPILogFile");
-                        using (FileStream fstream = File.Create(path))
-                        {
-                            Byte[] info = new UTF8Encoding(true).GetBytes("Failed to Get house data from Storage: " + ex.Message);
-                            fstream.Write(info, 0, info.Length);
-                        }
-                    }
-                    else File.AppendAllText(path, "\nFailed to Get house data from Storage: " + ex.Message);
+                    LogFile.AddLog("Failed to Get house data from Storage: " + ex.Message + "\n");
                     return null;
                 }
             }
 
             catch (SystemException ex)
             {
-                if (!File.Exists(path))
-                {
-                    Directory.CreateDirectory(@"C:\ServerAPILogFile");
-                    using (FileStream fstream = File.Create(path))
-                    {
-                        Byte[] info = new UTF8Encoding(true).GetBytes("GetHouse -- Failed to create URL with the provided data: " + ex.Message);
-                        fstream.Write(info, 0, info.Length);
-                    }
-                }
-                else File.AppendAllText(path, "\nGetHouse -- Failed to create URL with the provided data: " + ex.Message);
+                LogFile.AddLog("GetHouse -- Failed to create URL with the provided data: " + ex.Message = "\n");
                 return null;
             }
 #endif
-	}
+        }
 
-	    public bool PostState(JObject deviceBlob)
-	    {
+        public bool PostState(JObject deviceBlob)
+        {
 
-	    //POST UD/HOUSEID/ROOMID/DEVICEID
+            //POST UD/HOUSEID/ROOMID/DEVICEID
 
-	    UInt64 houseID;
-	    UInt64 roomID;
-	    UInt64 deviceID;
+            UInt64 houseID;
+            UInt64 roomID;
+            UInt64 deviceID;
 #if DEBUG
-        try
-        {
-            houseID = (UInt64)deviceBlob["houseID"];
-            roomID = (UInt64)deviceBlob["roomID"];
-            deviceID = (UInt64)deviceBlob["deviceID"];
-        }
-        catch (WebException ex)
-        {
-            return false;
-        }
-        return true;
+            try
+            {
+                houseID = (UInt64)deviceBlob["houseID"];
+                roomID = (UInt64)deviceBlob["roomID"];
+                deviceID = (UInt64)deviceBlob["deviceID"];
+            }
+            catch (WebException ex)
+            {
+                LogFile.AddLog("House -- Could not access correct keys: " + ex.Message + "\n");
+                return false;
+            }
+            return true;
 #else
 	    houseID = (UInt64)deviceBlob["houseID"];
 	    roomID = (UInt64)deviceBlob["roomID"];
@@ -139,122 +119,102 @@ namespace HomeAutomationServer.Services
 
                 catch (Exception ex)
                 {
-                    if (!File.Exists(path))
-                    {
-                        Directory.CreateDirectory(@"C:\ServerAPILogFile");
-                        using (FileStream fstream = File.Create(path))
-                        {
-                            Byte[] info = new UTF8Encoding(true).GetBytes("House -- Failed to Post state change to Storage: " + ex.Message);
-                            fstream.Write(info, 0, info.Length);
-                        }
-                    }
-                    else File.AppendAllText(path, "\nHouse -- Failed to Post state change to Storage: " + ex.Message);
+                    LogFile.AddLog("House -- Failed to Post state change to Storage: " + ex.Message + "\n");
                     return false;
                 }
 
 		try 
 		{
-			#if DEBUG
+#if DEBUG
 			if(!AppCache.AddDeviceBlob_DEBUG(deviceBlob))
 				throw new Exception("AppCache add device failed when adding: " + deviceBlob.ToString());
-			#else
+#else
 		    if(!AppCache.AddDeviceBlob(deviceBlob))
 		        throw new Exception("AppCache add device failed when adding: " + deviceBlob.ToString());
-			#endif
+#endif
 		}		
 		catch (Exception ex)
 		{
-		    if (!File.Exists(path))
-                    {
-                        Directory.CreateDirectory(@"C:\ServerAPILogFile");
-                        using (FileStream fstream = File.Create(path))
-                        {
-                            Byte[] info = new UTF8Encoding(true).GetBytes("House -- " + ex.Message);
-                            fstream.Write(info, 0, info.Length);
-                        }
-                    }
-                    else File.AppendAllText(path, "\nHouse -- " + ex.Message);
+            LogFile.AddLog("House -- " + ex.Message + "\n");
                     return false;
 		}
 	    }
 
             catch (SystemException ex)
             {
-                if (!File.Exists(path))
-                {
-                    Directory.CreateDirectory(@"C:\ServerAPILogFile");
-                    using (FileStream fstream = File.Create(path))
-                    {
-                        Byte[] info = new UTF8Encoding(true).GetBytes("DeviceStateHouse -- Failed to create URL from data provided: " + ex.Message);
-                        fstream.Write(info, 0, info.Length);
-                    }
-                }
-                else File.AppendAllText(path, "\nDeviceStateHouse -- Failed to create URL from data provided: " + ex.Message);
+                LogFile.AddLog("DeviceStateHouse -- Failed to create URL from data provided: " + ex.Message + "\n");
                 return false;
             }
 
 	    return true;
 #endif
-	}
+        }
 
-	    public UInt64 SaveHouse(JToken model)
+        public UInt64 SaveHouse(JToken model)
         {
-        UInt64 houseId;
-        WebRequest request = WebRequest.Create(DeviceRepository.storageURL + "H");
-        request.ContentType = "application/json";
-        request.Method = "POST";
-        
+            UInt64 houseId;
+            WebRequest request = WebRequest.Create(DeviceRepository.storageURL + "H");
+            request.ContentType = "application/json";
+            request.Method = "POST";
+
 #if DEBUG
             return 1;
 #else
-        using (var streamWriter = new StreamWriter(request.GetRequestStream()))
-        {
-            streamWriter.Write(model.ToString());
-            streamWriter.Flush();
-            streamWriter.Close();
-        }
+            try
+            {
+                using (var streamWriter = new StreamWriter(request.GetRequestStream()))
+                {
+                    streamWriter.Write(model.ToString());
+                    streamWriter.Flush();
+                    streamWriter.Close();
+                }
 
-        using (HttpWebResponse response = request.GetResponse() as HttpWebResponse)
-        {
-            if (response.StatusCode != HttpStatusCode.OK)
-                throw new Exception(String.Format(
-                "Server error (HTTP {0}: {1}).",
-                response.StatusCode,
-                response.StatusDescription));
+                using (HttpWebResponse response = request.GetResponse() as HttpWebResponse)
+                {
+                    if (response.StatusCode != HttpStatusCode.OK)
+                        throw new Exception(String.Format(
+                        "Server error (HTTP {0}: {1}).",
+                        response.StatusCode,
+                        response.StatusDescription));
 
-            var stream = response.GetResponseStream();
-            var reader = new StreamReader(stream);
+                    var stream = response.GetResponseStream();
+                    var reader = new StreamReader(stream);
 
-            houseId = UInt64.Parse(reader.ReadToEnd());
-        }
+                    return UInt64.Parse(reader.ReadToEnd());
+                }
+            }
 
-        return houseId;
+            catch (Exception ex)
+            {
+                LogFile.AddLog("House -- Could not post house to the server: " + ex.Message + "\n");
+                return 0;
+            }
 #endif
-    }
+        }
 
-	    public JObject DeleteHouse(string houseid)
-	    {
-		/*WebRequest request = WebRequest.Create("http://54.152.190.217:8081/H/" + houseid);
-           	request.Method = "DELETE";
+        public JObject DeleteHouse(string houseid)
+        {
+            /*WebRequest request = WebRequest.Create("http://54.152.190.217:8081/H/" + houseid);
+                request.Method = "DELETE";
 
-           using (HttpWebResponse response = request.GetResponse() as HttpWebResponse)
-           {
-               if (response.StatusCode != HttpStatusCode.OK)
-                   throw new Exception(String.Format(
-                   "Server error (HTTP {0}: {1}).",
-                   response.StatusCode,
-                   response.StatusDescription));
-               var stream = response.GetResponseStream();
-               var reader = new StreamReader(stream);
+               using (HttpWebResponse response = request.GetResponse() as HttpWebResponse)
+               {
+                   if (response.StatusCode != HttpStatusCode.OK)
+                       throw new Exception(String.Format(
+                       "Server error (HTTP {0}: {1}).",
+                       response.StatusCode,
+                       response.StatusDescription));
+                   var stream = response.GetResponseStream();
+                   var reader = new StreamReader(stream);
 
-               string houseString = reader.ReadToEnd();
-               return JObject.Parse(houseString);
-           }*/
+                   string houseString = reader.ReadToEnd();
+                   return JObject.Parse(houseString);
+               }*/
 
-			return null;
-		}
+            return null;
+        }
 
-		/*public Exception UpdateHouse(int id, string name, int userId)
+        /*public Exception UpdateHouse(int id, string name, int userId)
         {
             //House house = new House();
             //house = getHouse(id);                             // Persistent storage getHouse() method
@@ -286,5 +246,5 @@ namespace HomeAutomationServer.Services
             return null;
 
         }*/
-	}
+    }
 }
