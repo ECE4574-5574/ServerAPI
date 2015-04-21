@@ -36,30 +36,45 @@ namespace HomeAutomationServer.Services
             return null;
         }
 
-        public JObject SaveSpace(JObject model)
-        {
-		sting roomID = model["RoomID"];
-		WebRequest request = WebRequest.Create(DeviceRepository.storageURL + "R/" + roomID);
-		request.ContentType = "application/json";
-		
-            request.Method = "POST";
-		
-            using (var streamWriter = new StreamWriter(request.GetRequestStream()))
-            {
-               streamWriter.Write(model.ToString());
-            }
+        public UInt64 SaveSpace (JObject model)
+		{
+			
+			UInt64 roomID;
 
-            using (HttpWebResponse response = request.GetResponse() as HttpWebResponse)
-            {
-                if (response.StatusCode != HttpStatusCode.OK)
-                    throw new Exception(String.Format(
-                    "Server error (HTTP {0}: {1}).",
-                    response.StatusCode,
-                    response.StatusDescription));
-            }
+			WebRequest request = WebRequest.Create (DeviceRepository.storageURL + "R");
+			request.ContentType = "application/json";
+			request.Method = "POST";
 
-            return null;
-        }
+#if DEBUG
+			return 1;
+#else
+		
+			try {
+
+				using (var streamWriter = new StreamWriter (request.GetRequestStream ())) {
+					streamWriter.Write (model.ToString ());
+				}
+
+				using (HttpWebResponse response = request.GetResponse () as HttpWebResponse) {
+					if (response.StatusCode != HttpStatusCode.OK)
+						throw new Exception (String.Format (
+							"Server error (HTTP {0}: {1}).",
+							response.StatusCode,
+							response.StatusDescription));
+
+					var stream = response.GetResponseStream ();
+					var reader = new StreamReader (stream);
+
+					return UInt64.Parse (reader.ReadToEnd ());
+				}
+
+			} catch (Exception ex) {
+				LogFile.AddLog ("House -- Could not post room to the server: " + ex.Message + "\n");
+				return 0;
+			}
+
+#endif
+		}
 
         public JObject DeleteSpace(string houseid, string spaceid)
         {
