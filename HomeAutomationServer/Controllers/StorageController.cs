@@ -139,11 +139,11 @@ namespace HomeAutomationServer.Controllers
         /// Posts the space with the JSON object data information provided.
         /// </summary>
         /// <param name="model"></param>
-        /// <returns>Returns true if posted, false if not.</returns>
+        /// <returns>Returns space ID or 0 if error</returns>
         [Route("space")]
-        public bool PostSpace([FromBody] JObject model)                  // HTTP POST - posts a new space
+		public UInt64 PostSpace([FromBody] JObject model)                  // HTTP POST - posts a new space
         {
-            return spaceRepository.SaveSpace(model) != 0;
+            return spaceRepository.SaveSpace(model);
         }
 
         // DELETE api/space/houseid/spaceid
