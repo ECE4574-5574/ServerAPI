@@ -13,11 +13,11 @@ using System.Web;
 
 namespace HomeAutomationServer.Services
 {
-    public class SpaceRepository
-    {
-        public JObject GetSpace(string houseid, string spaceid)
-        {
-            /*WebRequest request = WebRequest.Create("http://54.152.190.217:8081/RI/" + houseid + "/" + spaceid);
+	public class SpaceRepository
+	{
+		public JObject GetSpace (string houseid, string spaceid)
+		{
+			/*WebRequest request = WebRequest.Create("http://54.152.190.217:8081/RI/" + houseid + "/" + spaceid);
             request.Method = "GET";
 
             using (HttpWebResponse response = request.GetResponse() as HttpWebResponse)
@@ -34,53 +34,78 @@ namespace HomeAutomationServer.Services
                 return JObject.Parse(spaceString);
             }*/
 
-            return null;
-        }
+			return null;
+		}
 
 
-        public UInt64 SaveSpace (JObject model)
+		public UInt64 SaveSpace (JObject model)
 		{
-			
-			UInt64 roomID;
-
-			WebRequest request = WebRequest.Create (DeviceRepository.storageURL + "R");
-			request.ContentType = "application/json";
-			request.Method = "POST";
-
+			UInt64 houseId, roomID;
 #if DEBUG
+			try
+			{
+				houseId = (UInt64)model["houseID"]; // houseID is the correct key and is type UInt64
+			}
+			catch (Exception ex)
+			{ // catches the exception if any of the keys are missing      
+				LogFile.AddLog("Device -- Keys are invalid or missing: " + ex.Message + "\n");
+				return 0;
+			}
+
 			return 1;
 #else
 		
 			try {
-
-				using (var streamWriter = new StreamWriter (request.GetRequestStream ())) {
-					streamWriter.Write (model.ToString ());
-				}
-
-				using (HttpWebResponse response = request.GetResponse () as HttpWebResponse) {
-					if (response.StatusCode != HttpStatusCode.OK)
-						throw new Exception (String.Format (
-							"Server error (HTTP {0}: {1}).",
-							response.StatusCode,
-							response.StatusDescription));
-
-					var stream = response.GetResponseStream ();
-					var reader = new StreamReader (stream);
-
-					return UInt64.Parse (reader.ReadToEnd ());
-				}
-
-			} catch (Exception ex) {
-				LogFile.AddLog ("House -- Could not post room to the server: " + ex.Message + "\n");
+				houseId = (UInt64)model ["houseID"]; // houseID is the correct key and is type UInt64
+			}
+			catch (Exception ex)
+			{ // catches the exception if any of the keys are missing      
+				LogFile.AddLog("Device -- Keys are invalid or missing: " + ex.Message + "\n");
 				return 0;
 			}
 
+			try {
+				
+				WebRequest request = WebRequest.Create (DeviceRepository.storageURL + "R/" +houseId);
+				request.ContentType = "application/json";
+				request.Method = "POST";
+
+				try {
+
+					using (var streamWriter = new StreamWriter (request.GetRequestStream ())) {
+						streamWriter.Write (model.ToString ());
+					}
+
+					using (HttpWebResponse response = request.GetResponse () as HttpWebResponse) {
+						if (response.StatusCode != HttpStatusCode.OK)
+							throw new Exception (String.Format (
+								"Server error (HTTP {0}: {1}).",
+								response.StatusCode,
+								response.StatusDescription));
+
+						var stream = response.GetResponseStream ();
+						var reader = new StreamReader (stream);
+
+						roomID = UInt64.Parse (reader.ReadToEnd ());
+					}
+
+				} catch (Exception ex) {
+					LogFile.AddLog ("House -- Could not post room to the server: " + ex.Message + "\n");
+					return 0;
+				}
+
+			} catch (SystemException ex) {
+				LogFile.AddLog ("Device -- Failed to send POST request with the URL provided: " + ex.Message + "\n");
+				return 0;
+			}
+
+			return roomID;
 #endif
 		}
 
-        public JObject DeleteSpace(string houseid, string spaceid)
-        {
-            /*WebRequest request = WebRequest.Create("http://54.152.190.217:8081/HI/" + houseid);
+		public JObject DeleteSpace (string houseid, string spaceid)
+		{
+			/*WebRequest request = WebRequest.Create("http://54.152.190.217:8081/HI/" + houseid);
             request.Method = "GET";
 
             using (HttpWebResponse response = request.GetResponse() as HttpWebResponse)
@@ -116,11 +141,11 @@ namespace HomeAutomationServer.Services
                 string spaceString = reader.ReadToEnd();
                 return JObject.Parse(spaceString);
             }*/
-            return null;
+			return null;
 
-        }
+		}
 
-        /*public Exception UpdateSpace(int id, string name, int type, int houseId)
+		/*public Exception UpdateSpace(int id, string name, int type, int houseId)
         {
             //Space space = new Space();
             //space = getSpace(id);                             // Persistent storage getSpace() method
@@ -155,5 +180,5 @@ namespace HomeAutomationServer.Services
             return null;
 
         }*/
-    }
+	}
 }
