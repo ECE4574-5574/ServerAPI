@@ -18,7 +18,7 @@ namespace HomeAutomationServer.Controllers
         /// Gets the logfile as a string
         /// </summary>
         /// <returns></returns>
-        [HttpGet, Route("api/logfile")]
+        [HttpGet, Route("api/logfile/getlog")]
         public string Get()
         {
             return LogFile.GetLog();
@@ -39,7 +39,7 @@ namespace HomeAutomationServer.Controllers
         /// <summary>
         /// Deletes the logile
         /// </summary>
-        [HttpDelete, Route("api/logfile")]
+        [HttpDelete, Route("api/logfile/delete")]
         public void Delete()
         {
             LogFile.DeleteLog();

@@ -87,5 +87,37 @@ namespace HomeAutomationServer.Controllers
         {
             return userRepository.Brighten(model);
         }
+
+        // GET api/logfile
+        /// <summary>
+        /// Gets the logfile as a string
+        /// </summary>
+        /// <returns></returns>
+        [Route("logfile/getlog")]
+        public string Get()
+        {
+            return LogFile.GetLog();
+        }
+
+        // Get api/logfile/count
+        /// <summary>
+        /// Gets the logfile count
+        /// </summary>
+        /// <returns></returns>
+        [Route("logfile/count")]
+        public int GetCount()
+        {
+            return LogFile.GetCount();
+        }
+
+        // Delete api/logfile
+        /// <summary>
+        /// Deletes the logile
+        /// </summary>
+        [Route("logfile/delete")]
+        public void Delete()
+        {
+            LogFile.DeleteLog();
+        }
     }
 }
