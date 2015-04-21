@@ -55,7 +55,14 @@ namespace HomeAutomationServer.Services
 			return 1;
 #else
 		
-			houseId = (UInt64)model ["houseID"]; // houseID is the correct key and is type UInt64
+			try {
+				houseId = (UInt64)model ["houseID"]; // houseID is the correct key and is type UInt64
+			}
+			catch (Exception ex)
+			{ // catches the exception if any of the keys are missing      
+				LogFile.AddLog("Device -- Keys are invalid or missing: " + ex.Message + "\n");
+				return 0;
+			}
 
 			try {
 				
