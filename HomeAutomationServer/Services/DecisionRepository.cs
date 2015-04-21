@@ -65,7 +65,7 @@ namespace HomeAutomationServer.Services
 
                 catch (Exception ex)
                 {
-                    LogFile("Decision -- Failed to send data to the House System: " + ex.Message + "\n");
+                    LogFile.AddLog("Decision -- Failed to send data to the House System: " + ex.Message + "\n");
                     return false;
                 }
 
