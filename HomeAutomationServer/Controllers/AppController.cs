@@ -14,6 +14,7 @@ namespace HomeAutomationServer.Controllers
     [RoutePrefix("api/app")]
     public class AppController : ApiController
     {
+        private SimRepository simRepo = new SimRepository();
         private UserRepository userRepository = new UserRepository();
         ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         //
@@ -30,7 +31,7 @@ namespace HomeAutomationServer.Controllers
         public bool UpdatePosition(string username, [FromBody] JObject model)
         {
             model["userId"] = username;
-            DateTime currentTime;
+            //DateTime currentTime;
             //currentTime = DateTime.Now;
             //model["locationTimeStamp"] = currentTime.ToString();
             return userRepository.OnUpdatePosition(model);

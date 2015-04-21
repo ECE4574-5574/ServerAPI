@@ -10,21 +10,38 @@ using System.Net;
 using System.Web;
 using System.Text;
 
-using HomeAutomationServer.Models;
+//using HomeAutomationServer.Models;
 
 namespace HomeAutomationServer.Services
 {
     public class DecisionRepository
     {
         private string houseApiHost = "http://house_address:house_port/device/";
-        private string storageUrl = "http://172.31.26.85:8080/";
         private string path = @"C:\ServerAPILogFile\logfile.txt";
 
         public bool StateUpdate(JObject model)
         {
+			UInt64 houseId, roomId;
+			string deviceType;
+			UInt64 deviceId;
+
+			#if DEBUG
+			try{
+				houseId = (UInt64)model["houseID"]; // houseID is the correct key and is type UInt64
+				roomId = (UInt64)model["roomID"];   // roomID is the correct key and is type UInt64
+				deviceType = (string)model["Type"]; // Type is the correct key and is type string
+			}
+			catch (Exception ex){ // catches the exception if any of the keys are missing                
+				return false;
+			}
+
+			#else
+            houseId = (UInt64)model["houseID"]; // houseID is the correct key and is type UInt64
+			roomId = (UInt64)model["roomID"];   // roomID is the correct key and is type UInt64
+			deviceType = (string)model["Type"]; // Type is the correct key and is type string
             try
             {
-                WebRequest request = WebRequest.Create(houseApiHost + "/" + (UInt64)model["HouseID"] + "/" + (UInt64)model["RoomID"] + "/" + (UInt64)model["DeviceID"]);
+				WebRequest request = WebRequest.Create(houseApiHost + "/" + houseId + "/" + roomId + "/" + deviceType);
                 request.Method = "POST";
 
                 using (var streamWriter = new StreamWriter(request.GetRequestStream()))
@@ -60,7 +77,7 @@ namespace HomeAutomationServer.Services
                     return false;
                 }
 
-                request = WebRequest.Create(storageUrl + "UD/" + (UInt64)model["HouseID"] + "/" + (UInt64)model["RoomID"] + "/" + (UInt64)model["DeviceID"]);
+                request = WebRequest.Create(DeviceRepository.storageURL + "UD/" + (UInt64)model["HouseID"] + "/" + (UInt64)model["RoomID"] + "/" + (UInt64)model["DeviceID"]);
                 request.Method = "POST";
 
                 using (var streamWriter = new StreamWriter(request.GetRequestStream()))
@@ -98,8 +115,13 @@ namespace HomeAutomationServer.Services
 
                 try
                 {
+#if DEBUG
+					if (!AppCache.AddDeviceBlob_DEBUG(model))
+						throw new Exception("Decision -- AppCache add device failed when adding: " + model.ToString());
+#else
                     if (!AppCache.AddDeviceBlob(model))
-                        throw new Exception("Decision -- AppCache add device failed when adding: " + model.ToString());
+                        throw new Exception("Decision -- AppCache add device failed when adding: " + model.ToString());	
+#endif
                 }
 
                 catch (Exception ex)
@@ -132,6 +154,7 @@ namespace HomeAutomationServer.Services
                 else File.AppendAllText(path, "\nDecision -- Could not create the specified url with the data provided: " + ex.Message);
                 return false;
             }
+#endif
 
             return true;
         }

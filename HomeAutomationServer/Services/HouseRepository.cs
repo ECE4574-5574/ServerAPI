@@ -20,11 +20,18 @@ namespace HomeAutomationServer.Services
 	{
         private string path = @"C:\ServerAPILogFile\logfile.txt";
 
-		public JObject GetHouse (string id)
+		public JObject GetHouse (UInt64 id)
 		{
+#if DEBUG
+            JObject value = new JObject();
+            value["houseID"] = 12;
+            value["deviceID"] = 12;
+            return value;
+
+#else
             try
             {
-                WebRequest request = WebRequest.Create(DeviceRepository.storageURL + "/HI/" + id);
+                WebRequest request = WebRequest.Create(DeviceRepository.storageURL + "/BH/" + id);
                 request.Method = "GET";
 
                 try
@@ -74,20 +81,34 @@ namespace HomeAutomationServer.Services
                 else File.AppendAllText(path, "\nGetHouse -- Failed to create URL with the provided data: " + ex.Message);
                 return null;
             }
+#endif
 	}
 
-	public bool PostState(JObject deviceBlob)
-	{
+	    public bool PostState(JObject deviceBlob)
+	    {
 
 	    //POST UD/HOUSEID/ROOMID/DEVICEID
 
 	    UInt64 houseID;
 	    UInt64 roomID;
 	    UInt64 deviceID;
-
+#if DEBUG
+        try
+        {
+            houseID = (UInt64)deviceBlob["houseID"];
+            roomID = (UInt64)deviceBlob["roomID"];
+            deviceID = (UInt64)deviceBlob["deviceID"];
+        }
+        catch (WebException ex)
+        {
+            return false;
+        }
+        return true;
+#else
 	    houseID = (UInt64)deviceBlob["houseID"];
 	    roomID = (UInt64)deviceBlob["roomID"];
 	    deviceID = (UInt64)deviceBlob["deviceID"];
+        
 
             try
             {
@@ -133,8 +154,13 @@ namespace HomeAutomationServer.Services
 
 		try 
 		{
+			#if DEBUG
+			if(!AppCache.AddDeviceBlob_DEBUG(deviceBlob))
+				throw new Exception("AppCache add device failed when adding: " + deviceBlob.ToString());
+			#else
 		    if(!AppCache.AddDeviceBlob(deviceBlob))
 		        throw new Exception("AppCache add device failed when adding: " + deviceBlob.ToString());
+			#endif
 		}		
 		catch (Exception ex)
 		{
@@ -168,51 +194,48 @@ namespace HomeAutomationServer.Services
             }
 
 	    return true;
+#endif
 	}
 
-		/*public JObject SaveHouse(string houseId, JToken model)
+	    public UInt64 SaveHouse(JToken model)
         {
-            WebRequest request = WebRequest.Create("http://54.152.190.217:8081/H/" + houseId);
-            request.ContentType = "application/json";
-            request.Method = "POST";
-            
-            using (var streamWriter = new StreamWriter(request.GetRequestStream()))
-            {
-                streamWriter.Write(model.ToString());
-            }
+        UInt64 houseId;
+        WebRequest request = WebRequest.Create(DeviceRepository.storageURL + "H");
+        request.ContentType = "application/json";
+        request.Method = "POST";
+        
+#if DEBUG
+            return 1;
+#else
+        using (var streamWriter = new StreamWriter(request.GetRequestStream()))
+        {
+            streamWriter.Write(model.ToString());
+            streamWriter.Flush();
+            streamWriter.Close();
+        }
 
-            using (HttpWebResponse response = request.GetResponse() as HttpWebResponse)
-            {
-                if (response.StatusCode != HttpStatusCode.OK)
-                    throw new Exception(String.Format(
-                    "Server error (HTTP {0}: {1}).",
-                    response.StatusCode,
-                    response.StatusDescription));
-            }
+        using (HttpWebResponse response = request.GetResponse() as HttpWebResponse)
+        {
+            if (response.StatusCode != HttpStatusCode.OK)
+                throw new Exception(String.Format(
+                "Server error (HTTP {0}: {1}).",
+                response.StatusCode,
+                response.StatusDescription));
 
-            request = WebRequest.Create("http://54.152.190.217:8081/HI/" + houseId);
-            request.Method = "GET";
+            var stream = response.GetResponseStream();
+            var reader = new StreamReader(stream);
 
-            using (HttpWebResponse response = request.GetResponse() as HttpWebResponse)
-            {
-                if (response.StatusCode != HttpStatusCode.OK)
-                    throw new Exception(String.Format(
-                    "Server error (HTTP {0}: {1}).",
-                    response.StatusCode,
-                    response.StatusDescription));
-                var stream = response.GetResponseStream();
-                var reader = new StreamReader(stream);
+            houseId = UInt64.Parse(reader.ReadToEnd());
+        }
 
-                string houseString = reader.ReadToEnd();
-                return JObject.Parse(houseString);
-            }
-            return null;
-        }*/
+        return houseId;
+#endif
+    }
 
-		public JObject DeleteHouse(string houseid)
-		{
-			/*WebRequest request = WebRequest.Create("http://54.152.190.217:8081/H/" + houseid);
-           request.Method = "DELETE";
+	    public JObject DeleteHouse(string houseid)
+	    {
+		/*WebRequest request = WebRequest.Create("http://54.152.190.217:8081/H/" + houseid);
+           	request.Method = "DELETE";
 
            using (HttpWebResponse response = request.GetResponse() as HttpWebResponse)
            {

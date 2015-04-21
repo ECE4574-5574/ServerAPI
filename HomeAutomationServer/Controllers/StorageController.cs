@@ -171,7 +171,7 @@ namespace HomeAutomationServer.Controllers
         /// <param name="houseid"></param>
         /// <returns>Returns the houses information via JSON object data.</returns>
         [Route("house/{houseid}")]
-        public JObject GetHouse(string houseid)
+        public JObject GetHouse(UInt64 houseid)
         {
             return houseRepository.GetHouse(houseid);
         }
@@ -184,9 +184,9 @@ namespace HomeAutomationServer.Controllers
         /// <param name="model"></param>
         /// <returns>Returns true if the house was posted, false if not.</returns>
         [Route("house")]
-        public bool PostHouse([FromBody] JObject model)                  // HTTP POST - posts a new user
+        public UInt64 PostHouse([FromBody] JObject model)                  // HTTP POST - posts a new user
         {
-            return true; // houseRepository.SaveHouse(houseid, model);
+            return houseRepository.SaveHouse(model);
         }
 
         /*// PATCH api/House/

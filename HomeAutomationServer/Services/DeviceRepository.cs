@@ -15,8 +15,13 @@ namespace HomeAutomationServer.Services
 {
     public class DeviceRepository
     {
-        public static string decisionURL = "http://LocalHost:8081/";
-        public static string storageURL = "http://54.152.190.217:8080/";
+		#if DEBUG
+		public static string decisionURL = "http://localhost:8085/";
+		public static string storageURL = "http://localhost:8080/";
+		#else
+		public static string decisionURL = "http://52.5.26.12:8085/";
+		public static string storageURL = "http://ec2-52-11-96-207.us-west-2.compute.amazonaws.com:8080/";
+#endif
 
         private string path = @"C:\ServerAPILogFile\logfile.txt";
 
@@ -300,15 +305,29 @@ namespace HomeAutomationServer.Services
             }
         }
         
-        public UInt64 SaveDevice(JObject model)     // Returns the device ID from the Storage which is type UInt64
+public UInt64 SaveDevice(JObject model)     // Returns the device ID from the Storage which is type UInt64
         {
             UInt64 houseId, roomId;
             string deviceType;
             UInt64 deviceId;
+#if DEBUG
+            try
+            {
+                houseId = (UInt64)model["houseID"]; // houseID is the correct key and is type UInt64
+                roomId = (UInt64)model["roomID"];   // roomID is the correct key and is type UInt64
+                deviceType = (string)model["Type"]; // Type is the correct key and is type string
+            }
+            catch (Exception ex){ // catches the exception if any of the keys are missing                
+                return 0;
+            }
+
+            return 1;
+            //model.TryGetValue("houseID", houseId);
+            //model.TryGetValue()
+#else
             houseId = (UInt64)model["houseID"]; // houseID is the correct key and is type UInt64
             roomId = (UInt64)model["roomID"];   // roomID is the correct key and is type UInt64
             deviceType = (string)model["Type"]; // Type is the correct key and is type string
-
             try
             {
                 WebRequest request = WebRequest.Create(storageURL + "D/" + houseId + "/" + roomId + "/" + deviceType);
@@ -369,11 +388,12 @@ namespace HomeAutomationServer.Services
             }
 
             return deviceId;
+#endif
         }
 
         public JObject DeleteDevice(string houseid, string spaceid, string deviceid)
         {
-            /*WebRequest request = WebRequest.Create("http://54.152.190.217:8081/HI/" + houseid);
+            /*WebRequest request = WebRequest.Create("http://54.152.190.217:8081/HD/" + houseid);
             request.Method = "GET";
 
             using (HttpWebResponse response = request.GetResponse() as HttpWebResponse)

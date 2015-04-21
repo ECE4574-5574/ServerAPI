@@ -15,11 +15,21 @@ namespace HomeAutomationServer.Services
 {
     public class UserRepository
     {
+		
+        // deviceRepo has static url
+        private string dm_url = DeviceRepository.decisionURL;
+		private string pss_url = DeviceRepository.storageURL;
+
         public JObject GetUser(string username)
         {
+            #if DEBUG
+            JObject val = new JObject();
+            val["test"] = "test1";
+            return val;
+            #else
             try
             {
-                WebRequest request = WebRequest.Create("http://172.31.26.85:8080/UI/" + username);
+				WebRequest request = WebRequest.Create(pss_url + username);
                 request.Method = "GET";
 
                 try
@@ -51,13 +61,30 @@ namespace HomeAutomationServer.Services
                 LogFile.AddLog("UserGet -- Could not create URL from data provided: " + ex.Message + "\n");
                 return null;
             }
+
+            #endif
         }
 
         public bool SaveUser(string username, JToken model)
         {
+			#if DEBUG
             try
             {
-                WebRequest request = WebRequest.Create("http://54.152.190.217:8081/U/" + username);
+                string userID = (string)model["userID"]; // houseID is the correct key and is type UInt64
+                string passWord = (string)model["Password"];   // roomID is the correct key and is type UInt64
+                //int[] houseIDs = (int[])model["houseIDs"]; // Type is the correct key and is type string
+            }
+            catch (Exception e){ // catches the exception if any of the keys are missing    
+				Console.WriteLine(e.Source);
+                return false;
+            }
+			return true;
+			#else
+            try
+            {
+                string userID = (string)model["userID"]; // houseID is the correct key and is type UInt64
+                string passWord = (string)model["Password"];   // roomID is the correct key and is type UInt64
+				WebRequest request = WebRequest.Create(pss_url + username);
                 request.ContentType = "application/json";
                 request.Method = "POST";
 
@@ -92,8 +119,8 @@ namespace HomeAutomationServer.Services
                 LogFile.AddLog("UpdateLocation -- Could not create the URL with the data provided: " + ex.Message + "\n");
                 return false;
             }
-
             return true;
+#endif
         }
 
         public JObject DeleteUser(string username)
@@ -120,9 +147,31 @@ namespace HomeAutomationServer.Services
         //Sends an updated position to the decison system
         public bool OnUpdatePosition(JObject model)
         {
+
+			#if DEBUG
+			try
+			{
+				string time = model["time"].ToString();
+				string lat = model["lat"].ToString();
+				string lon = model["long"].ToString();
+				string alt = model["alt"].ToString();
+				string userID = model["userID"].ToString();
+			}
+			catch (Exception e){ // catches the exception if any of the keys are missing      
+				Console.WriteLine(e.Source);
+				return false;
+			}
+
+			return true;
+			#else
+            string time = model["time"].ToString();
+            string lat = model["lat"].ToString();
+            string lon = model["long"].ToString();
+            string alt = model["alt"].ToString();
+            string userID = model["userID"].ToString();
             try
             {
-                WebRequest request = WebRequest.Create("http://54.152.190.217:8085/LocationChange");
+				WebRequest request = WebRequest.Create(dm_url +"LocationChange");
                 request.ContentType = "application/json";
                 request.Method = "POST";
 
@@ -157,16 +206,40 @@ namespace HomeAutomationServer.Services
                 LogFile.AddLog("UpdateLocation -- Could not create the URL with the data provided: " + ex.Message + "\n");
                 return false;
             }
-
             return true;
+#endif
         }
 
         //Sends an updated position to the decison system and needs the nearest object to be brightened that can be brightened
         public bool Brighten(JObject model)
         {
+			#if DEBUG
+			try
+			{
+				string time = model["time"].ToString();
+				double lat = (double) model["lat"];
+				double lon = (double) model["long"];
+				double alt = (double) model["alt"];
+				string userID = model["userID"].ToString();
+				string command = model["brightenNearMe"].ToString();
+			}
+			catch (Exception e){ // catches the exception if any of the keys are missing  
+				Console.WriteLine(e.Source);
+				return false;
+			}
+			return true;
+
+			#else
+
             try
             {
-                WebRequest request = WebRequest.Create("http://54.152.190.217:8085/LocationChange");
+                string time = model["time"].ToString();
+				double lat = (double) model["lat"];
+				double lon = (double) model["long"];
+				double alt = (double) model["alt"];
+				string userID = model["userID"].ToString();
+				string command = model["brightenNearMe"].ToString();
+		        WebRequest request = WebRequest.Create(dm_url + "CommandsFromApp");
                 request.ContentType = "application/json";
                 request.Method = "POST";
 
@@ -200,8 +273,8 @@ namespace HomeAutomationServer.Services
                 LogFile.AddLog("Brigthen -- Could not create the URL with the data provided: " + ex.Message + "\n")
                 return false;
             }
-
             return true;
+#endif
         }
 
         //public Exception UpdateUser(int id, string firstName, string lastName)
