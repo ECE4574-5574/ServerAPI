@@ -11,7 +11,7 @@ using HomeAutomationServer.Filters;
 
 namespace HomeAutomationServer.Controllers
 {
-    public class LogFileController : ApiController
+    public class LogfileController : ApiController
     {
         // GET api/logfile
         /// <summary>
