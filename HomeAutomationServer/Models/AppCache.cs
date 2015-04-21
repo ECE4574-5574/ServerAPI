@@ -6,7 +6,6 @@ using System.Net.Http;
 using System.Web.Http;
 using Newtonsoft.Json.Linq;
 using HomeAutomationServer.Filters;
-using System.Text;
 using System.IO;
 
 using Amazon;
@@ -24,7 +23,6 @@ namespace HomeAutomationServer.Models
     static public class AppCache  // A cache to temporarily store app information while waiting on 
     {                      // information request.
 
-        private static string path = @"C:\ServerAPILogFile\logfile.txt";
         // A JSON array of device blobs
         private static JArray deviceBlobs = new JArray();
         // add any other JArrays containing blobs here
@@ -62,16 +60,7 @@ namespace HomeAutomationServer.Models
 
                 catch (Exception ex)
                 {
-                    if (!File.Exists(path))
-                    {
-                        Directory.CreateDirectory(@"C:\ServerAPILogFile");
-                        using (FileStream fstream = File.Create(path))
-                        {
-                            Byte[] info = new UTF8Encoding(true).GetBytes("AppCache -- Failed to send Push Notification: " + ex.Message);
-                            fstream.Write(info, 0, info.Length);
-                        }
-                    }
-                    else File.AppendAllText(path, "\nAppCache -- Could not send Push Notification: " + ex.Message);
+                    LogFile.AddLog("AppCache -- Could not send Push Notification: " + ex.Message + "\n");
                     return false;
                 }
 
