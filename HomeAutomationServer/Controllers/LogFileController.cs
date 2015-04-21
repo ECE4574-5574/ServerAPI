@@ -11,7 +11,6 @@ using HomeAutomationServer.Filters;
 
 namespace HomeAutomationServer.Controllers
 {
-    [RoutePrefix("api/logfile")]
     public class LogFileController : ApiController
     {
         // GET api/logfile
@@ -19,6 +18,7 @@ namespace HomeAutomationServer.Controllers
         /// Gets the logfile as a string
         /// </summary>
         /// <returns></returns>
+        [Route("api/logfile")]
         public string GetLogFile()
         {
             return LogFile.GetLog();
@@ -39,6 +39,7 @@ namespace HomeAutomationServer.Controllers
         /// <summary>
         /// Deletes the logile
         /// </summary>
+        [Route("api/logfile")]
         public void DeleteLogFile()
         {
             LogFile.DeleteLog();
