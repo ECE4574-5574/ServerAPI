@@ -17,23 +17,37 @@ namespace HomeAutomationServer.Services
     {
         public JObject GetSpace(string houseid, string spaceid)
         {
-            /*WebRequest request = WebRequest.Create("http://54.152.190.217:8081/RI/" + houseid + "/" + spaceid);
-            request.Method = "GET";
-
-            using (HttpWebResponse response = request.GetResponse() as HttpWebResponse)
+            try
             {
-                if (response.StatusCode != HttpStatusCode.OK)
-                    throw new Exception(String.Format(
-                    "Server error (HTTP {0}: {1}).",
-                    response.StatusCode,
-                    response.StatusDescription));
-                var stream = response.GetResponseStream();
-                var reader = new StreamReader(stream);
+                /*WebRequest request = WebRequest.Create("http://54.152.190.217:8081/RI/" + houseid + "/" + spaceid);
+                request.Method = "GET";
+                */
+                try {
+                /*using (HttpWebResponse response = request.GetResponse() as HttpWebResponse)
+                {
+                    if (response.StatusCode != HttpStatusCode.OK)
+                        throw new Exception(String.Format(
+                        "Server error (HTTP {0}: {1}).",
+                        response.StatusCode,
+                        response.StatusDescription));
+                    var stream = response.GetResponseStream();
+                    var reader = new StreamReader(stream);
 
-                string spaceString = reader.ReadToEnd();
-                return JObject.Parse(spaceString);
-            }*/
-
+                    string spaceString = reader.ReadToEnd();
+                    return JObject.Parse(spaceString);
+                }*/
+            }
+            catch (Exception ex)
+            {
+                LogFile.AddLog("Room -- Could not Get the room information from Storage: " + ex.Message + "\n");
+                return null;
+            }
+            }
+            catch (Exception ex)
+            {
+                LogFile.AddLog("Room -- Invalid URL information provided: " + ex.Message + "\n");
+                return null;
+            }
             return null;
         }
 
@@ -42,12 +56,18 @@ namespace HomeAutomationServer.Services
 		{
 			
 			UInt64 roomID;
-
-			WebRequest request = WebRequest.Create (DeviceRepository.storageURL + "R");
-			request.ContentType = "application/json";
-			request.Method = "POST";
+            try
+            {
+                WebRequest request = WebRequest.Create(DeviceRepository.storageURL + "R");
+                request.ContentType = "application/json";
+                request.Method = "POST";
 
 #if DEBUG
+            }
+            catch (Exception ex)
+            {
+                return 1;
+            }
 			return 1;
 #else
 		
@@ -74,6 +94,12 @@ namespace HomeAutomationServer.Services
 				LogFile.AddLog ("House -- Could not post room to the server: " + ex.Message + "\n");
 				return 0;
 			}
+            }
+            catch (Exception ex)
+            {
+                LogFile.AddLog("House -- Invalid URL: " + ex.Message + "\n");
+                return 0;
+            }
 
 #endif
 		}
