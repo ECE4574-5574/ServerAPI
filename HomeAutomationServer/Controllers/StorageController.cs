@@ -45,7 +45,7 @@ namespace HomeAutomationServer.Controllers
         /// <param name="houseid"></param>
         /// <param name="spaceid"></param>
         /// <returns>Returns all devices in the space via JSON array data.</returns>
-        [Route("device/{houseid}/{spaceid}")]
+        [Route("device/{houseid}/{spaceid:alpha}")]
         public JArray GetDevSpace(string houseid, string spaceid)
         {
             return deviceRepository.GetDevice(houseid, spaceid);
@@ -84,7 +84,7 @@ namespace HomeAutomationServer.Controllers
         /// <param name="houseid"></param>
         /// <param name="type"></param>
         /// <returns>Returns all of the devices in the specified house via JSON array data.</returns>
-        [Route("device/{houseid}/{type}")]
+        [Route("device/{houseid}/{type:int}")]
         public JArray GetDevHouseType(string houseid, int type)
         {
             return deviceRepository.GetDevice(houseid, type);
