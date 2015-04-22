@@ -15,8 +15,9 @@ server.patch_decision_state_deviceid_state(deviceid, state)
 print ""
 
 device_data = {
-	"Name": 'device',
-	"Enabled": True
+	"HouseID": "001",
+	"RoomID": "002",
+	"DeviceID": "004",
 }
 # GET api/decision/state
 server.get_decision_state(device_data)
