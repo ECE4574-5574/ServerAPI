@@ -17,7 +17,7 @@ namespace HomeAutomationServer.Services
 	{
 
 		// returns room object or null if error
-		public JObject GetSpace (string houseid, string spaceid)
+		public JObject GetSpace (string houseID, string spaceid)
 		{
 
 			try {
@@ -47,10 +47,9 @@ namespace HomeAutomationServer.Services
 
 			} catch (SystemException ex) {
 				LogFile.AddLog ("Storage -- Could not create the specified url with the data provided: " + ex.Message + "\n");
-				return (bool)model ["Enabled"];
+				return null;
 			}
 
-			return null;
 		}
 
 
