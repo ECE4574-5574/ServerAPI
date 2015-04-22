@@ -57,6 +57,7 @@ namespace HomeAutomationServer.Services
 		{
 			UInt64 houseId, roomID;
 #if DEBUG
+
 			try
 			{
 				houseId = (UInt64)model["houseID"]; // houseID is the correct key and is type UInt64
@@ -111,6 +112,12 @@ namespace HomeAutomationServer.Services
 				LogFile.AddLog ("Device -- Failed to send POST request with the URL provided: " + ex.Message + "\n");
 				return 0;
 			}
+            }
+            catch (Exception ex)
+            {
+                LogFile.AddLog("House -- Invalid URL: " + ex.Message + "\n");
+                return 0;
+            }
 
 			return roomID;
 #endif

@@ -1,4 +1,4 @@
-using HomeAutomationServer.Services;
+﻿using HomeAutomationServer.Services;
 using HomeAutomationServer.Models;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -85,10 +85,17 @@ namespace HomeAutomationServer.Services
             }
             return true;
 #else
-	    houseID = (UInt64)deviceBlob["houseID"];
-	    roomID = (UInt64)deviceBlob["roomID"];
-	    deviceID = (UInt64)deviceBlob["deviceID"];
-        
+            try 
+            {
+	            houseID = (UInt64)deviceBlob["houseID"];
+	            roomID = (UInt64)deviceBlob["roomID"];
+	            deviceID = (UInt64)deviceBlob["deviceID"];
+            }
+            catch (Exception ex)
+            {
+                LogFile.AddLog("House -- Invalid Keys are used: " + ex.Message + "\n");
+                return false;
+            }
 
             try
             {
@@ -152,12 +159,19 @@ namespace HomeAutomationServer.Services
 
         public UInt64 SaveHouse(JObject model)
         {
-            UInt64 houseId;
-            WebRequest request = WebRequest.Create(DeviceRepository.storageURL + "H");
-            request.ContentType = "application/json";
-            request.Method = "POST";
+            try
+            {
+                UInt64 houseId;
+                WebRequest request = WebRequest.Create(DeviceRepository.storageURL + "H");
+                request.ContentType = "application/json";
+                request.Method = "POST";
 
 #if DEBUG
+            }
+            catch (Exception ex)
+            {
+                return 1;
+            }
             return 1;
 #else
             try
@@ -189,6 +203,12 @@ namespace HomeAutomationServer.Services
                 LogFile.AddLog("House -- Could not post house to the server: " + ex.Message + "\n");
                 return 0;
             }
+         }
+         catch (Exception ex)
+         {
+                LogFile.AddLog("House -- Invalid URL with data provided: " + ex.Message + "\n");
+                return 0;
+         }
 #endif
         }
 

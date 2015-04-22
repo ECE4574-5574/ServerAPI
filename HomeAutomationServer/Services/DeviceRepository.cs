@@ -234,9 +234,18 @@ namespace HomeAutomationServer.Services
             //model.TryGetValue("houseID", houseId);
             //model.TryGetValue()
 #else
+
+            try {
             houseId = (UInt64)model["houseID"]; // houseID is the correct key and is type UInt64
             roomId = (UInt64)model["roomID"];   // roomID is the correct key and is type UInt64
             deviceType = (string)model["Type"]; // Type is the correct key and is type string
+            }
+            catch (Exception ex)
+            {
+               LogFile.AddLog("Device -- Keys are invalid or missing: " ex.Message + "\n");
+               return 0;
+            }
+
             try
             {
                 WebRequest request = WebRequest.Create(storageURL + "D/" + houseId + "/" + roomId + "/" + deviceType);
