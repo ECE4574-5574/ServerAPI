@@ -15,24 +15,40 @@ namespace HomeAutomationServer.Services
 {
 	public class SpaceRepository
 	{
+
+		// returns room object or null if error
 		public JObject GetSpace (string houseid, string spaceid)
 		{
-			/*WebRequest request = WebRequest.Create("http://54.152.190.217:8081/RI/" + houseid + "/" + spaceid);
-            request.Method = "GET";
 
-            using (HttpWebResponse response = request.GetResponse() as HttpWebResponse)
-            {
-                if (response.StatusCode != HttpStatusCode.OK)
-                    throw new Exception(String.Format(
-                    "Server error (HTTP {0}: {1}).",
-                    response.StatusCode,
-                    response.StatusDescription));
-                var stream = response.GetResponseStream();
-                var reader = new StreamReader(stream);
+			try {
 
-                string spaceString = reader.ReadToEnd();
-                return JObject.Parse(spaceString);
-            }*/
+				WebRequest request = WebRequest.Create (DeviceRepository.storageURL + "BR/" + houseID + "/" + spaceid);
+				request.Method = "GET";
+
+				try {
+
+					using (HttpWebResponse response = request.GetResponse () as HttpWebResponse) {
+						if (response.StatusCode != HttpStatusCode.OK)
+							throw new Exception (String.Format (
+								"Server error (HTTP {0}: {1}).",
+								response.StatusCode,
+								response.StatusDescription));
+						var stream = response.GetResponseStream ();
+						var reader = new StreamReader (stream);
+
+						string spaceString = reader.ReadToEnd ();
+						return JObject.Parse (spaceString);
+					}
+
+				} catch (Exception ex) {
+					LogFile.AddLog ("Decision -- Could not Get the data from the House System: " + ex.Message + "\n");
+					return null;
+				}
+
+			} catch (SystemException ex) {
+				LogFile.AddLog ("Storage -- Could not create the specified url with the data provided: " + ex.Message + "\n");
+				return (bool)model ["Enabled"];
+			}
 
 			return null;
 		}
@@ -57,16 +73,14 @@ namespace HomeAutomationServer.Services
 		
 			try {
 				houseId = (UInt64)model ["houseID"]; // houseID is the correct key and is type UInt64
-			}
-			catch (Exception ex)
-			{ // catches the exception if any of the keys are missing      
-				LogFile.AddLog("Device -- Keys are invalid or missing: " + ex.Message + "\n");
+			} catch (Exception ex) { // catches the exception if any of the keys are missing      
+				LogFile.AddLog ("Device -- Keys are invalid or missing: " + ex.Message + "\n");
 				return 0;
 			}
 
 			try {
 				
-				WebRequest request = WebRequest.Create (DeviceRepository.storageURL + "R/" +houseId);
+				WebRequest request = WebRequest.Create (DeviceRepository.storageURL + "R/" + houseId);
 				request.ContentType = "application/json";
 				request.Method = "POST";
 
