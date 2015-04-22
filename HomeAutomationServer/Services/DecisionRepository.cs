@@ -127,7 +127,9 @@ namespace HomeAutomationServer.Services
         public bool GetState(JObject model)
         {
             JObject device = new JObject();
-
+#if DEBUG
+            return true;
+#else
             try
             {
                 WebRequest request = WebRequest.Create(houseApiHost + (UInt64)model["HouseID"] + (UInt64)model["RoomID"] + (UInt64)model["DeviceID"]);
@@ -164,6 +166,7 @@ namespace HomeAutomationServer.Services
                 LogFile.AddLog("Decision -- Could not create the specified url with the data provided: " + ex.Message + "\n");
                 return (bool)model["Enabled"];
             }
+#endif
         }
     }
 }
