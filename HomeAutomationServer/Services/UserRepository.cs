@@ -170,10 +170,10 @@ namespace HomeAutomationServer.Services
             try
             {
                 double lat = (double)model["lat"];
-                double lon = (double)model["long"];
+                double lon = (double)model["lon"];
                 double alt = (double)model["alt"];
                 model["lat"] = lat;
-                model["long"] = lon;
+                model["lon"] = lon;
                 model["alt"] = alt;
 				WebRequest request = WebRequest.Create(dm_url +"LocationChange");
                 request.ContentType = "application/json";
@@ -185,7 +185,6 @@ namespace HomeAutomationServer.Services
                     streamWriter.Flush();
                     streamWriter.Close();
                 }
-
                 try
                 {
                     using (HttpWebResponse response = request.GetResponse() as HttpWebResponse)
@@ -239,10 +238,10 @@ namespace HomeAutomationServer.Services
             {
                 string time = model["time"].ToString();
 				double lat = (double) model["lat"];
-				double lon = (double) model["long"];
+				double lon = (double) model["lon"];
 				double alt = (double) model["alt"];
 				string userID = model["userID"].ToString();
-				string command = model["brightenNearMe"].ToString();
+				string command = model["command-string"].ToString();
 		        WebRequest request = WebRequest.Create(dm_url + "CommandsFromApp");
                 request.ContentType = "application/json";
                 request.Method = "POST";
