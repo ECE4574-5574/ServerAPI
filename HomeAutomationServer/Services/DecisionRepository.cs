@@ -37,11 +37,12 @@ namespace HomeAutomationServer.Services
             }
 
 #else
-            houseId = (UInt64)model["houseID"]; // houseID is the correct key and is type UInt64
-			roomId = (UInt64)model["roomID"];   // roomID is the correct key and is type UInt64
-			deviceType = (string)model["Type"]; // Type is the correct key and is type string
+            
             try
             {
+                houseId = (UInt64)model["houseID"]; // houseID is the correct key and is type UInt64
+                roomId = (UInt64)model["roomID"];   // roomID is the correct key and is type UInt64
+                deviceType = (string)model["Type"]; // Type is the correct key and is type string
 				WebRequest request = WebRequest.Create(houseApiHost + "/" + houseId + "/" + roomId + "/" + deviceType);
                 request.Method = "POST";
 

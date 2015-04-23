@@ -135,6 +135,7 @@
     <Compile Include="Controllers\DecisionController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\LearningControllerSelector.cs" />
+    <Compile Include="Controllers\LogFileController.cs" />
     <Compile Include="Controllers\SimController.cs" />
     <Compile Include="Controllers\StorageController.cs" />
     <Compile Include="Filters\ForceHttpsAttribute.cs" />
