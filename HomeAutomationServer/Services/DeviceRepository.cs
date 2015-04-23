@@ -242,7 +242,7 @@ namespace HomeAutomationServer.Services
             }
             catch (Exception ex)
             {
-               LogFile.AddLog("Device -- Keys are invalid or missing: " ex.Message + "\n");
+               LogFile.AddLog("Device -- Keys are invalid or missing: " + ex.Message + "\n");
                return 0;
             }
 
