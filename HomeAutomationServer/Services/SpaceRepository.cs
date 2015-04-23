@@ -85,7 +85,7 @@ namespace HomeAutomationServer.Services
 
 				try {
 
-					using (var streamWriter = new StreamWriter (request.GetRequestStream ())) {
+					using (var streamWriter = new StreamWriter (request.GetRequestStream ()))
 						streamWriter.Write (model.ToString ());
 					using (HttpWebResponse response = request.GetResponse () as HttpWebResponse) {
 						if (response.StatusCode != HttpStatusCode.OK)
@@ -99,7 +99,7 @@ namespace HomeAutomationServer.Services
 
 						roomID = UInt64.Parse (reader.ReadToEnd ());
 					}
-                    }
+        
 				} catch (Exception ex) {
 					LogFile.AddLog ("House -- Could not post room to the server: " + ex.Message + "\n");
 					return 0;
