@@ -17,80 +17,83 @@ using Amazon.S3;
 using Amazon.S3.Model;
 using Amazon.SimpleNotificationService;
 using Amazon.SimpleNotificationService.Model;
+using api;
 
 namespace HomeAutomationServer.Models
 {
-    static public class AppCache  // A cache to temporarily store app information while waiting on 
-    {                      // information request.
+static public class AppCache  // A cache to temporarily store app information while waiting on 
+{
+	// information request.
 
-        // A JSON array of device blobs
-        private static JArray deviceBlobs = new JArray();
-        // add any other JArrays containing blobs here
+	// A JSON array of device blobs
+	static private JArray deviceBlobs = new JArray();
+	static private Dictionary<FullID, Device> _devices;
+	// add any other JArrays containing blobs here
         
-        ////////////////////////////////////////////////////////////////////////////////////////
-        //
-        // deviceBlobs methods
+	////////////////////////////////////////////////////////////////////////////////////////
+	//
+	// deviceBlobs methods
 
-		/*************** DEBUG MODE METHOD *************/
+	/*************** DEBUG MODE METHOD *************/
 
-		static public bool AddDeviceBlob_DEBUG(JObject blob)
+	static public bool AddDeviceBlob_DEBUG(JObject blob)
+	{
+		deviceBlobs[(string)blob["deviceID"]] = blob;
+
+		if(deviceBlobs[(string)blob["deviceID"]] == blob)
 		{
-			deviceBlobs[(string)blob["deviceID"]] = blob;
-
-			if (deviceBlobs [(string)blob ["deviceID"]] == blob) {
-				return true;
-			}
-
-			return false;
+			return true;
 		}
 
-		/*************** END DEBUG MODE METHOD *************/
+		return false;
+	}
 
-        static public bool AddDeviceBlob(JObject blob)
-        {
-            deviceBlobs[(string)blob["deviceID"]] = blob;
+	/*************** END DEBUG MODE METHOD *************/
 
-            if (deviceBlobs[(string)blob["deviceID"]] == blob)
-            {
-                try
-                {
-                    AmazonSimpleNotificationServiceClient snsClient = new AmazonSimpleNotificationServiceClient("AKIAJM2E3LGZHJYGFSQQ", "p3Qi8DAXj+XHAH+ny7HrlRyleBs5V5DJv77zKK3T", Amazon.RegionEndpoint.USEast1);
-                    snsClient.Publish("arn:aws:sns:us-east-1:336632281456:MyTopic", "New Device Updates");
-                }
+	static public bool AddDeviceBlob(JObject blob)
+	{
+		deviceBlobs[(string)blob["deviceID"]] = blob;
 
-                catch (Exception ex)
-                {
-                    LogFile.AddLog("AppCache -- Could not send Push Notification: " + ex.Message + "\n");
-                    return false;
-                }
+		if(deviceBlobs[(string)blob["deviceID"]] == blob)
+		{
+			try
+			{
+				AmazonSimpleNotificationServiceClient snsClient = new AmazonSimpleNotificationServiceClient("AKIAJM2E3LGZHJYGFSQQ", "p3Qi8DAXj+XHAH+ny7HrlRyleBs5V5DJv77zKK3T", Amazon.RegionEndpoint.USEast1);
+				snsClient.Publish("arn:aws:sns:us-east-1:336632281456:MyTopic", "New Device Updates");
+			}
+			catch(Exception ex)
+			{
+				LogFile.AddLog("AppCache -- Could not send Push Notification: " + ex.Message + "\n");
+				return false;
+			}
 
-                return true;
-            }
+			return true;
+		}
 
-            return false;
-        }
+		return false;
+	}
 
-        static public JToken GetDeviceBlob(string deviceID)
-        {
-            JToken blob = deviceBlobs[deviceID];
-            deviceBlobs[deviceID].Remove();
-            return blob;
-        }
+	static public JToken GetDeviceBlob(string deviceID)
+	{
+		JToken blob = deviceBlobs[deviceID];
+		deviceBlobs[deviceID].Remove();
+		return blob;
+	}
 
-        static public JArray GetAllBlobs()
-        {
-            JArray blobs = deviceBlobs;
-            deviceBlobs.RemoveAll();
-            return blobs;
-        }
+	static public JArray GetAllBlobs()
+	{
+		JArray blobs = deviceBlobs;
+		deviceBlobs.RemoveAll();
+		return blobs;
+	}
 
-        static public int GetBlobCount()
-        {
-            return deviceBlobs.Count;
-        }
+	static public int GetBlobCount()
+	{
+		return deviceBlobs.Count;
+	}
 
-        ////////////////////////////////////////////////////////////////////////////////////////
-        //
-        // other blob methods
-    }
+	////////////////////////////////////////////////////////////////////////////////////////
+	//
+	// other blob methods
+}
 }
