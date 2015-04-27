@@ -75,6 +75,23 @@ namespace HomeAutomationServer.Controllers
             return AppCache.GetBlobCount();
         }
 
+        // GET api/app/device/enumeratedevices
+        /// <summary>
+        /// Get the list of devices from the house.
+        /// </summary>
+        /// <returns>Returns the list of unregistered devices in the house.</returns>
+        [Route("device/enumeratedevices")]
+        public JArray GetUnregisteredDevices()
+        {
+            JArray test = new JArray();
+            test.Add("light1");
+            test.Add("light2");
+            test.Add("light3");
+            return test;
+        }
+
+
+
         // POST api/app/user/brighten
         /// <summary>
         /// A request from the App system to make something brighter near their location. Information provided 
