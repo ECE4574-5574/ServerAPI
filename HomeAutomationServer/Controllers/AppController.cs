@@ -12,11 +12,11 @@ using api;
 
 namespace HomeAutomationServer.Controllers
 {
-	[RoutePrefix("api/app")]
+	[RoutePrefix ("api/app")]
 	public class AppController : ApiController
 	{
-		private UserRepository userRepository = new UserRepository();
-		private AppCache appCache = new AppCache();
+		private UserRepository userRepository = new UserRepository ();
+		private AppCache appCache = new AppCache ();
 
 		////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 		//
@@ -29,14 +29,14 @@ namespace HomeAutomationServer.Controllers
 		/// <param name="username"></param>
 		/// <param name="model"></param>
 		/// <returns>Returns true if updated, false if not.</returns>
-		[Route("user/updateposition/{username}")]
-		public bool UpdatePosition(string username, [FromBody] JObject model)
+		[Route ("user/updateposition/{username}")]
+		public bool UpdatePosition (string username, [FromBody] JObject model)
 		{
-			model["userId"] = username;
+			model ["userId"] = username;
 			DateTime currentTime;
 			//currentTime = DateTime.Now;
 			//model["locationTimeStamp"] = currentTime.ToString();
-			return userRepository.OnUpdatePosition(model);
+			return userRepository.OnUpdatePosition (model);
 		}
 
 		///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -49,10 +49,10 @@ namespace HomeAutomationServer.Controllers
 		/// </summary>
 		/// <param name="deviceid"></param>
 		/// <returns>Returns pending JSON device data with the device ID provided.</returns>
-		[Route("device/{fullid}")]
-		public JToken GetDevice(FullID fullID)
+		[Route ("device/{fullid}")]
+		public JToken GetDevice (FullID fullID)
 		{
-			return appCache.GetDeviceBlob(fullID);
+			return appCache.GetDeviceBlob (fullID);
 		}
 
 		// GET api/app/device
@@ -60,10 +60,10 @@ namespace HomeAutomationServer.Controllers
 		/// Get all the pending JSON device data as an array of JSON data.
 		/// </summary>
 		/// <returns>Returns an array of JSON data of the devices.</returns>
-		[Route("device")]
-		public JArray GetDevices()
+		[Route ("device")]
+		public JArray GetDevices ()
 		{
-			return appCache.GetAllBlobs();
+			return appCache.GetAllBlobs ();
 		}
 
 		// GET api/app/device/count
@@ -71,10 +71,10 @@ namespace HomeAutomationServer.Controllers
 		/// Get the pending JSON device data count.
 		/// </summary>
 		/// <returns>Returns the number of pending JSON device data.</returns>
-		[Route("device/count")]
-		public int GetDeviceCount()
+		[Route ("device/count")]
+		public int GetDeviceCount ()
 		{
-			return appCache.GetBlobCount();
+			return appCache.GetBlobCount ();
 		}
 	}
 }
