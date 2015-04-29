@@ -1,10 +1,21 @@
-﻿using System;
+using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Net;
 using System.IO;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System.Diagnostics;
+
+
+using Amazon;
+using Amazon.EC2;
+using Amazon.EC2.Model;
+using Amazon.SimpleDB;
+using Amazon.SimpleDB.Model;
+using Amazon.S3;
+using Amazon.S3.Model;
+using Amazon.SimpleNotificationService;
+using Amazon.SimpleNotificationService.Model;
 
 namespace HomeAutomationTest
 {
@@ -24,9 +35,9 @@ namespace HomeAutomationTest
             request.Method = "POST";
 
             JObject jobject = new JObject();
-            jobject["wall"] = "1997-07-16T19:20:30+01:00";
-            jobject["sim"] = "ISO 8601";
-            jobject["rate"] = "double";
+            jobject["time"] = "2015-04-06T18:05:05Z";
+            jobject["localTime"] = "2015-04-06T18:05:05Z";
+           // jobject["rate"] = "double";
 
             string json = jobject.ToString();
 
@@ -149,10 +160,10 @@ namespace HomeAutomationTest
             request.Method = "POST";
 
             JObject jobject = new JObject();
-            jobject["time"] = "2015-05-06 12:15:35";
-            jobject["userId"] = username;
+            jobject["time"] = "2015-04-06T18:05:05Z";
+            jobject["userID"] = username;
             jobject["lat"] = "37.874342";
-            jobject["long"] = "-86.342234";
+            jobject["lon"] = "-86.342234";
             jobject["alt"] = "21.5452";
 
             string json = jobject.ToString();
@@ -182,42 +193,19 @@ namespace HomeAutomationTest
                 Assert.Fail("Web exception occurred");
             }
 
-            //Testing update location with wrong username
             /*
-            request = WebRequest.Create(URI + "/api/app/user/updateposition/" + "wrongusername");
-            request.ContentType = "application/json";
-            request.Method = "POST";
+            // of the array is one line of the file. 
+            string[] lines = System.IO.File.ReadAllLines(@"C:\keys.txt");
+            string accK = lines[0];
+            string secK = lines[1];
 
-            jobject = new JObject();
-            jobject["time"] = "2015-05-06 12:15:35";
-            jobject["userId"] = username +"wrongusername";
-            jobject["lat"] = "37.874342";
-            jobject["lon"] = "-86.342234";
-            jobject["alt"] = "21.5452";
-
-            json = jobject.ToString();
-
-            using (var streamWriter = new StreamWriter(request.GetRequestStream()))
-            {
-                streamWriter.Write(json);
-                streamWriter.Close();
-            }
-
-            try
-            {
-                using (HttpWebResponse response = request.GetResponse() as HttpWebResponse)
-                {
-                    // Should get a bad request
-                    Assert.AreEqual(response.StatusCode, HttpStatusCode.BadRequest);
-                }
-            }
-
-            catch (WebException we)
-            {
-                Console.WriteLine("TestPostUpdateLocation failed.");
-                Assert.Fail();
-            }
-             */
+            NotificationManager nm = new NotificationManager(accK, secK, Amazon.RegionEndpoint.USEast1);
+            AmazonSimpleNotificationServiceClient snsClient = new AmazonSimpleNotificationServiceClient(accK, secK, Amazon.RegionEndpoint.USEast1);
+            
+            var topic = snsClient.FindTopic(nm.getTopicName(username));
+            string topicArn1 = "arn:aws:sns:us-east-1:336632281456:" + nm.getTopicName(username);
+            Assert.AreEqual(topic.TopicArn, topicArn1);
+             * */
         }
 
         // Testing delete user on 
@@ -905,11 +893,15 @@ namespace HomeAutomationTest
             request.ContentType = "application/json";
             request.Method = "POST";
 
+            int houseid = 67;
+            int roomid = 20;
+            int deviceid = 0;
+
             JObject jobjects = new JObject();
             jobjects["ID"] = "1234";
-            jobjects["houseid"] = "16";
-            jobjects["roomid"] = "890";
-            jobjects["deviceid"] = "5";
+            jobjects["houseID"] = houseid;
+            jobjects["roomID"] = roomid;
+            jobjects["deviceID"] = "5";
             jobjects["type"] = "Light";
             jobjects["Name"] = "BedroomLight";
             string json = jobjects.ToString();
@@ -928,7 +920,8 @@ namespace HomeAutomationTest
                     var stream = response.GetResponseStream();
                     var reader = new StreamReader(stream);
                     string str = reader.ReadToEnd();
-                    Assert.AreEqual(str, "true");
+                    deviceid = Convert.ToInt32(str);
+                    //Assert.AreEqual(str, "true");
                 }
             }
 
@@ -940,7 +933,7 @@ namespace HomeAutomationTest
 
             //Now try to GET DeviceId w/ wrong Data
 
-            request = WebRequest.Create(URI + "/api/storage/device/?{houseid=" + 8732 + "/&{roomid=" + 21 + "/&{deviceid=" + 3 + "}");
+            request = WebRequest.Create(URI + "/api/storage/device/" + houseid + "/" + "-1" + "/" + deviceid);
             request.ContentType = "application/json";
             request.Method = "GET";
 
@@ -952,7 +945,8 @@ namespace HomeAutomationTest
                     var stream = response.GetResponseStream();
                     var reader = new StreamReader(stream);
                     string str = reader.ReadToEnd();
-                    Assert.AreEqual(str, "false");
+
+                    Assert.AreEqual(str, "[]");
                 }
             }
 
@@ -964,7 +958,7 @@ namespace HomeAutomationTest
 
             // NOW Try to get the CORRECT Device ID Data
 
-            request = WebRequest.Create(URI + "/api/storage/device/?{houseid=" + 567 + "/&{roomid=" + 890 + "/&{deviceid=" + 5 + "}");
+            request = WebRequest.Create(URI + "/api/storage/device/" + houseid + "/" + roomid + "/" + deviceid );
             request.ContentType = "application/json";
             request.Method = "GET";
 
@@ -976,7 +970,7 @@ namespace HomeAutomationTest
                     var stream = response.GetResponseStream();
                     var reader = new StreamReader(stream);
                     string str = reader.ReadToEnd();
-                    Assert.AreEqual(str, "true");
+                    Assert.AreNotEqual(str, "null");
                 }
             }
 
@@ -994,20 +988,15 @@ namespace HomeAutomationTest
         [TestMethod]
         public void TestGetRoomID()
         {
-            //FIRST POST Data
-
-            WebRequest request = WebRequest.Create(URI + "/api/storage/device");
+            int houseid = 0;
+            WebRequest request = WebRequest.Create(URI + "/api/storage/house");
             request.ContentType = "application/json";
             request.Method = "POST";
 
-            JObject jobjects = new JObject();
-            jobjects["ID"] = "1234";
-            jobjects["houseid"] = "567";
-            jobjects["roomid"] = "890";
-            jobjects["deviceid"] = "5";
-            jobjects["type"] = "Light";
-            jobjects["Name"] = "BedroomLight";
-            string json = jobjects.ToString();
+            JObject jobject = new JObject();
+            jobject["blob"] = houseid;
+            jobject["name"] = "myhouse";
+            string json = jobject.ToString();
 
             using (var streamWriter = new StreamWriter(request.GetRequestStream()))
             {
@@ -1023,7 +1012,49 @@ namespace HomeAutomationTest
                     var stream = response.GetResponseStream();
                     var reader = new StreamReader(stream);
                     string str = reader.ReadToEnd();
-                    Assert.AreEqual(str, "true");
+                    houseid = Convert.ToInt32(str);
+                    //Assert.AreEqual(str, "true");
+                }
+            }
+
+            catch (WebException we)
+            {
+                Console.WriteLine("TestPostHouse failed. Couldn't post a house");
+                Assert.Fail("WebException occurred. TestPostHouse failed. Couldn't post a house");
+            }
+
+            //FIRST POST Data
+
+            request = WebRequest.Create(URI + "/api/storage/space");
+            request.ContentType = "application/json";
+            request.Method = "POST";
+
+            JObject jobjects = new JObject();
+            jobjects["ID"] = "1234";
+            jobjects["houseID"] = houseid;
+            jobjects["deviceid"] = "5";
+            jobjects["type"] = "Light";
+            jobjects["Name"] = "BedroomLight";
+            json = jobjects.ToString();
+
+            int roomid = 0;
+
+            using (var streamWriter = new StreamWriter(request.GetRequestStream()))
+            {
+                streamWriter.Write(json);
+                streamWriter.Close();
+            }
+
+            try
+            {
+                using (HttpWebResponse response = request.GetResponse() as HttpWebResponse)
+                {
+                    Assert.AreEqual(response.StatusCode, HttpStatusCode.OK);
+                    var stream = response.GetResponseStream();
+                    var reader = new StreamReader(stream);
+                    string str = reader.ReadToEnd();
+                    roomid = Convert.ToInt32(str);
+                    //Assert.AreEqual(str, "true");
                 }
             }
 
@@ -1034,7 +1065,7 @@ namespace HomeAutomationTest
             }
 
             //Testing with giving FALSE DATA 
-            request = WebRequest.Create(URI + "/api/storage/device/?{houseid=" + 000 + "/&{spaceid=" + 000 + "}");
+            request = WebRequest.Create(URI + "/api/storage/space/" + 0 + "/" + 1);
             request.ContentType = "application/json";
             request.Method = "GET";
 
@@ -1046,7 +1077,7 @@ namespace HomeAutomationTest
                     var stream = response.GetResponseStream();
                     var reader = new StreamReader(stream);
                     string str = reader.ReadToEnd();
-                    Assert.AreEqual(str, "false");
+                    Assert.AreEqual(str, "null");
                 }
             }
 
@@ -1056,8 +1087,8 @@ namespace HomeAutomationTest
                 Assert.Fail();
             }
 
-            //NOW TRY TO GET THE CORRECT ROOM ID DATA
-            request = WebRequest.Create(URI + "/api/storage/device/?{houseid=" + 567 + "/&{spaceid=" + 890 + "}");
+            //NOW TRY TO GET THE CORRECT ROOM ID DATA (URI + "/api/storage/space/" + houseid + "/" + spaceID
+            request = WebRequest.Create(URI + "/api/storage/space/" + houseid + "/" + roomid);
             request.ContentType = "application/json";
             request.Method = "GET";
 
@@ -1069,7 +1100,8 @@ namespace HomeAutomationTest
                     var stream = response.GetResponseStream();
                     var reader = new StreamReader(stream);
                     string str = reader.ReadToEnd();
-                    Assert.AreEqual(str, "true");
+                    JObject j = JObject.Parse(str);
+                    Assert.AreEqual(json, j.ToString());
                 }
             }
 
@@ -1090,12 +1122,13 @@ namespace HomeAutomationTest
             request.ContentType = "application/json";
             request.Method = "POST";
 
+            int deviceid = 0;
+
             JObject jobjects = new JObject();
             jobjects["ID"] = "1234";
-            jobjects["houseid"] = "567";
-            jobjects["roomid"] = "890";
-            jobjects["deviceid"] = "5";
-            jobjects["type"] = "Light";
+            jobjects["houseID"] = "60";
+            jobjects["roomID"] = "20";
+            jobjects["Type"] = "Light";
             jobjects["Name"] = "BedroomLight";
             string json = jobjects.ToString();
 
@@ -1113,18 +1146,18 @@ namespace HomeAutomationTest
                     var stream = response.GetResponseStream();
                     var reader = new StreamReader(stream);
                     string str = reader.ReadToEnd();
-                    Assert.AreEqual(str, "true");
+                    deviceid = Convert.ToInt32(str);
+                    //Assert.AreEqual(str, "true");
                 }
             }
 
             catch (WebException we)
             {
-                Console.WriteLine("StorageGetDevicesInRoomofType failed. Couldn't post a user");
-                Assert.Fail();
+                Assert.Fail("StorageGetDevicesInRoomofType failed. Couldn't post a user");
             }
 
             //TEST GETTING FALSE DEVICE TYPES
-            request = WebRequest.Create(URI + "/api/storage/device/?{houseid=" + 6511 + "/&{spaceid=" + 21 + "/&{type=unknown}");
+            request = WebRequest.Create(URI + "/api/storage/device/" + 60 + "/" + 20 + "/unkown");
             request.ContentType = "application/json";
             request.Method = "GET";
 
@@ -1136,7 +1169,7 @@ namespace HomeAutomationTest
                     var stream = response.GetResponseStream();
                     var reader = new StreamReader(stream);
                     string str = reader.ReadToEnd();
-                    Assert.AreEqual(str, "false");
+                    Assert.AreEqual(str, "null");
                 }
             }
 
@@ -1146,7 +1179,7 @@ namespace HomeAutomationTest
                 Assert.Fail();
             }
             //TEST GETTING CORRECT DEVICE TYPES
-            request = WebRequest.Create(URI + "/api/storage/device/?{houseid=" + 567 + "/&{spaceid=" + 890 + "/&{type=Light}");
+            request = WebRequest.Create(URI + "/api/storage/device/" + 60 + "/" + 20 + "/Light");
             request.ContentType = "application/json";
             request.Method = "GET";
 
@@ -1349,20 +1382,56 @@ namespace HomeAutomationTest
         [TestMethod]
         public void TestPostSpace()
         {
+            int houseid = 0;
+            WebRequest request = WebRequest.Create(URI + "/api/storage/house");
+            request.ContentType = "application/json";
+            request.Method = "POST";
 
-            WebRequest request = WebRequest.Create(URI + "/api/storage/space");
+            JObject jobject = new JObject();
+            jobject["blob"] = houseid;
+            jobject["name"] = "myhouse";
+            string json = jobject.ToString();
+
+            using (var streamWriter = new StreamWriter(request.GetRequestStream()))
+            {
+                streamWriter.Write(json);
+                streamWriter.Close();
+            }
+
+            try
+            {
+                using (HttpWebResponse response = request.GetResponse() as HttpWebResponse)
+                {
+                    Assert.AreEqual(response.StatusCode, HttpStatusCode.OK);
+                    var stream = response.GetResponseStream();
+                    var reader = new StreamReader(stream);
+                    string str = reader.ReadToEnd();
+                    houseid = Convert.ToInt32(str);
+                    //Assert.AreEqual(str, "true");
+                }
+            }
+
+            catch (WebException we)
+            {
+                Console.WriteLine("TestPostHouse failed. Couldn't post a house");
+                Assert.Fail("WebException occurred. TestPostHouse failed. Couldn't post a house");
+            }
+
+            request = WebRequest.Create(URI + "/api/storage/space");
             request.ContentType = "application/json";
             request.Method = "POST";
 
             JObject jobjects = new JObject();
-            jobjects["houseid"] = "1";
+            jobjects["houseID"] = houseid;
             jobjects["roomid"] = "1234";
             jobjects["type"] = "Light";
             jobjects["name"] = "BedroomLight";
             jobjects["x"] = "100";
             jobjects["y"] = "300";
 
-            string json = jobjects.ToString();
+            int spaceID = 0;
+
+            json = jobjects.ToString();
 
             using (var streamWriter = new StreamWriter(request.GetRequestStream()))
             {
@@ -1379,7 +1448,8 @@ namespace HomeAutomationTest
                     var stream = response.GetResponseStream();
                     var reader = new StreamReader(stream);
                     string str = reader.ReadToEnd();
-                    Assert.AreEqual(str, "true");
+                    spaceID = Convert.ToInt32(str);
+                    //Assert.AreEqual(str, "true");
                 }
             }
 
@@ -1389,8 +1459,8 @@ namespace HomeAutomationTest
                 Assert.Fail();
             }
 
-            //Now Try to Get That POST (Getting House and Room/Space ID)
-            request = WebRequest.Create(URI + "/api/storage/space/" + 1 + "/" + 1234);
+            //Now Try to Get That  (Getting House and Room/Space ID)
+            request = WebRequest.Create(URI + "/api/storage/space/" + houseid + "/" + spaceID);
             request.ContentType = "application/json";
             request.Method = "GET";
 
@@ -1403,7 +1473,8 @@ namespace HomeAutomationTest
                     var stream = response.GetResponseStream();
                     var reader = new StreamReader(stream);
                     string str = reader.ReadToEnd();
-                    Assert.AreEqual(str, "true");
+                    JObject j = JObject.Parse(str);
+                    Assert.AreEqual(json, j.ToString());
                 }
             }
 
@@ -1424,6 +1495,11 @@ namespace HomeAutomationTest
                 using (HttpWebResponse response = request.GetResponse() as HttpWebResponse)
                 {
                     Assert.AreEqual(response.StatusCode, HttpStatusCode.OK);
+                    var stream = response.GetResponseStream();
+                    var reader = new StreamReader(stream);
+                    string str = reader.ReadToEnd();
+
+                    Assert.AreEqual(str, "null");
                 }
             }
 
@@ -1439,7 +1515,7 @@ namespace HomeAutomationTest
         public void TestDeleteRoom()
         {
             //FIRST TRY DELETING A ROOM BEFORE POSTING ONE
-            WebRequest request = WebRequest.Create(URI + "/api/storage/space/?{houseid=" + 5 + "/&{roomid=" + 6532 + "}");
+            WebRequest request = WebRequest.Create(URI + "/api/storage/space/" + 60 + "/" + 20 );
             request.ContentType = "application/json";
             request.Method = "DELETE";
 
@@ -1524,8 +1600,307 @@ namespace HomeAutomationTest
                 Assert.Fail();
             }
 
-
         }
+
+        //Testing Logs
+        [TestMethod]
+        public void TestLogFile()
+        {
+            WebRequest request = WebRequest.Create(URI + "/api/logfile");
+            request.ContentType = "application/json";
+            request.Method = "DELETE";
+
+            int count = 0;
+
+            JObject jobject = new JObject();
+            string json = jobject.ToString();
+
+            using (var streamWriter = new StreamWriter(request.GetRequestStream()))
+            {
+                streamWriter.Write(json);
+                streamWriter.Close();
+            }
+
+            try
+            {
+                using (HttpWebResponse response = request.GetResponse() as HttpWebResponse)
+                {
+                    Assert.AreNotEqual(response.StatusCode, HttpStatusCode.BadRequest);
+                    var stream = response.GetResponseStream();
+                    var reader = new StreamReader(stream);
+                    string str = reader.ReadToEnd();
+                }
+            }
+
+            catch (WebException we)
+            {
+                Console.WriteLine("TestLogFile failed.");
+                Assert.Fail("WebException occurred. TestLogFile failed.");
+            }
+
+            request = WebRequest.Create(URI + "/api/logfile/count");
+            request.ContentType = "application/json";
+            request.Method = "GET";
+
+            try
+            {
+                using (HttpWebResponse response = request.GetResponse() as HttpWebResponse)
+                {
+                    Assert.AreNotEqual(response.StatusCode, HttpStatusCode.BadRequest);
+                    var stream = response.GetResponseStream();
+                    var reader = new StreamReader(stream);
+                    string str = reader.ReadToEnd();
+                    count = Convert.ToInt32(str);
+                    Assert.AreEqual(count, 0);
+                }
+            }
+
+            catch (WebException we)
+            {
+                Console.WriteLine("TestLogFile failed.");
+                Assert.Fail("WebException occurred. TestLogFile failed.");
+            }
+
+            //Doing Bad Request
+            request = WebRequest.Create(URI + "/api/sim/timeframe");
+            request.ContentType = "application/json";
+            request.Method = "POST";
+
+            JObject jobjects = new JObject();
+            jobjects["sds"] = "-1";
+            jobjects["rosdsomID"] = "-1";
+            json = jobjects.ToString();
+
+            using (var streamWriter = new StreamWriter(request.GetRequestStream()))
+            {
+                streamWriter.Write(json);
+                streamWriter.Close();
+            }
+
+            try
+            {
+                using (HttpWebResponse response = request.GetResponse() as HttpWebResponse)
+                {
+                    Assert.AreEqual(response.StatusCode, HttpStatusCode.OK);
+                }
+            }
+
+            catch (WebException we)
+            {
+                Console.WriteLine("TestLogFile failed.");
+                //Assert.Fail("WebException occurred. TestLogFile failed.");
+            }
+
+            request = WebRequest.Create(URI + "/api/logfile/count");
+            request.ContentType = "application/json";
+            request.Method = "GET";
+
+            try
+            {
+                using (HttpWebResponse response = request.GetResponse() as HttpWebResponse)
+                {
+                    Assert.AreNotEqual(response.StatusCode, HttpStatusCode.BadRequest);
+                    var stream = response.GetResponseStream();
+                    var reader = new StreamReader(stream);
+                    string str = reader.ReadToEnd();
+                    count = Convert.ToInt32(str);
+                    Assert.AreEqual(count, 1);
+                }
+            }
+
+            catch (WebException we)
+            {
+                Console.WriteLine("TestLogFile failed.");
+                Assert.Fail("WebException occurred. TestLogFile failed.");
+            }
+        }
+
+        //Test POST STATE to Persistent Storage
+        [TestMethod]
+        public void TestPostState()
+        {
+            int houseid = 0;
+
+            WebRequest request = WebRequest.Create(URI + "/api/storage/house");
+            request.ContentType = "application/json";
+            request.Method = "POST";
+
+            JObject jobject = new JObject();
+            jobject["houseId"] = houseid;
+            jobject["name"] = "myhouse";
+            string json = jobject.ToString();
+
+            using (var streamWriter = new StreamWriter(request.GetRequestStream()))
+            {
+                streamWriter.Write(json);
+                streamWriter.Close();
+            }
+
+            try
+            {
+                using (HttpWebResponse response = request.GetResponse() as HttpWebResponse)
+                {
+                    Assert.AreEqual(response.StatusCode, HttpStatusCode.OK);
+                    var stream = response.GetResponseStream();
+                    var reader = new StreamReader(stream);
+                    string str = reader.ReadToEnd();
+                    houseid = Convert.ToInt32(str);
+                    //Assert.AreEqual(str, "true");
+                }
+            }
+
+            catch (WebException we)
+            {
+                Console.WriteLine("TestPostHouse failed. Couldn't post a house");
+                Assert.Fail("WebException occurred. TestPostHouse failed. Couldn't post a house");
+            }
+
+            // Posting a ROOM
+
+            request = WebRequest.Create(URI + "/api/storage/space/");
+            request.ContentType = "application/json";
+            request.Method = "POST";
+
+            JObject jobjects = new JObject();
+            jobjects["houseID"] = houseid;
+            jobjects["roomid"] = "1234";
+            jobjects["type"] = "Light";
+            jobjects["name"] = "BedroomLight";
+            jobjects["x"] = "100";
+            jobjects["y"] = "300";
+
+            json = jobjects.ToString();
+
+            int roomId = 0;
+
+            using (var streamWriter = new StreamWriter(request.GetRequestStream()))
+            {
+                streamWriter.Write(json);
+                streamWriter.Close();
+            }
+
+            try
+            {
+                using (HttpWebResponse response = request.GetResponse() as HttpWebResponse)
+                {
+
+                    Assert.AreEqual(response.StatusCode, HttpStatusCode.OK);
+                    var stream = response.GetResponseStream();
+                    var reader = new StreamReader(stream);
+                    string str = reader.ReadToEnd();
+                    roomId = Convert.ToInt32(str);
+                }
+            }
+
+            catch (WebException we)
+            {
+                Console.WriteLine("TestStoragePostSpace failed, Didnt Post.");
+                Assert.Fail();
+            }
+
+            // Posting a device
+
+            request = WebRequest.Create(URI + "/api/storage/device");
+            request.ContentType = "application/json";
+            request.Method = "POST";
+
+            jobjects = new JObject();
+            //jobjects["ID"] = "1234";
+            jobjects["houseID"] = houseid;
+            jobjects["roomID"] = roomId;
+            //jobjects["deviceID"] = "5";
+            jobjects["Type"] = "Light";
+            //jobjects["Name"] = "BedroomLight";
+            json = jobjects.ToString();
+
+            int deviceId = 0;
+
+            using (var streamWriter = new StreamWriter(request.GetRequestStream()))
+            {
+                streamWriter.Write(json);
+                streamWriter.Close();
+            }
+
+            try
+            {
+                using (HttpWebResponse response = request.GetResponse() as HttpWebResponse)
+                {
+                    Assert.AreEqual(response.StatusCode, HttpStatusCode.OK);
+                    var stream = response.GetResponseStream();
+                    var reader = new StreamReader(stream);
+                    string str = reader.ReadToEnd();
+                    deviceId = Convert.ToInt32(str);
+                    //Assert.AreEqual(str, "true");
+                }
+            }
+
+            catch (WebException we)
+            {
+                Console.WriteLine("TestStorageDevicePost failed. Couldn't post the device");
+                Assert.Fail("WebException occurred.\n");
+            }
+
+            request = WebRequest.Create(URI + "/api/house/device/state");
+            request.ContentType = "application/json";
+            request.Method = "POST";
+
+            jobjects = new JObject();
+            jobjects["houseID"] = houseid;
+            jobjects["roomID"] = roomId;
+            jobjects["deviceID"] = deviceId;
+            jobjects["Type"] = "Light";
+            jobjects["Name"] = "BedroomLight";
+            jobjects["state"] = "changed";
+            json = jobjects.ToString();
+
+            using (var streamWriter = new StreamWriter(request.GetRequestStream()))
+            {
+                streamWriter.Write(json);
+                streamWriter.Close();
+            }
+
+            try
+            {
+                using (HttpWebResponse response = request.GetResponse() as HttpWebResponse)
+                {
+                    Assert.AreEqual(response.StatusCode, HttpStatusCode.OK);
+                    var stream = response.GetResponseStream();
+                    var reader = new StreamReader(stream);
+                    string str = reader.ReadToEnd();
+                    //Assert.Fail(houseid + " " + deviceId + " " + roomId);
+                    Assert.AreEqual(str, "true");
+                }
+            }
+
+            catch (WebException we)
+            {
+                Console.WriteLine("TestStorageDeviceDelete failed.");
+                Assert.Fail(houseid + " " + deviceId + " " + roomId);
+            }
+
+            //Now Try to Get the State Given Correct Data
+            request = WebRequest.Create(URI + "/api/storage/device/" + houseid + "/" + roomId + "/" + deviceId + "/" + "changed");
+            request.ContentType = "application/json";
+            request.Method = "GET";
+
+            try
+            {
+                using (HttpWebResponse response = request.GetResponse() as HttpWebResponse)
+                {
+                    Assert.Equals(response.StatusCode, HttpStatusCode.OK);
+                    var stream = response.GetResponseStream();
+                    var reader = new StreamReader(stream);
+                    string str = reader.ReadToEnd();
+                    Assert.Equals(str, "true");
+                }
+            }
+
+            catch (WebException we)
+            {
+                Console.WriteLine("TestStorageDeviceDelete failed.");
+                Assert.Fail();
+            }
+        } 
     }
 
 }
