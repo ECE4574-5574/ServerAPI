@@ -136,5 +136,35 @@ namespace HomeAutomationServer.Controllers
         {
             LogFile.DeleteLog();
         }
+
+        [Route("user/devicetoken/{username}/{pass}")]
+        [HttpPost]
+        public string PostDeviceToken([FromBody] JObject model, string username, string pass)
+        {
+            // Make a call to persistent storage to POST the device token
+            return model.ToString() + " " + username + " " + pass;
+        }
+
+        [Route("user/notify/{username}/{pass}")]
+        [HttpPost]
+        public string SendNotification([FromBody] JObject model, string username, string pass)
+        {
+            
+            return model.ToString() + " " + username + " " + pass;
+        }
+
+        [Route("user/userid/{username}/{pass}")]
+        [HttpGet]
+        public string GetUserId()
+        {
+            return "token";
+        }
+
+        [Route("user/command")]
+        [HttpPost]
+        public string PostCommand([FromBody] JObject model)
+        {
+            return "false";
+        }
     }
 }
