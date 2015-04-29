@@ -114,8 +114,9 @@ Get all the pending JSON device data as an array of JSON data.
 GET api/app/device/count
 Get the count of the pending JSON device data.
 
-GET api/app/device/enumeratedevices
+GET api/app/device/enumeratedevices/{houseid}
 A request from the App to get list of all the devices that are not registered to the house.
+Requires a houseID as an input in the uri.
 Returns all the elements which don’t match any devices registered to a given house.
 
 -------------------------------------------------------------------------------------------------------------------------
