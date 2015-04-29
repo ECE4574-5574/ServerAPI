@@ -105,8 +105,8 @@ Returns a bool that is true if the information was posted, false if not.
 
 ---Device---
 
-GET api/app/device/{deviceid}
-Get pending JSON device data with the device ID provided.
+GET api/app/device/{fullid}
+Get pending JSON device data with the FullID object provided.
 
 GET api/app/device
 Get all the pending JSON device data as an array of JSON data.
