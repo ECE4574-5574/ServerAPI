@@ -8,6 +8,7 @@ using System.Net.Http;
 using System.Web.Http;
 using Newtonsoft.Json.Linq;
 using HomeAutomationServer.Filters;
+using api
 
 namespace HomeAutomationServer.Controllers
 {
@@ -44,16 +45,16 @@ namespace HomeAutomationServer.Controllers
         // Device
 
         // GET api/app/device/{deviceid}
-        /// <summary>
-        /// Get pending JSON device data with the device ID provided.
-        /// </summary>
-        /// <param name="deviceid"></param>
-        /// <returns>Returns pending JSON device data with the device ID provided.</returns>
-        [Route("device/{deviceid}")]
-        public JToken GetDevice(string deviceid)
-        {
-            return AppCache.GetDeviceBlob(deviceid);
-        }
++		/// <summary>
++		/// Get pending JSON device data with the device ID provided.
++		/// </summary>
++		/// <param name="deviceid"></param>
++		/// <returns>Returns pending JSON device data with the device ID provided.</returns>
++		[Route ("device/{fullid}")]
++		public JToken GetDevice (FullID fullID)
++		{
++			return appCache.GetDeviceBlob (fullID);
++		}
 
         // GET api/app/device
         /// <summary>
