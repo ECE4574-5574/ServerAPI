@@ -151,8 +151,9 @@ namespace HomeAutomationServer.Controllers
         [HttpPost]
         public string SendNotification([FromBody] JObject model, string username, string pass)
         {
-            
-            return model.ToString() + " " + username + " " + pass;
+            string message = (string) model["message"];
+            return userRepository.SendNotification(username, pass, message);
+            //return model.ToString() + " " + username + " " + pass;
         }
 
         [Route("user/userid/{username}/{pass}")]

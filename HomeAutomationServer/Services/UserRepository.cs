@@ -19,6 +19,80 @@ namespace HomeAutomationServer.Services
         // deviceRepo has static url
         private string dm_url = DeviceRepository.decisionURL;
 		private string pss_url = DeviceRepository.storageURL;
+        
+        private NotificationManager notificationManager;
+        
+        public UserRepository()
+        {
+            // of the array is one line of the file. 
+            string[] lines = System.IO.File.ReadAllLines(@"C:\keys.txt");
+            string accK = lines[0];
+            string secK = lines[1];
+            notificationManager = new NotificationManager(accK, secK, Amazon.RegionEndpoint.USEast1);
+            notificationManager.init();
+        }
+        
+        public string SendNotification(string username, string pass, string message)
+        {
+            WebRequest request = WebRequest.Create(DeviceRepository.storageURL + "/IU/" + username + "/" + pass);
+            request.ContentType = "application/json";
+            request.Method = "GET";
+
+            string userId = "";
+
+            try
+            {
+
+                using (HttpWebResponse response = request.GetResponse() as HttpWebResponse)
+                {
+                    if (response.StatusCode != HttpStatusCode.OK)
+                    {
+                        return "false";
+                    }
+                    
+                    var stream = response.GetResponseStream();
+                    var reader = new StreamReader(stream);
+                    userId = reader.ReadToEnd();
+                }
+            }
+
+            catch (WebException we)
+            {
+                return "false";
+            }
+            
+            
+            // Now Get the Json blob
+            
+            request = WebRequest.Create(DeviceRepository.storageURL + "/BU/" + userId);
+            request.ContentType = "application/json";
+            request.Method = "GET";
+            
+            try
+            {
+
+                using (HttpWebResponse response = request.GetResponse() as HttpWebResponse)
+                {
+                    if (response.StatusCode != HttpStatusCode.OK)
+                    {
+                        return "false";
+                    }
+                    
+                    var stream = response.GetResponseStream();
+                    var reader = new StreamReader(stream);
+                    string value = reader.ReadToEnd();
+                    JObject j = JObject.Parse(value);
+                    string topicArn = (string) j["topicArn"];
+                    notificationManager.PublishNotification(topicArn, message);
+                    return "true";
+                }
+            }
+
+            catch (WebException we)
+            {
+                return "false";
+            }
+        }
 
         public JObject GetUser(string username)
         {
