@@ -21,7 +21,9 @@ namespace HomeAutomationServer.Controllers
         private SimRepository simRepo = new SimRepository();
         private UserRepository userRepository = new UserRepository();
 
-        private DeviceRepository deviceRepo = new DeviceRepository();
+		private DecisionRepository decisionRepository = new DecisionRepository();
+
+		private DeviceRepository deviceRepo = new DeviceRepository();
         ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         //
         // User
