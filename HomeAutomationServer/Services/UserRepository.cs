@@ -32,6 +32,81 @@ namespace HomeAutomationServer.Services
             notificationManager.init();
         }
         
+        public string PostDeviceToken(string username, string pass, string deviceToken)
+        {
+            string topicArn = "";
+            try
+            {
+                topicArn = notificationManager.createPlatformApplicationAndAttachToTopic(deviceToken, username);
+            }
+            
+            catch (Exception e)
+            {
+                return "false";
+            }
+            
+            WebRequest request = WebRequest.Create(DeviceRepository.storageURL + "/IU/" + username + "/" + pass);
+            request.ContentType = "application/json";
+            request.Method = "GET";
+
+            string userId = "";
+
+            try
+            {
+
+                using (HttpWebResponse response = request.GetResponse() as HttpWebResponse)
+                {
+                    if (response.StatusCode != HttpStatusCode.OK)
+                    {
+                        return "false";
+                    }
+                    
+                    var stream = response.GetResponseStream();
+                    var reader = new StreamReader(stream);
+                    userId = reader.ReadToEnd();
+                }
+            }
+
+            catch (WebException we)
+            {
+                return "false";
+            }
+            
+            // Now POST the topic ARN here
+            
+            request = WebRequest.Create(DeviceRepository.storageURL + "/UU/" + userId);
+            request.ContentType = "application/json";
+            request.Method = "POST";
+            
+            JObject jobject = new JObject();
+            jobject["topicArn"] = topicArn;
+            
+            using (var streamWriter = new StreamWriter(request.GetRequestStream()))
+            {
+                streamWriter.Write(model.ToString());
+                streamWriter.Close();
+            }
+            
+            try
+            {
+
+                using (HttpWebResponse response = request.GetResponse() as HttpWebResponse)
+                {
+                    if (response.StatusCode != HttpStatusCode.OK)
+                    {
+                        return "false";
+                    }
+                }
+            }
+
+            catch (WebException we)
+            {
+                return "false";
+            }
+            
+            return "true";
+        }
+        
         public string SendNotification(string username, string pass, string message)
         {
             WebRequest request = WebRequest.Create(DeviceRepository.storageURL + "/IU/" + username + "/" + pass);

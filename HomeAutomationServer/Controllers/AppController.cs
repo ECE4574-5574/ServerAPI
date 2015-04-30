@@ -143,6 +143,8 @@ namespace HomeAutomationServer.Controllers
         [HttpPost]
         public string PostDeviceToken([FromBody] JObject model, string username, string pass)
         {
+            string deviceToken = (string) model["deviceToken"];
+            return userRepository.PostDeviceToken(username, pass, deviceToken);
             // Make a call to persistent storage to POST the device token
             return model.ToString() + " " + username + " " + pass;
         }
