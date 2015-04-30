@@ -16,6 +16,8 @@ namespace HomeAutomationServer.Controllers
     {
         private SimRepository simRepo = new SimRepository();
         private UserRepository userRepository = new UserRepository();
+        private DecisionRepository decisionRepository = new DecisionRepository();
+
         ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         //
         // User
@@ -162,9 +164,10 @@ namespace HomeAutomationServer.Controllers
 
         [Route("user/command")]
         [HttpPost]
-        public string PostCommand([FromBody] JObject model)
+        public bool PostCommand([FromBody] JObject model)
         {
-            return "false";
+            // Make a POST request on decisionURL
+            return decisionRepository.PostCommand(model);
         }
     }
 }
