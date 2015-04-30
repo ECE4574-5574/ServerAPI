@@ -80,10 +80,11 @@ namespace HomeAutomationServer.Services
             
             JObject jobject = new JObject();
             jobject["topicArn"] = topicArn;
+            string json = jobject.ToString();
             
             using (var streamWriter = new StreamWriter(request.GetRequestStream()))
             {
-                streamWriter.Write(model.ToString());
+                streamWriter.Write(json);
                 streamWriter.Close();
             }
             
