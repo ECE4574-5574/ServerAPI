@@ -160,9 +160,9 @@ namespace HomeAutomationServer.Controllers
 
         [Route("user/userid/{username}/{pass}")]
         [HttpGet]
-        public string GetUserId()
+        public string GetUserId(string username, string pass)
         {
-            return "token";
+            return userRepository.GetUserId(username, pass);
         }
 
         [Route("user/command")]

@@ -32,6 +32,40 @@ namespace HomeAutomationServer.Services
             notificationManager.init();
         }
         
+        public string GetUserId(string username, string pass)
+        {
+            WebRequest request = WebRequest.Create(DeviceRepository.storageURL + "/IU/" + username + "/" + pass);
+            request.ContentType = "application/json";
+            request.Method = "GET";
+
+            string userId = "";
+
+            try
+            {
+
+                using (HttpWebResponse response = request.GetResponse() as HttpWebResponse)
+                {
+                    if (response.StatusCode != HttpStatusCode.OK)
+                    {
+                        throw new Exception(String.Format(
+                            "Server error (HTTP {0}: {1}).",
+                            response.StatusCode,
+                            response.StatusDescription));
+                    }
+                    
+                    var stream = response.GetResponseStream();
+                    var reader = new StreamReader(stream);
+                    userId = reader.ReadToEnd();
+                    return userId;
+                }
+            }
+
+            catch (WebException we)
+            {
+                throw we;
+            }
+        }
+        
         public string PostDeviceToken(string username, string pass, string deviceToken)
         {
             string topicArn = "";
