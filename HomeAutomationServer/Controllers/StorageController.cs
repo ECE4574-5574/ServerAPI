@@ -72,7 +72,7 @@ namespace HomeAutomationServer.Controllers
         /// <param name="houseid"></param>
         /// <returns>Returns all of the devices in the house specified via JSON array data.</returns>
         [Route("device/{houseid}")]
-        public JArray GetDevHouse(string houseid)
+        public JArray GetDevHouse(String houseid)
         {
             return deviceRepository.GetDevice(houseid);
         }

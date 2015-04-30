@@ -8,6 +8,8 @@ using System.Net.Http;
 using System.Web.Http;
 using Newtonsoft.Json.Linq;
 using HomeAutomationServer.Filters;
+using System.Threading;
+
 
 namespace HomeAutomationServer.Controllers
 {
@@ -16,6 +18,7 @@ namespace HomeAutomationServer.Controllers
     {
         private SimRepository simRepo = new SimRepository();
         private UserRepository userRepository = new UserRepository();
+        private DeviceRepository deviceRepo = new DeviceRepository();
         ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         //
         // User
@@ -30,10 +33,6 @@ namespace HomeAutomationServer.Controllers
         [Route("user/updateposition/{username}")]
         public bool UpdatePosition(string username, [FromBody] JObject model)
         {
-            model["userId"] = username;
-            //DateTime currentTime;
-            //currentTime = DateTime.Now;
-            //model["locationTimeStamp"] = currentTime.ToString();
             return userRepository.OnUpdatePosition(model);
         }
 
@@ -80,13 +79,12 @@ namespace HomeAutomationServer.Controllers
         /// Get the list of devices from the house.
         /// </summary>
         /// <returns>Returns the list of unregistered devices in the house.</returns>
-        [Route("device/enumeratedevices")]
-        public JArray GetUnregisteredDevices()
+        [Route("device/enumeratedevices/{houseID}")]
+        public JArray GetUnregisteredDevices(string houseID)
         {
+
             JArray test = new JArray();
-            test.Add("light1");
-            test.Add("light2");
-            test.Add("light3");
+            test = deviceRepo.SendUnregisteredDevice(houseID);
             return test;
         }
 
