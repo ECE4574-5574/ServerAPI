@@ -212,6 +212,68 @@ namespace HomeAutomationServer.Services
             }
         }
 
+        public JArray SendUnregisteredDevice(string houseid)
+        {
+            JArray allDevices;
+            JArray devicesInStorage;
+            JArray unregisteredDevices = new JArray();
+#if DEBUG
+            JObject test = new JObject();
+            test["Enabled"] = "false";
+            test["Value"] = 0;
+            test["ID"] = 0;
+            test["LastUpdate"] = "2015-04-29T14:15:58.0088064";
+            test["Name"] = "light";
+            test["Class"] = "lightSwitch";
+            unregisteredDevices.Add(test);
+#else
+            //first request all the devices from the house
+            WebRequest request = WebRequest.Create("http://localhost:8081/api/device"); // this is local house uri
+            request.Method = "GET";
+            using (HttpWebResponse response = request.GetResponse() as HttpWebResponse)
+            {
+                if (response.StatusCode != HttpStatusCode.OK)
+                    throw new Exception(String.Format(
+                    "Server error (HTTP {0}: {1}).",
+                    response.StatusCode,
+                    response.StatusDescription));
+                var stream = response.GetResponseStream();
+                var reader = new StreamReader(stream);
+
+                string deviceString = reader.ReadToEnd();
+                allDevices =  JArray.Parse(deviceString);
+            }
+            devicesInStorage = GetDevice(houseid);
+            for (int i = 0; i < allDevices.Count(); i++)
+            {
+                UInt64 id = (UInt64)(allDevices[i]["ID"]);
+                if (devicesInStorage.Count() == 0)
+                    return allDevices;
+                for (int j = 0; j < devicesInStorage.Count(); j++)
+                {
+                    JToken blobVal;
+                    String blob = (string)devicesInStorage[j]["blob"];
+                    //if (blob.Contains("I"))
+                    //{
+                    //    int h;
+                    //    h = 1;
+                    //}
+                    
+                    blobVal = JToken.Parse(blob);
+                    UInt64 id2 = (UInt64)(blobVal[j]["ID"]);
+                    if (id != id2)
+                    {
+                        unregisteredDevices.Add(allDevices[i]);
+                        break;
+                    }
+                }
+            }
+            
+#endif
+            return unregisteredDevices;
+        }
+
+
         public UInt64 SaveDevice(JObject model)     // Returns the device ID from the Storage which is type UInt64
         {
             UInt64 houseId, roomId;

@@ -8,7 +8,10 @@ using System.Net.Http;
 using System.Web.Http;
 using Newtonsoft.Json.Linq;
 using HomeAutomationServer.Filters;
-using api
+
+using api;
+
+using System.Threading;
 
 namespace HomeAutomationServer.Controllers
 {
@@ -17,8 +20,8 @@ namespace HomeAutomationServer.Controllers
     {
         private SimRepository simRepo = new SimRepository();
         private UserRepository userRepository = new UserRepository();
-        private DecisionRepository decisionRepository = new DecisionRepository();
 
+        private DeviceRepository deviceRepo = new DeviceRepository();
         ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         //
         // User
@@ -33,10 +36,6 @@ namespace HomeAutomationServer.Controllers
         [Route("user/updateposition/{username}")]
         public bool UpdatePosition(string username, [FromBody] JObject model)
         {
-            model["userId"] = username;
-            //DateTime currentTime;
-            //currentTime = DateTime.Now;
-            //model["locationTimeStamp"] = currentTime.ToString();
             return userRepository.OnUpdatePosition(model);
         }
 
@@ -45,16 +44,16 @@ namespace HomeAutomationServer.Controllers
         // Device
 
         // GET api/app/device/{deviceid}
-+		/// <summary>
-+		/// Get pending JSON device data with the device ID provided.
-+		/// </summary>
-+		/// <param name="deviceid"></param>
-+		/// <returns>Returns pending JSON device data with the device ID provided.</returns>
-+		[Route ("device/{fullid}")]
-+		public JToken GetDevice (FullID fullID)
-+		{
-+			return appCache.GetDeviceBlob (fullID);
-+		}
+		/// <summary>
+		/// Get pending JSON device data with the device ID provided.
+		/// </summary>
+		/// <param name="deviceid"></param>
+		/// <returns>Returns pending JSON device data with the device ID provided.</returns>
+		[Route ("device/{fullid}")]
+		public JToken GetDevice (FullID fullID)
+		{
+			return appCache.GetDeviceBlob (fullID);
+		}
 
         // GET api/app/device
         /// <summary>
@@ -83,13 +82,12 @@ namespace HomeAutomationServer.Controllers
         /// Get the list of devices from the house.
         /// </summary>
         /// <returns>Returns the list of unregistered devices in the house.</returns>
-        [Route("device/enumeratedevices")]
-        public JArray GetUnregisteredDevices()
+        [Route("device/enumeratedevices/{houseID}")]
+        public JArray GetUnregisteredDevices(string houseID)
         {
+
             JArray test = new JArray();
-            test.Add("light1");
-            test.Add("light2");
-            test.Add("light3");
+            test = deviceRepo.SendUnregisteredDevice(houseID);
             return test;
         }
 
