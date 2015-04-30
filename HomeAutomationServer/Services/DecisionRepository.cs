@@ -17,6 +17,37 @@ namespace HomeAutomationServer.Services
     {
         private string houseApiHost = "http://house_address:house_port/device/";
 
+        public bool PostCommand(JObject model)
+        {
+            WebRequest request = WebRequest.Create(DeviceRepository.decisionURL + "/CommandsFromApp");
+            request.ContentType = "application/json";
+            request.Method = "POST";
+
+            string json = model.ToString();
+
+            try
+            {
+                using (var streamWriter = new StreamWriter(request.GetRequestStream()))
+                {
+                    streamWriter.Write(json);
+                    streamWriter.Close();
+                }
+
+                using (HttpWebResponse response = request.GetResponse() as HttpWebResponse)
+                {
+                    if (response.StatusCode == HttpStatusCode.OK)
+                        return true;
+                    else
+                        return false;
+                }
+            }
+
+            catch (WebException we)
+            {
+                return false;
+            }
+        }
+
         public bool StateUpdate(JObject model)
         {
             UInt64 houseId, roomId;
