@@ -152,6 +152,7 @@ namespace HomeAutomationServer.Services
                 {
                     if (response.StatusCode != HttpStatusCode.OK)
                     {
+                        notificationManager.DeletePlatformApplication(arn[0]);
                         return "false";
                     }
                     
@@ -163,6 +164,7 @@ namespace HomeAutomationServer.Services
 
             catch (WebException we)
             {
+                notificationManager.DeletePlatformApplication(arn[0]);
                 return "false";
             }
             
@@ -190,6 +192,7 @@ namespace HomeAutomationServer.Services
                 {
                     if (response.StatusCode != HttpStatusCode.OK)
                     {
+                        notificationManager.DeletePlatformApplication(arn[0]);
                         return "false";
                     }
                 }
@@ -197,6 +200,7 @@ namespace HomeAutomationServer.Services
 
             catch (WebException we)
             {
+                notificationManager.DeletePlatformApplication(arn[0]);
                 return "false";
             }
             
