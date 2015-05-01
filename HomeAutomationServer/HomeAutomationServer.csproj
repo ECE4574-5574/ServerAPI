@@ -209,6 +209,16 @@
   <ItemGroup>
     <Content Include="packages.config" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\Devices\api\api.csproj">
+      <Project>{dce2fd21-5b48-4413-a2a2-b55d1b70c7d4}</Project>
+      <Name>api</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\sim_harness\time_frame\time_frame\time_frame.csproj">
+      <Project>{e9c8a0a8-16d9-4fef-ab45-04e9ee9a579e}</Project>
+      <Name>time_frame</Name>
+    </ProjectReference>
+  </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>

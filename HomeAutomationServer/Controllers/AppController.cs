@@ -20,7 +20,7 @@ namespace HomeAutomationServer.Controllers
     {
         private SimRepository simRepo = new SimRepository();
         private UserRepository userRepository = new UserRepository();
-
+        private DecisionRepository decisionRepository = new DecisionRepository();
         private DeviceRepository deviceRepo = new DeviceRepository();
         ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         //
@@ -52,7 +52,7 @@ namespace HomeAutomationServer.Controllers
 		[Route ("device/{fullid}")]
 		public JToken GetDevice (FullID fullID)
 		{
-			return appCache.GetDeviceBlob (fullID);
+			return AppCache.GetDeviceBlob (fullID);
 		}
 
         // GET api/app/device

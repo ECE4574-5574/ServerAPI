@@ -7,6 +7,8 @@ using System.Web.Http;
 using Newtonsoft.Json.Linq;
 using HomeAutomationServer.Filters;
 using System.IO;
+using HomeAutomationServer.Services;
+using Hats.Time;
 
 using Amazon;
 using Amazon.EC2;
@@ -21,93 +23,93 @@ using api;
 
 namespace HomeAutomationServer.Models
 {
-	static public class AppCache  // A cache to temporarily store app information while waiting on 
-	{
-		// information request.
+    static public class AppCache  // A cache to temporarily store app information while waiting on 
+    {
+        // information request.
 
-		// A JSON array of device blobs
-		private static Dictionary<FullID, Device> deviceBlobs = new Dictionary<FullID, Device> ();
-		// add any other JArrays containing blobs here
+        // A JSON array of device blobs
+        private static Dictionary<FullID, Device> deviceBlobs = new Dictionary<FullID, Device>();
+        // add any other JArrays containing blobs here
 
-		////////////////////////////////////////////////////////////////////////////////////////
-		//
-		// deviceBlobs methods
+        ////////////////////////////////////////////////////////////////////////////////////////
+        //
+        // deviceBlobs methods
 
-		/*************** DEBUG MODE METHOD *************/
+        /*************** DEBUG MODE METHOD *************/
 
-		static public bool AddDeviceBlob_DEBUG (JObject blob)
-		{
-			string blob_string = blob.ToString ();
-			Device dev = Interfaces.CreateDevices (blob_string, new TimeFrame ()); // to convert the JSON blob to an actual Device object.
+        static public bool AddDeviceBlob_DEBUG(JObject blob)
+        {
+            Uri storageURL = new Uri(DeviceRepository.storageURL);
+            Interfaces check = new Interfaces(storageURL);
+            string blob_string = blob.ToString();
+            Device dev = check.CreateDevice(blob_string, new TimeFrame());
+            ulong devID = (ulong)blob["deviceID"];
+            ulong roomID = (ulong)blob["roomID"];
+            ulong houseID = (ulong)blob["houseID"];
 
-			ulong devID = (ulong)blob ["deviceID"];
-			ulong roomID = (ulong)blob ["roomID"];
-			ulong houseID = (ulong)blob ["houseID"];
+            FullID fullID = new FullID();
+            fullID.DeviceID = devID;
+            fullID.RoomID = roomID;
+            fullID.HouseID = houseID;
 
-			FullID fullID = new FullID ();
-			fullID.DeviceID = devID;
-			fullID.RoomID = roomID;
-			fullID.HouseID = houseID;
+            deviceBlobs.Add(fullID, dev);
+            //if (deviceBlobs.Contains(fullID, dev))
+            //{
+            //    return true;
+            //}
 
-			deviceBlobs.Add (fullID, dev);
+            return true;
+        }
 
-			if (deviceBlobs.Contains (dev)) {
-				return true;
-			}
+        /*************** END DEBUG MODE METHOD *************/
 
-			return false;
-		}
+        static public bool AddDeviceBlob(JObject blob)
+        {
+            Uri storageURL = new Uri(DeviceRepository.storageURL);
+            Interfaces check = new Interfaces(storageURL);
+            string blob_string = blob.ToString();
+            Device dev = check.CreateDevice(blob_string, new TimeFrame());
+            ulong devID = (ulong)blob["deviceID"];
+            ulong roomID = (ulong)blob["roomID"];
+            ulong houseID = (ulong)blob["houseID"];
 
-		/*************** END DEBUG MODE METHOD *************/
+            FullID fullID = new FullID();
+            fullID.DeviceID = devID;
+            fullID.RoomID = roomID;
+            fullID.HouseID = houseID;
 
-		static public bool AddDeviceBlob (JObject blob)
-		{
-			string blob_string = blob.ToString ();
-			Device dev = Interfaces.CreateDevices (blob_string, new TimeFrame ()); // to convert the JSON blob to an actual Device object.
+            deviceBlobs.Add(fullID, dev);
+            //if (deviceBlobs.Contains(fullID, dev))
+            //{
+            //    push notification
+            //}
 
-			ulong devID = (ulong)blob ["deviceID"];
-			ulong roomID = (ulong)blob ["roomID"];
-			ulong houseID = (ulong)blob ["houseID"];
+            return true;
+        }
 
-			FullID fullID = new FullID ();
-			fullID.DeviceID = devID;
-			fullID.RoomID = roomID;
-			fullID.HouseID = houseID;
+        static public JToken GetDeviceBlob(FullID fullID)
+        {
+            Device dev = deviceBlobs[fullID];
+            deviceBlobs.Remove(fullID);
+            return dev.ToString(); // implicit conversion
+        }
 
-			deviceBlobs.Add (fullID, dev);
+        static public JArray GetAllBlobs()
+        {
+            List<JToken> blobs = new List<JToken>();
+            foreach (Device dev in deviceBlobs.Values)
+            {
+                JToken blob = dev.ToString();
+                blobs.Add(blob);
+            }
+            deviceBlobs.Clear();
+            return JArray.Parse(blobs.ToString());
+        }
 
-			if (deviceBlobs.Contains (dev)) {
+        static public int GetBlobCount()
+        {
+            return deviceBlobs.Count;
+        }
 
-				// Arjun -- add push notification code here
-
-				return true;
-			}
-
-			return false;
-		}
-
-		static public JToken GetDeviceBlob (FullID fullID)
-		{
-			Device dev = deviceBlobs [fullID];
-			deviceBlobs.Remove (fullID);
-			return dev.ToString (); // implicit conversion
-		}
-
-		static public JArray GetAllBlobs ()
-		{
-			List<JToken> blobs = new List<JToken> ();
-			foreach (Device dev in deviceBlobs) {
-				JToken blob = dev.ToString ();
-				blobs.Add (blob);
-			}
-			deviceBlobs.Clear ();
-			return blobs.ToArray; 
-		}
-
-		static public int GetBlobCount ()
-		{
-			return deviceBlobs.Count;
-		}
-
-	}
+    }
 }
