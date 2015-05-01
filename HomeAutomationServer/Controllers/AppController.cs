@@ -173,5 +173,12 @@ namespace HomeAutomationServer.Controllers
             // Make a POST request on decisionURL
             return decisionRepository.PostCommand(model);
         }
+        
+        [Route("user/delete/{userid}")]
+        [HttpDelete]
+        public string DeleteUser(string userid)
+        {
+            return userRepository.DeleteUser(userid);
+        }
     }
 }

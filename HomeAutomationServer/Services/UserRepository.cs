@@ -32,9 +32,69 @@ namespace HomeAutomationServer.Services
             notificationManager.init();
         }
         
+        public string DeleteUser(string userid)
+        {
+            WebRequest request = WebRequest.Create(DeviceRepository.storageURL + "BU/" + userid);
+            request.ContentType = "application/json";
+            request.Method = "GET";
+            
+            try
+            {
+
+                using (HttpWebResponse response = request.GetResponse() as HttpWebResponse)
+                {
+                    if (response.StatusCode != HttpStatusCode.OK)
+                    {
+                        return "false";
+                    }
+                    
+                    var stream = response.GetResponseStream();
+                    var reader = new StreamReader(stream);
+                    string value = reader.ReadToEnd();
+                    JObject j = JObject.Parse(value);
+                    string platformAppArn = (string) j["platformAppArn"];
+                    notificationManager.DeletePlatformApplication(platformAppArn);
+                    //return "true";
+                }
+            }
+
+            catch (WebException we)
+            {
+                return "false";
+            }
+            
+            request = WebRequest.Create(DeviceRepository.storageURL + "A/" + userid);
+            request.ContentType = "application/json";
+            request.Method = "DELETE";
+            
+            using (var streamWriter = new StreamWriter(request.GetRequestStream()))
+            {
+                streamWriter.Write("");
+                streamWriter.Close();
+            }
+            
+            try
+            {
+                using (HttpWebResponse response = request.GetResponse() as HttpWebResponse)
+                {
+                    if (response.StatusCode != HttpStatusCode.OK)
+                    {
+                        return "false";
+                    }
+                }
+            }
+
+            catch (WebException we)
+            {
+                return "false";
+            }
+            
+            return "true";
+        }
+        
         public string GetUserId(string username, string pass)
         {
-            WebRequest request = WebRequest.Create(DeviceRepository.storageURL + "/IU/" + username + "/" + pass);
+            WebRequest request = WebRequest.Create(DeviceRepository.storageURL + "IU/" + username + "/" + pass);
             request.ContentType = "application/json";
             request.Method = "GET";
 
@@ -68,10 +128,10 @@ namespace HomeAutomationServer.Services
         
         public string PostDeviceToken(string username, string pass, string deviceToken)
         {
-            string topicArn = "";
+            string[] arn = new string[2]{"", ""};
             try
             {
-                topicArn = notificationManager.createPlatformApplicationAndAttachToTopic(deviceToken, username);
+                arn = notificationManager.createPlatformApplication(deviceToken, username);
             }
             
             catch (Exception e)
@@ -79,7 +139,7 @@ namespace HomeAutomationServer.Services
                 return "false";
             }
             
-            WebRequest request = WebRequest.Create(DeviceRepository.storageURL + "/IU/" + username + "/" + pass);
+            WebRequest request = WebRequest.Create(DeviceRepository.storageURL + "IU/" + username + "/" + pass);
             request.ContentType = "application/json";
             request.Method = "GET";
 
@@ -108,12 +168,13 @@ namespace HomeAutomationServer.Services
             
             // Now POST the topic ARN here
             
-            request = WebRequest.Create(DeviceRepository.storageURL + "/UU/" + userId);
+            request = WebRequest.Create(DeviceRepository.storageURL + "UU/" + userId);
             request.ContentType = "application/json";
             request.Method = "POST";
             
             JObject jobject = new JObject();
-            jobject["topicArn"] = topicArn;
+            jobject["platformAppArn"] = arn[0];
+            jobject["endPointArn"] = arn[1];
             string json = jobject.ToString();
             
             using (var streamWriter = new StreamWriter(request.GetRequestStream()))
@@ -144,7 +205,7 @@ namespace HomeAutomationServer.Services
         
         public string SendNotification(string username, string pass, string message)
         {
-            WebRequest request = WebRequest.Create(DeviceRepository.storageURL + "/IU/" + username + "/" + pass);
+            WebRequest request = WebRequest.Create(DeviceRepository.storageURL + "IU/" + username + "/" + pass);
             request.ContentType = "application/json";
             request.Method = "GET";
 
@@ -174,7 +235,7 @@ namespace HomeAutomationServer.Services
             
             // Now Get the Json blob
             
-            request = WebRequest.Create(DeviceRepository.storageURL + "/BU/" + userId);
+            request = WebRequest.Create(DeviceRepository.storageURL + "BU/" + userId);
             request.ContentType = "application/json";
             request.Method = "GET";
             
@@ -192,8 +253,8 @@ namespace HomeAutomationServer.Services
                     var reader = new StreamReader(stream);
                     string value = reader.ReadToEnd();
                     JObject j = JObject.Parse(value);
-                    string topicArn = (string) j["topicArn"];
-                    notificationManager.PublishNotification(topicArn, message);
+                    string endPointArn = (string) j["endPointArn"];
+                    notificationManager.PublishNotification(endPointArn, message);
                     return "true";
                 }
             }
@@ -249,7 +310,7 @@ namespace HomeAutomationServer.Services
             #endif
         }
 
-        public bool SaveUser(string username, JToken model)
+        public string SaveUser(JObject model)
         {
 			#if DEBUG
             try
@@ -257,18 +318,18 @@ namespace HomeAutomationServer.Services
                 string userID = (string)model["userID"]; // houseID is the correct key and is type UInt64
                 string passWord = (string)model["Password"];   // roomID is the correct key and is type UInt64
                 //int[] houseIDs = (int[])model["houseIDs"]; // Type is the correct key and is type string
+                return "1";
             }
             catch (Exception e){ // catches the exception if any of the keys are missing    
 				Console.WriteLine(e.Source);
-                return false;
+                return "false";
             }
-			return true;
 			#else
             try
             {
-                string userID = (string)model["userID"]; // houseID is the correct key and is type UInt64
-                string passWord = (string)model["Password"];   // roomID is the correct key and is type UInt64
-				WebRequest request = WebRequest.Create(pss_url + username);
+                //string userID = (string)model["userID"]; // houseID is the correct key and is type UInt64
+                //string passWord = (string)model["Password"];   // roomID is the correct key and is type UInt64
+				WebRequest request = WebRequest.Create(pss_url + "U");
                 request.ContentType = "application/json";
                 request.Method = "POST";
 
@@ -277,7 +338,6 @@ namespace HomeAutomationServer.Services
                     streamWriter.Write(model.ToString());
                     streamWriter.Close();
                 }
-                // request = WebRequest.Create("http://localhost:8081");
 
                 try
                 {
@@ -288,44 +348,28 @@ namespace HomeAutomationServer.Services
                             "Server error (HTTP {0}: {1}).",
                             response.StatusCode,
                             response.StatusDescription));
+                            
+                        var stream = response.GetResponseStream();
+                        var reader = new StreamReader(stream);
+
+                        return reader.ReadToEnd();
                     }
                 }
 
                 catch (Exception we)
                 {
                     LogFile.AddLog("Could not post user information to the Storage: " + we.Message + "\n");
-                    return false;
+                    return "false";
                 }
             }
 
             catch (SystemException ex)
             {
                 LogFile.AddLog("UpdateLocation -- Could not create the URL with the data provided: " + ex.Message + "\n");
-                return false;
+                return "false";
             }
-            return true;
+            return "true";
 #endif
-        }
-
-        public JObject DeleteUser(string username)
-        {
-            /*WebRequest request = WebRequest.Create("http://54.152.190.217:8080/A/USER/" + username);
-            request.Method = "DELETE";
-
-            using (HttpWebResponse response = request.GetResponse() as HttpWebResponse)
-            {
-                if (response.StatusCode != HttpStatusCode.OK)
-                    throw new Exception(String.Format(
-                    "Server error (HTTP {0}: {1}).",
-                    response.StatusCode,
-                    response.StatusDescription));
-                var stream = response.GetResponseStream();
-                var reader = new StreamReader(stream);
-
-                string userString = reader.ReadToEnd();
-                return JObject.Parse(userString);
-            }*/
-            return null;
         }
 
         //Sends an updated position to the decison system
