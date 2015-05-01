@@ -353,37 +353,13 @@ namespace HomeAutomationServer.Services
 #endif
         }
 
-        public JObject DeleteDevice(string houseid, string spaceid, string deviceid)
+        public bool DeleteDevice(string houseID, string spaceID, string deviceID)
         {
-            /*WebRequest request = WebRequest.Create("http://54.152.190.217:8081/HD/" + houseid);
-            request.Method = "GET";
-
-            using (HttpWebResponse response = request.GetResponse() as HttpWebResponse)
-            {
-                if (response.StatusCode != HttpStatusCode.OK)
-                    throw new Exception(String.Format(
-                    "Server error (HTTP {0}: {1}).",
-                    response.StatusCode,
-                    response.StatusDescription));
-                var stream = response.GetResponseStream();
-                var reader = new StreamReader(stream);
-
-                string houseString = reader.ReadToEnd();
-                JObject houseObject = JObject.Parse(deviceString);
-            }
-              
-            int version;
-            // Get version from JObject
-             
-            request = WebRequest.Create("http://54.152.190.217:8081/D/" + houseid + "/" + version + "/" + spaceid + "/" + deviceid);
-            request.ContentType = "application/json";
+#if DEBUG
+#else
+            WebRequest request = WebRequest.Create(storageURL + "D/" + houseID + "/" + spaceID +  "/"  + deviceID);
             request.Method = "DELETE";
 
-            using (var streamWriter = new StreamWriter(request.GetRequestStream()))
-            {
-               streamWriter.Write(model.ToString());
-            }
-
             using (HttpWebResponse response = request.GetResponse() as HttpWebResponse)
             {
                 if (response.StatusCode != HttpStatusCode.OK)
@@ -391,9 +367,9 @@ namespace HomeAutomationServer.Services
                     "Server error (HTTP {0}: {1}).",
                     response.StatusCode,
                     response.StatusDescription));
-            }*/
-
-            return null;
+            }
+#endif
+          return true;
         }
     }
 }

@@ -113,7 +113,7 @@ namespace HomeAutomationServer.Controllers
         [Route("device/{houseid}/{spaceid}/{deviceid}")]
         public bool DeleteDevice(string houseid, string spaceid, string deviceid)
         {
-            return true; // deviceRepository.DeleteDevice(houseid, spaceid, deviceid);
+            return deviceRepository.DeleteDevice(houseid, spaceid, deviceid);
         }
 
 
