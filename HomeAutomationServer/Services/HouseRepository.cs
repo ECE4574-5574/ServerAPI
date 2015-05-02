@@ -212,27 +212,25 @@ namespace HomeAutomationServer.Services
 #endif
         }
 
-        public JObject DeleteHouse(string houseid)
+        public bool DeleteHouse(string houseid)
         {
-            /*WebRequest request = WebRequest.Create("http://54.152.190.217:8081/H/" + houseid);
-                request.Method = "DELETE";
+#if DEBUG
+#else
+            WebRequest request = WebRequest.Create(DeviceRepository.storageURL + "H/" + houseid);
+            request.Method = "DELETE";
 
-               using (HttpWebResponse response = request.GetResponse() as HttpWebResponse)
-               {
-                   if (response.StatusCode != HttpStatusCode.OK)
-                       throw new Exception(String.Format(
-                       "Server error (HTTP {0}: {1}).",
-                       response.StatusCode,
-                       response.StatusDescription));
-                   var stream = response.GetResponseStream();
-                   var reader = new StreamReader(stream);
+            using (HttpWebResponse response = request.GetResponse() as HttpWebResponse)
+            {
+                if (response.StatusCode != HttpStatusCode.OK)
+                    throw new Exception(String.Format(
+                    "Server error (HTTP {0}: {1}).",
+                    response.StatusCode,
+                    response.StatusDescription));
+            }
+#endif
+          return true;
+}
 
-                   string houseString = reader.ReadToEnd();
-                   return JObject.Parse(houseString);
-               }*/
-
-            return null;
-        }
 
         /*public Exception UpdateHouse(int id, string name, int userId)
         {

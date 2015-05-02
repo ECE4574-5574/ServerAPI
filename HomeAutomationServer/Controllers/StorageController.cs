@@ -205,7 +205,7 @@ namespace HomeAutomationServer.Controllers
         [Route("house/{houseid}")]
         public bool DeleteHouse(string houseid)
         {
-            return true;
+            return houseRepository.DeleteHouse(houseid);
         }
 
         ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

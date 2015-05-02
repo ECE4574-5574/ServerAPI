@@ -79,7 +79,7 @@ namespace HomeAutomationServer.Controllers
             return AppCache.GetBlobCount();
         }
 
-        // GET api/app/device/enumeratedevices
+        // GET api/app/device/enumeratedevices/{houseID}
         /// <summary>
         /// Get the list of devices from the house.
         /// </summary>

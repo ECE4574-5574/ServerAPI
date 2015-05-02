@@ -305,7 +305,8 @@ namespace HomeAutomationServer.Services
             catch (Exception ex)
             {
                LogFile.AddLog("Device -- Keys are invalid or missing: " + ex.Message + "\n");
-               return 0;
+               throw new Exception ("Device -- Keys are invalid or missing: " + ex.Message + "\n");
+               //return 0;
             }
 
             try
@@ -339,14 +340,16 @@ namespace HomeAutomationServer.Services
                 catch (Exception ex)
                 {
                     LogFile.AddLog("Device -- Failed to send information to the Storage: " + ex.Message + "\n");
-                    return 0;
+                    throw new Exception("Device -- Failed to send information to the Storage: " + ex.Message + "\n");
+                    //return 0;
                 }
             }
 
             catch (SystemException ex) 
             {
                 LogFile.AddLog("Device -- Failed to send POST request with the URL provided: " + ex.Message + "\n");
-                return 0;
+                throw new Exception("Device -- Failed to send information to the Storage: " + ex.Message + "\n");;
+                //return 0;
             }
 
             return deviceId;
