@@ -42,7 +42,7 @@ namespace HomeAutomationServer.Controllers
         [HttpPost]
         public bool SendDevDecision([FromBody] JObject model)
         {
-            return decisionRepo.SendDevDecision(model);
+            return AppCache.AddDeviceInfo(model);
         }
 
         /*// Get api/decision/state
@@ -70,7 +70,7 @@ namespace HomeAutomationServer.Controllers
 		[Route("app"), HttpPost]
 		public bool Information([FromBody] JObject model)
 		{
-			return decisionRepo.SendMessage(model);
+			return AppCache.AddUserInfo(model);
 		}
     }
 }
