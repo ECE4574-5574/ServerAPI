@@ -176,9 +176,12 @@ namespace HomeAutomationServer.Controllers
         
         [Route("user/delete/{userid}")]
         [HttpDelete]
-        public string DeleteUser(string userid)
+        public bool DeleteUser(string userid)
         {
-            return userRepository.DeleteUser(userid);
+            if (userRepository.DeleteUser(userid) == "true")
+                return true;
+            else
+                return false;
         }
     }
 }

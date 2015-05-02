@@ -37,6 +37,7 @@ namespace HomeAutomationServer.Services
             WebRequest request = WebRequest.Create(DeviceRepository.storageURL + "BU/" + userid);
             request.ContentType = "application/json";
             request.Method = "GET";
+            string platformAppArn = null;
             
             try
             {
@@ -52,8 +53,7 @@ namespace HomeAutomationServer.Services
                     var reader = new StreamReader(stream);
                     string value = reader.ReadToEnd();
                     JObject j = JObject.Parse(value);
-                    string platformAppArn = (string) j["platformAppArn"];
-                    notificationManager.DeletePlatformApplication(platformAppArn);
+                    platformAppArn = (string) j["platformAppArn"];
                     //return "true";
                 }
             }
@@ -81,6 +81,9 @@ namespace HomeAutomationServer.Services
                     {
                         return "false";
                     }
+                    
+                    //Remove the user from notification
+                    notificationManager.DeletePlatformApplication(platformAppArn);
                 }
             }
 
@@ -319,8 +322,8 @@ namespace HomeAutomationServer.Services
 			#if DEBUG
             try
             {
-                string userID = (string)model["userID"]; // houseID is the correct key and is type UInt64
-                string passWord = (string)model["Password"];   // roomID is the correct key and is type UInt64
+                //string userID = (string)model["userID"]; // houseID is the correct key and is type UInt64
+                //string passWord = (string)model["Password"];   // roomID is the correct key and is type UInt64
                 //int[] houseIDs = (int[])model["houseIDs"]; // Type is the correct key and is type string
                 return "1";
             }
@@ -331,9 +334,9 @@ namespace HomeAutomationServer.Services
 			#else
             try
             {
-                //string userID = (string)model["userID"]; // houseID is the correct key and is type UInt64
-                //string passWord = (string)model["Password"];   // roomID is the correct key and is type UInt64
-				WebRequest request = WebRequest.Create(pss_url + "U");
+                string username = (string) model["username"]; // houseID is the correct key and is type UInt64
+                string password = (string) model["password"];   // roomID is the correct key and is type UInt64
+				WebRequest request = WebRequest.Create(pss_url + "U/" + username + "/" + password);
                 request.ContentType = "application/json";
                 request.Method = "POST";
 
