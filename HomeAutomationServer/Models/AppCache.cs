@@ -29,6 +29,9 @@ namespace HomeAutomationServer.Models
 
         // A JSON array of device blobs
         private static Dictionary<FullID, Device> deviceBlobs = new Dictionary<FullID, Device>();
+		// These are just ideas for the most part, could be a better implementation
+		private static List<JObject> /*JArray might work instead*/ deviceInfo = new List<JObject>();
+		private static List<JObject> userInfo = new List<JObject>();
         // add any other JArrays containing blobs here
 
         ////////////////////////////////////////////////////////////////////////////////////////
@@ -86,6 +89,18 @@ namespace HomeAutomationServer.Models
 
             return true;
         }
+		
+		static public bool AddUserInfo(JObject info)
+		{
+			userInfo.Add(info);
+			return true;
+		}
+		
+		static public bool AddDeviceInfo(JObject info)
+		{
+			deviceInfo.Add(info);
+			return true;
+		}
 
         static public JToken GetDeviceBlob(FullID fullID)
         {
@@ -106,10 +121,32 @@ namespace HomeAutomationServer.Models
             return JArray.Parse(blobs.ToString());
         }
 
+		static public JObject GetDeviceInfo()
+		{
+			if (deviceInfo.Count > 0) return deviceInfo.RemoveAt(0);
+			else return null;
+		}
+		
+		static public JObject GetUserInfo()
+		{
+			if (userInfo.Count > 0) return userInfo.RemoveAt(0);
+			else return null;
+		}
+		
         static public int GetBlobCount()
         {
             return deviceBlobs.Count;
         }
+		
+		static public int GetDeviceInfoCount()
+		{
+			return deviceInfo.Count;
+		}
+		
+		static public int GetUserInfoCount()
+		{
+			return userInfo.Count;
+		}
 
     }
 }
