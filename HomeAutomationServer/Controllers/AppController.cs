@@ -142,36 +142,93 @@ namespace HomeAutomationServer.Controllers
 
         [Route("user/devicetoken/{username}/{pass}")]
         [HttpPost]
-        public string PostDeviceToken([FromBody] JObject model, string username, string pass)
+        public bool PostDeviceToken([FromBody] JObject model, string username, string pass)
         {
-            string deviceToken = (string) model["deviceToken"];
-            return userRepository.PostDeviceToken(username, pass, deviceToken);
-            // Make a call to persistent storage to POST the device token
-            return model.ToString() + " " + username + " " + pass;
+            #if DEBUG
+            
+                return true;
+                
+            #else
+            
+                string deviceToken = (string) model["deviceToken"];
+                string retVal = userRepository.PostDeviceToken(username, pass, deviceToken);
+                
+                if (retVal == "true")
+                    return true;
+                else
+                    return false;
+                
+            #endif
         }
 
         [Route("user/notify/{username}/{pass}")]
         [HttpPost]
-        public string SendNotification([FromBody] JObject model, string username, string pass)
+        public bool SendNotification([FromBody] JObject model, string username, string pass)
         {
-            string message = (string) model["message"];
-            return userRepository.SendNotification(username, pass, message);
-            //return model.ToString() + " " + username + " " + pass;
+            #if DEBUG
+            
+                return true;
+                
+            #else
+            
+                string message = (string) model["message"];
+                string retVal = userRepository.SendNotification(username, pass, message);
+                
+                if (retVal == "true")
+                    return true;
+                else
+                    return false;
+                
+            #endif
         }
 
         [Route("user/userid/{username}/{pass}")]
         [HttpGet]
-        public string GetUserId(string username, string pass)
+        public UInt64 GetUserId(string username, string pass)
         {
-            return userRepository.GetUserId(username, pass);
+            #if DEBUG
+            
+                return 1;
+                
+            #else
+            
+                return Convert.ToUInt64(userRepository.GetUserId(username, pass));
+                
+            #endif
         }
 
         [Route("user/command")]
         [HttpPost]
         public bool PostCommand([FromBody] JObject model)
         {
-            // Make a POST request on decisionURL
-            return decisionRepository.PostCommand(model);
+            #if DEBUG
+                
+                return true;
+                
+            #else
+            
+                // Make a POST request on decisionURL
+                return decisionRepository.PostCommand(model);
+                
+            #endif
+        }
+        
+        [Route("user/delete/{userid}")]
+        [HttpDelete]
+        public bool DeleteUser(string userid)
+        {
+            #if DEBUG
+                
+                return true;
+                
+            #else
+            
+                if (userRepository.DeleteUser(userid) == "true")
+                    return true;
+                else
+                    return false;
+            
+            #endif
         }
     }
 }

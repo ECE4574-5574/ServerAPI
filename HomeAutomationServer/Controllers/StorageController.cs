@@ -231,9 +231,10 @@ namespace HomeAutomationServer.Controllers
         /// <param name="model"></param>
         /// <returns>Returns true if the information was posted, false if not.</returns>
         [Route("user")]
-        public bool PostUser([FromBody] JObject model)                  // HTTP POST - posts a new user
+        [HttpPost]
+        public string PostUser([FromBody] JObject model)                  // HTTP POST - posts a new user
         {
-            return true; //userRepository.SaveUser(model);
+            return userRepository.SaveUser(model); //userRepository.SaveUser(model);
         }
 
         // DELETE api/user/username
