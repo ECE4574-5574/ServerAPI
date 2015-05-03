@@ -23,7 +23,8 @@ namespace HomeAutomationTest
     [TestClass]
     public class TestSimController
     {
-        private string URI = "http://serverapi1.azurewebsites.net";
+        //private string URI = "http://serverapi1.azurewebsites.net";
+        private string URI = "http://localhost:8080/";
 
         [TestMethod]
         public void TestPostTimeFrame()
@@ -259,7 +260,7 @@ namespace HomeAutomationTest
             // POST api/storage/user	
             // Posts the users information provided by JSON object data.
 
-            request = WebRequest.Create(URI + "/api/storage/user/" + username + "/" + password);
+            request = WebRequest.Create(URI + "/api/storage/user");
             request.ContentType = "application/json";
             request.Method = "POST";
 
@@ -317,6 +318,7 @@ namespace HomeAutomationTest
 
             catch (WebException we)
             {
+                Assert.Fail();
             }
 
             //Now Trying to get that user
@@ -404,7 +406,7 @@ namespace HomeAutomationTest
                     string id = reader.ReadToEnd();
                     Assert.AreNotEqual(id, "false");
                     //Assert.Inconclusive(userid);
-                    Assert.AreEqual(Convert.ToInt32(userid), userid);
+                    Assert.AreEqual(userid, id);
                 }
             }
 
