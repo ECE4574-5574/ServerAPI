@@ -232,9 +232,9 @@ namespace HomeAutomationServer.Controllers
         /// <returns>Returns true if the information was posted, false if not.</returns>
         [Route("user")]
         [HttpPost]
-        public string PostUser([FromBody] JObject model)                  // HTTP POST - posts a new user
+        public UInt64 PostUser([FromBody] JObject model)                  // HTTP POST - posts a new user
         {
-            return userRepository.SaveUser(model); //userRepository.SaveUser(model);
+            return Convert.ToUInt64(userRepository.SaveUser(model)); //userRepository.SaveUser(model);
         }
 
         // DELETE api/user/username
