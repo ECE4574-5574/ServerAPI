@@ -142,47 +142,57 @@ namespace HomeAutomationServer.Controllers
 
         [Route("user/devicetoken/{username}/{pass}")]
         [HttpPost]
-        public string PostDeviceToken([FromBody] JObject model, string username, string pass)
+        public bool PostDeviceToken([FromBody] JObject model, string username, string pass)
         {
             #if DEBUG
             
-                return "true";
+                return true;
                 
             #else
             
                 string deviceToken = (string) model["deviceToken"];
-                return userRepository.PostDeviceToken(username, pass, deviceToken);
+                string retVal = userRepository.PostDeviceToken(username, pass, deviceToken);
+                
+                if (retVal == "true")
+                    return true;
+                else
+                    return false;
                 
             #endif
         }
 
         [Route("user/notify/{username}/{pass}")]
         [HttpPost]
-        public string SendNotification([FromBody] JObject model, string username, string pass)
+        public bool SendNotification([FromBody] JObject model, string username, string pass)
         {
             #if DEBUG
             
-                return "true";
+                return true;
                 
             #else
             
                 string message = (string) model["message"];
-                return userRepository.SendNotification(username, pass, message);
+                string retVal = userRepository.SendNotification(username, pass, message);
+                
+                if (retVal == "true")
+                    return true;
+                else
+                    return false;
                 
             #endif
         }
 
         [Route("user/userid/{username}/{pass}")]
         [HttpGet]
-        public string GetUserId(string username, string pass)
+        public UInt64 GetUserId(string username, string pass)
         {
             #if DEBUG
             
-                return "1";
+                return 1;
                 
             #else
             
-                return userRepository.GetUserId(username, pass);
+                return Convert.ToUInt64(userRepository.GetUserId(username, pass));
                 
             #endif
         }
