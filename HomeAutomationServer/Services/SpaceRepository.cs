@@ -70,7 +70,6 @@ namespace HomeAutomationServer.Services
 
 			return 1;
 #else
-		
 			try {
 				houseId = (UInt64)model ["houseID"]; // houseID is the correct key and is type UInt64
 			} catch (Exception ex) { // catches the exception if any of the keys are missing      
@@ -86,10 +85,8 @@ namespace HomeAutomationServer.Services
 
 				try {
 
-					using (var streamWriter = new StreamWriter (request.GetRequestStream ())) {
+					using (var streamWriter = new StreamWriter (request.GetRequestStream ()))
 						streamWriter.Write (model.ToString ());
-					}
-
 					using (HttpWebResponse response = request.GetResponse () as HttpWebResponse) {
 						if (response.StatusCode != HttpStatusCode.OK)
 							throw new Exception (String.Format (
@@ -102,7 +99,7 @@ namespace HomeAutomationServer.Services
 
 						roomID = UInt64.Parse (reader.ReadToEnd ());
 					}
-
+        
 				} catch (Exception ex) {
 					LogFile.AddLog ("House -- Could not post room to the server: " + ex.Message + "\n");
 					return 0;
@@ -112,12 +109,7 @@ namespace HomeAutomationServer.Services
 				LogFile.AddLog ("Device -- Failed to send POST request with the URL provided: " + ex.Message + "\n");
 				return 0;
 			}
-            }
-            catch (Exception ex)
-            {
-                LogFile.AddLog("House -- Invalid URL: " + ex.Message + "\n");
-                return 0;
-            }
+
 
 			return roomID;
 #endif

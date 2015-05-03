@@ -19,6 +19,258 @@ namespace HomeAutomationServer.Services
         // deviceRepo has static url
         private string dm_url = DeviceRepository.decisionURL;
 		private string pss_url = DeviceRepository.storageURL;
+        
+        private NotificationManager notificationManager;
+        
+        public UserRepository()
+        {
+            // of the array is one line of the file. 
+            string[] lines = System.IO.File.ReadAllLines(@"C:\keys.txt");
+            string accK = lines[0];
+            string secK = lines[1];
+            notificationManager = new NotificationManager(accK, secK, Amazon.RegionEndpoint.USEast1);
+            notificationManager.init();
+        }
+        
+        public string DeleteUser(string userid)
+        {
+            WebRequest request = WebRequest.Create(DeviceRepository.storageURL + "BU/" + userid);
+            request.ContentType = "application/json";
+            request.Method = "GET";
+            string platformAppArn = null;
+            
+            try
+            {
+
+                using (HttpWebResponse response = request.GetResponse() as HttpWebResponse)
+                {
+                    if (response.StatusCode != HttpStatusCode.OK)
+                    {
+                        return "false";
+                    }
+                    
+                    var stream = response.GetResponseStream();
+                    var reader = new StreamReader(stream);
+                    string value = reader.ReadToEnd();
+                    JObject j = JObject.Parse(value);
+                    platformAppArn = (string) j["platformAppArn"];
+                    //return "true";
+                }
+            }
+
+            catch (WebException we)
+            {
+                return "false";
+            }
+            
+            request = WebRequest.Create(DeviceRepository.storageURL + "A/" + userid);
+            request.ContentType = "application/json";
+            request.Method = "DELETE";
+            
+            using (var streamWriter = new StreamWriter(request.GetRequestStream()))
+            {
+                streamWriter.Write("");
+                streamWriter.Close();
+            }
+            
+            try
+            {
+                using (HttpWebResponse response = request.GetResponse() as HttpWebResponse)
+                {
+                    if (response.StatusCode != HttpStatusCode.OK)
+                    {
+                        return "false";
+                    }
+                    
+                    //Remove the user from notification
+                    notificationManager.DeletePlatformApplication(platformAppArn);
+                }
+            }
+
+            catch (WebException we)
+            {
+                return "false";
+            }
+            
+            return "true";
+        }
+        
+        public string GetUserId(string username, string pass)
+        {
+            WebRequest request = WebRequest.Create(DeviceRepository.storageURL + "IU/" + username + "/" + pass);
+            request.ContentType = "application/json";
+            request.Method = "GET";
+
+            string userId = "";
+
+            try
+            {
+
+                using (HttpWebResponse response = request.GetResponse() as HttpWebResponse)
+                {
+                    if (response.StatusCode != HttpStatusCode.OK)
+                    {
+                        throw new Exception(String.Format(
+                            "Server error (HTTP {0}: {1}).",
+                            response.StatusCode,
+                            response.StatusDescription));
+                    }
+                    
+                    var stream = response.GetResponseStream();
+                    var reader = new StreamReader(stream);
+                    userId = reader.ReadToEnd();
+                    return userId;
+                }
+            }
+
+            catch (WebException we)
+            {
+                throw we;
+            }
+        }
+        
+        public string PostDeviceToken(string username, string pass, string deviceToken)
+        {
+            string[] arn = new string[2]{"", ""};
+            try
+            {
+                arn = notificationManager.createPlatformApplication(deviceToken, username);
+            }
+            
+            catch (Exception e)
+            {
+                return "false";
+            }
+            
+            WebRequest request = WebRequest.Create(DeviceRepository.storageURL + "IU/" + username + "/" + pass);
+            request.ContentType = "application/json";
+            request.Method = "GET";
+
+            string userId = "";
+
+            try
+            {
+
+                using (HttpWebResponse response = request.GetResponse() as HttpWebResponse)
+                {
+                    if (response.StatusCode != HttpStatusCode.OK)
+                    {
+                        notificationManager.DeletePlatformApplication(arn[0]);
+                        return "false";
+                    }
+                    
+                    var stream = response.GetResponseStream();
+                    var reader = new StreamReader(stream);
+                    userId = reader.ReadToEnd();
+                }
+            }
+
+            catch (WebException we)
+            {
+                notificationManager.DeletePlatformApplication(arn[0]);
+                return "false";
+            }
+            
+            // Now POST the topic ARN here
+            
+            request = WebRequest.Create(DeviceRepository.storageURL + "UU/" + userId);
+            request.ContentType = "application/json";
+            request.Method = "POST";
+            
+            JObject jobject = new JObject();
+            jobject["platformAppArn"] = arn[0];
+            jobject["endPointArn"] = arn[1];
+            string json = jobject.ToString();
+            
+            using (var streamWriter = new StreamWriter(request.GetRequestStream()))
+            {
+                streamWriter.Write(json);
+                streamWriter.Close();
+            }
+            
+            try
+            {
+
+                using (HttpWebResponse response = request.GetResponse() as HttpWebResponse)
+                {
+                    if (response.StatusCode != HttpStatusCode.OK)
+                    {
+                        notificationManager.DeletePlatformApplication(arn[0]);
+                        return "false";
+                    }
+                }
+            }
+
+            catch (WebException we)
+            {
+                notificationManager.DeletePlatformApplication(arn[0]);
+                return "false";
+            }
+            
+            return "true";
+        }
+        
+        public string SendNotification(string username, string pass, string message)
+        {
+            WebRequest request = WebRequest.Create(DeviceRepository.storageURL + "IU/" + username + "/" + pass);
+            request.ContentType = "application/json";
+            request.Method = "GET";
+
+            string userId = "";
+
+            try
+            {
+
+                using (HttpWebResponse response = request.GetResponse() as HttpWebResponse)
+                {
+                    if (response.StatusCode != HttpStatusCode.OK)
+                    {
+                        return "false";
+                    }
+                    
+                    var stream = response.GetResponseStream();
+                    var reader = new StreamReader(stream);
+                    userId = reader.ReadToEnd();
+                }
+            }
+
+            catch (WebException we)
+            {
+                return "false";
+            }
+            
+            
+            // Now Get the Json blob
+            
+            request = WebRequest.Create(DeviceRepository.storageURL + "BU/" + userId);
+            request.ContentType = "application/json";
+            request.Method = "GET";
+            
+            try
+            {
+
+                using (HttpWebResponse response = request.GetResponse() as HttpWebResponse)
+                {
+                    if (response.StatusCode != HttpStatusCode.OK)
+                    {
+                        return "false";
+                    }
+                    
+                    var stream = response.GetResponseStream();
+                    var reader = new StreamReader(stream);
+                    string value = reader.ReadToEnd();
+                    JObject j = JObject.Parse(value);
+                    string endPointArn = (string) j["endPointArn"];
+                    notificationManager.PublishNotification(endPointArn, message);
+                    return "true";
+                }
+            }
+
+            catch (WebException we)
+            {
+                return "false";
+            }
+        }
 
         public JObject GetUser(string username)
         {
@@ -65,26 +317,26 @@ namespace HomeAutomationServer.Services
             #endif
         }
 
-        public bool SaveUser(string username, JToken model)
+        public string SaveUser(JObject model)
         {
 			#if DEBUG
             try
             {
-                string userID = (string)model["userID"]; // houseID is the correct key and is type UInt64
-                string passWord = (string)model["Password"];   // roomID is the correct key and is type UInt64
+                //string userID = (string)model["userID"]; // houseID is the correct key and is type UInt64
+                //string passWord = (string)model["Password"];   // roomID is the correct key and is type UInt64
                 //int[] houseIDs = (int[])model["houseIDs"]; // Type is the correct key and is type string
+                return "1";
             }
             catch (Exception e){ // catches the exception if any of the keys are missing    
 				Console.WriteLine(e.Source);
-                return false;
+                return "false";
             }
-			return true;
 			#else
             try
             {
-                string userID = (string)model["userID"]; // houseID is the correct key and is type UInt64
-                string passWord = (string)model["Password"];   // roomID is the correct key and is type UInt64
-				WebRequest request = WebRequest.Create(pss_url + username);
+                string username = (string) model["username"]; // houseID is the correct key and is type UInt64
+                string password = (string) model["password"];   // roomID is the correct key and is type UInt64
+				WebRequest request = WebRequest.Create(pss_url + "U/" + username + "/" + password);
                 request.ContentType = "application/json";
                 request.Method = "POST";
 
@@ -93,7 +345,6 @@ namespace HomeAutomationServer.Services
                     streamWriter.Write(model.ToString());
                     streamWriter.Close();
                 }
-                // request = WebRequest.Create("http://localhost:8081");
 
                 try
                 {
@@ -104,44 +355,28 @@ namespace HomeAutomationServer.Services
                             "Server error (HTTP {0}: {1}).",
                             response.StatusCode,
                             response.StatusDescription));
+                            
+                        var stream = response.GetResponseStream();
+                        var reader = new StreamReader(stream);
+
+                        return reader.ReadToEnd();
                     }
                 }
 
                 catch (Exception we)
                 {
                     LogFile.AddLog("Could not post user information to the Storage: " + we.Message + "\n");
-                    return false;
+                    return "false";
                 }
             }
 
             catch (SystemException ex)
             {
                 LogFile.AddLog("UpdateLocation -- Could not create the URL with the data provided: " + ex.Message + "\n");
-                return false;
+                return "false";
             }
-            return true;
+            return "true";
 #endif
-        }
-
-        public JObject DeleteUser(string username)
-        {
-            /*WebRequest request = WebRequest.Create("http://54.152.190.217:8080/A/USER/" + username);
-            request.Method = "DELETE";
-
-            using (HttpWebResponse response = request.GetResponse() as HttpWebResponse)
-            {
-                if (response.StatusCode != HttpStatusCode.OK)
-                    throw new Exception(String.Format(
-                    "Server error (HTTP {0}: {1}).",
-                    response.StatusCode,
-                    response.StatusDescription));
-                var stream = response.GetResponseStream();
-                var reader = new StreamReader(stream);
-
-                string userString = reader.ReadToEnd();
-                return JObject.Parse(userString);
-            }*/
-            return null;
         }
 
         //Sends an updated position to the decison system
@@ -170,10 +405,10 @@ namespace HomeAutomationServer.Services
             try
             {
                 double lat = (double)model["lat"];
-                double lon = (double)model["long"];
+                double lon = (double)model["lon"];
                 double alt = (double)model["alt"];
                 model["lat"] = lat;
-                model["long"] = lon;
+                model["lon"] = lon;
                 model["alt"] = alt;
 				WebRequest request = WebRequest.Create(dm_url +"LocationChange");
                 request.ContentType = "application/json";
@@ -185,7 +420,6 @@ namespace HomeAutomationServer.Services
                     streamWriter.Flush();
                     streamWriter.Close();
                 }
-
                 try
                 {
                     using (HttpWebResponse response = request.GetResponse() as HttpWebResponse)
@@ -239,10 +473,10 @@ namespace HomeAutomationServer.Services
             {
                 string time = model["time"].ToString();
 				double lat = (double) model["lat"];
-				double lon = (double) model["long"];
+				double lon = (double) model["lon"];
 				double alt = (double) model["alt"];
 				string userID = model["userID"].ToString();
-				string command = model["brightenNearMe"].ToString();
+				string command = model["command-string"].ToString();
 		        WebRequest request = WebRequest.Create(dm_url + "CommandsFromApp");
                 request.ContentType = "application/json";
                 request.Method = "POST";

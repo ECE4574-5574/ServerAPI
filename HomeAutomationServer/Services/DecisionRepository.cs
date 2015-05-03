@@ -17,6 +17,37 @@ namespace HomeAutomationServer.Services
     {
         private string houseApiHost = "http://house_address:house_port/device/";
 
+        public bool PostCommand(JObject model)
+        {
+            WebRequest request = WebRequest.Create(DeviceRepository.decisionURL + "/CommandsFromApp");
+            request.ContentType = "application/json";
+            request.Method = "POST";
+
+            string json = model.ToString();
+
+            try
+            {
+                using (var streamWriter = new StreamWriter(request.GetRequestStream()))
+                {
+                    streamWriter.Write(json);
+                    streamWriter.Close();
+                }
+
+                using (HttpWebResponse response = request.GetResponse() as HttpWebResponse)
+                {
+                    if (response.StatusCode == HttpStatusCode.OK)
+                        return true;
+                    else
+                        return false;
+                }
+            }
+
+            catch (WebException we)
+            {
+                return false;
+            }
+        }
+
         public bool StateUpdate(JObject model)
         {
             UInt64 houseId, roomId;
@@ -37,11 +68,12 @@ namespace HomeAutomationServer.Services
             }
 
 #else
-            houseId = (UInt64)model["houseID"]; // houseID is the correct key and is type UInt64
-			roomId = (UInt64)model["roomID"];   // roomID is the correct key and is type UInt64
-			deviceType = (string)model["Type"]; // Type is the correct key and is type string
+            
             try
             {
+                houseId = (UInt64)model["houseID"]; // houseID is the correct key and is type UInt64
+                roomId = (UInt64)model["roomID"];   // roomID is the correct key and is type UInt64
+                deviceType = (string)model["Type"]; // Type is the correct key and is type string
 				WebRequest request = WebRequest.Create(houseApiHost + "/" + houseId + "/" + roomId + "/" + deviceType);
                 request.Method = "POST";
 
@@ -127,7 +159,9 @@ namespace HomeAutomationServer.Services
         public bool GetState(JObject model)
         {
             JObject device = new JObject();
-
+#if DEBUG
+            return true;
+#else
             try
             {
                 WebRequest request = WebRequest.Create(houseApiHost + (UInt64)model["HouseID"] + (UInt64)model["RoomID"] + (UInt64)model["DeviceID"]);
@@ -164,6 +198,7 @@ namespace HomeAutomationServer.Services
                 LogFile.AddLog("Decision -- Could not create the specified url with the data provided: " + ex.Message + "\n");
                 return (bool)model["Enabled"];
             }
+#endif
         }
     }
 }

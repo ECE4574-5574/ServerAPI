@@ -212,6 +212,68 @@ namespace HomeAutomationServer.Services
             }
         }
 
+        public JArray SendUnregisteredDevice(string houseid)
+        {
+            JArray allDevices;
+            JArray devicesInStorage;
+            JArray unregisteredDevices = new JArray();
+#if DEBUG
+            JObject test = new JObject();
+            test["Enabled"] = "false";
+            test["Value"] = 0;
+            test["ID"] = 0;
+            test["LastUpdate"] = "2015-04-29T14:15:58.0088064";
+            test["Name"] = "light";
+            test["Class"] = "lightSwitch";
+            unregisteredDevices.Add(test);
+#else
+            //first request all the devices from the house
+            WebRequest request = WebRequest.Create("http://localhost:8081/api/device"); // this is local house uri
+            request.Method = "GET";
+            using (HttpWebResponse response = request.GetResponse() as HttpWebResponse)
+            {
+                if (response.StatusCode != HttpStatusCode.OK)
+                    throw new Exception(String.Format(
+                    "Server error (HTTP {0}: {1}).",
+                    response.StatusCode,
+                    response.StatusDescription));
+                var stream = response.GetResponseStream();
+                var reader = new StreamReader(stream);
+
+                string deviceString = reader.ReadToEnd();
+                allDevices =  JArray.Parse(deviceString);
+            }
+            devicesInStorage = GetDevice(houseid);
+            for (int i = 0; i < allDevices.Count(); i++)
+            {
+                UInt64 id = (UInt64)(allDevices[i]["ID"]);
+                if (devicesInStorage.Count() == 0)
+                    return allDevices;
+                for (int j = 0; j < devicesInStorage.Count(); j++)
+                {
+                    JToken blobVal;
+                    String blob = (string)devicesInStorage[j]["blob"];
+                    //if (blob.Contains("I"))
+                    //{
+                    //    int h;
+                    //    h = 1;
+                    //}
+                    
+                    blobVal = JToken.Parse(blob);
+                    UInt64 id2 = (UInt64)(blobVal[j]["ID"]);
+                    if (id != id2)
+                    {
+                        unregisteredDevices.Add(allDevices[i]);
+                        break;
+                    }
+                }
+            }
+            
+#endif
+            return unregisteredDevices;
+        }
+
+
         public UInt64 SaveDevice(JObject model)     // Returns the device ID from the Storage which is type UInt64
         {
             UInt64 houseId, roomId;
@@ -242,7 +304,7 @@ namespace HomeAutomationServer.Services
             }
             catch (Exception ex)
             {
-               LogFile.AddLog("Device -- Keys are invalid or missing: " ex.Message + "\n");
+               LogFile.AddLog("Device -- Keys are invalid or missing: " + ex.Message + "\n");
                return 0;
             }
 
@@ -291,37 +353,13 @@ namespace HomeAutomationServer.Services
 #endif
         }
 
-        public JObject DeleteDevice(string houseid, string spaceid, string deviceid)
+        public bool DeleteDevice(string houseID, string spaceID, string deviceID)
         {
-            /*WebRequest request = WebRequest.Create("http://54.152.190.217:8081/HD/" + houseid);
-            request.Method = "GET";
-
-            using (HttpWebResponse response = request.GetResponse() as HttpWebResponse)
-            {
-                if (response.StatusCode != HttpStatusCode.OK)
-                    throw new Exception(String.Format(
-                    "Server error (HTTP {0}: {1}).",
-                    response.StatusCode,
-                    response.StatusDescription));
-                var stream = response.GetResponseStream();
-                var reader = new StreamReader(stream);
-
-                string houseString = reader.ReadToEnd();
-                JObject houseObject = JObject.Parse(deviceString);
-            }
-              
-            int version;
-            // Get version from JObject
-             
-            request = WebRequest.Create("http://54.152.190.217:8081/D/" + houseid + "/" + version + "/" + spaceid + "/" + deviceid);
-            request.ContentType = "application/json";
+#if DEBUG
+#else
+            WebRequest request = WebRequest.Create(storageURL + "D/" + houseID + "/" + spaceID +  "/"  + deviceID);
             request.Method = "DELETE";
 
-            using (var streamWriter = new StreamWriter(request.GetRequestStream()))
-            {
-               streamWriter.Write(model.ToString());
-            }
-
             using (HttpWebResponse response = request.GetResponse() as HttpWebResponse)
             {
                 if (response.StatusCode != HttpStatusCode.OK)
@@ -329,9 +367,9 @@ namespace HomeAutomationServer.Services
                     "Server error (HTTP {0}: {1}).",
                     response.StatusCode,
                     response.StatusDescription));
-            }*/
-
-            return null;
+            }
+#endif
+          return true;
         }
     }
 }

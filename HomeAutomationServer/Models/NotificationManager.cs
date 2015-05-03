@@ -49,28 +49,24 @@ namespace HomeAutomationServer.Models
 
         public void PublishNotification(string topic, string message)
         {
-            snsClient.Publish(topic, message);
+            snsClient.Publish(new PublishRequest
+            {
+                Message = message,
+                TargetArn = topic
+            });
         }
 
-        public string createPlatformApplicationAndAttachToTopic(string deviceToken, string username)
+        public string[] createPlatformApplication(string deviceToken, string username)
         {
             if (deviceToken == null || username == null)
             {
                 throw new ArgumentException("Passing null device token or username");
             }
 
-            var topicRequest = new CreateTopicRequest
-            {
-                Name = username + "_myTopic"
-            };
-
-            var topicResponse = snsClient.CreateTopic(topicRequest);
-
-
             var createPlatformApplicationRequest = new CreatePlatformApplicationRequest
             {
                 // Platform Credential is the SERVER API KEY FOR GCM
-                Attributes = new Dictionary<string, string>() { { "PlatformCredential", API_KEY }, { "EventEndpointCreated", topicResponse.TopicArn } },
+                Attributes = new Dictionary<string, string>() { { "PlatformCredential", API_KEY }},
                 Name = username + "_platform",
                 Platform = "GCM"
             };
@@ -91,28 +87,38 @@ namespace HomeAutomationServer.Models
             var createPlatformEndpointResult = snsClient.CreatePlatformEndpoint(request1);
 
 
-            try
-            {
-                snsClient.Subscribe(new SubscribeRequest
-                {
-                    Protocol = "application",
-                    TopicArn = topicResponse.TopicArn,
-                    Endpoint = createPlatformEndpointResult.EndpointArn
-                });
-            }
+            string[] arr = new string[2]{"", ""};
+            arr[1] = createPlatformEndpointResult.EndpointArn;
+            arr[0] = platformApplicationArn;
 
-            catch (Exception e)
-            {
-                Console.WriteLine(e.Message.ToString());
-                return null;
-            }
-
-            return topicResponse.TopicArn;
+            return arr;
         }
 
         public string getTopicName(string username)
         {
             return username + "_myTopic";
+        }
+
+        public bool DeletePlatformApplication(string platformApplicationArn)
+        {
+            if (platformApplicationArn == null)
+                return false;
+                
+            var request = new DeletePlatformApplicationRequest
+            {
+                PlatformApplicationArn = platformApplicationArn
+            };
+
+            try
+            {
+                snsClient.DeletePlatformApplication(request);
+                return true;
+            }
+            
+            catch (Exception e)
+            {
+                return false;
+            }
         }
     }
 }

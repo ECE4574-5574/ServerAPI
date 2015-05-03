@@ -4,7 +4,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
-using System.Web.Mvc;
+using System.Web.Http;
+//using System.Web.Mvc;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using HomeAutomationServer.Services;
@@ -12,9 +13,14 @@ using HomeAutomationServer.Services;
 namespace HomeAutomationServer.Controllers
 {
     [RoutePrefix("api/house")]
-    public class HouseControllerNew : Controller
+    public class HouseController : ApiController
     {
-    	private HouseRepository house = new HouseRepository();
+        private HouseRepository house;
+        public HouseController()
+        {
+            house = new HouseRepository();
+        }
+            
 	
 	// POST api/house/device/state
 	/// <summary>

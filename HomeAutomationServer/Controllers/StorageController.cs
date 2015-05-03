@@ -45,7 +45,7 @@ namespace HomeAutomationServer.Controllers
         /// <param name="houseid"></param>
         /// <param name="spaceid"></param>
         /// <returns>Returns all devices in the space via JSON array data.</returns>
-        [Route("device/{houseid}/{spaceid}")]
+        [Route("device/{houseid}/{spaceid:alpha}")]
         public JArray GetDevSpace(string houseid, string spaceid)
         {
             return deviceRepository.GetDevice(houseid, spaceid);
@@ -72,7 +72,7 @@ namespace HomeAutomationServer.Controllers
         /// <param name="houseid"></param>
         /// <returns>Returns all of the devices in the house specified via JSON array data.</returns>
         [Route("device/{houseid}")]
-        public JArray GetDevHouse(string houseid)
+        public JArray GetDevHouse(String houseid)
         {
             return deviceRepository.GetDevice(houseid);
         }
@@ -84,7 +84,7 @@ namespace HomeAutomationServer.Controllers
         /// <param name="houseid"></param>
         /// <param name="type"></param>
         /// <returns>Returns all of the devices in the specified house via JSON array data.</returns>
-        [Route("device/{houseid}/{type}")]
+        [Route("device/{houseid}/{type:int}")]
         public JArray GetDevHouseType(string houseid, int type)
         {
             return deviceRepository.GetDevice(houseid, type);
@@ -113,7 +113,7 @@ namespace HomeAutomationServer.Controllers
         [Route("device/{houseid}/{spaceid}/{deviceid}")]
         public bool DeleteDevice(string houseid, string spaceid, string deviceid)
         {
-            return true; // deviceRepository.DeleteDevice(houseid, spaceid, deviceid);
+            return deviceRepository.DeleteDevice(houseid, spaceid, deviceid);
         }
 
 
@@ -231,9 +231,10 @@ namespace HomeAutomationServer.Controllers
         /// <param name="model"></param>
         /// <returns>Returns true if the information was posted, false if not.</returns>
         [Route("user")]
-        public bool PostUser([FromBody] JObject model)                  // HTTP POST - posts a new user
+        [HttpPost]
+        public string PostUser([FromBody] JObject model)                  // HTTP POST - posts a new user
         {
-            return true; //userRepository.SaveUser(model);
+            return userRepository.SaveUser(model); //userRepository.SaveUser(model);
         }
 
         // DELETE api/user/username
