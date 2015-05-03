@@ -25,9 +25,9 @@ namespace HomeAutomationServer.Services
         public UserRepository()
         {
             // of the array is one line of the file. 
-            string[] lines = System.IO.File.ReadAllLines(@"C:\keys.txt");
-            string accK = lines[0];
-            string secK = lines[1];
+            //string[] lines = System.IO.File.ReadAllLines(@"C:\keys.txt");
+            string accK = "";
+            string secK = "";
             notificationManager = new NotificationManager(accK, secK, Amazon.RegionEndpoint.USEast1);
             notificationManager.init();
         }
