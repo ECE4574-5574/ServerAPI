@@ -215,9 +215,9 @@ namespace HomeAutomationTest
             // DELETE api/storage/api/stroage/user/{username}	
             // Deletes the user specified by the username.
 
-            string username = "idontexist";
+            string userid = "100000000";
 
-            WebRequest request = WebRequest.Create(URI + "/api/storage/user/" + username);
+            WebRequest request = WebRequest.Create(URI + "/api/app/user/delete/" + userid);
             request.ContentType = "application/json";
             request.Method = "DELETE";
 
@@ -235,7 +235,11 @@ namespace HomeAutomationTest
             {
                 using (HttpWebResponse response = request.GetResponse() as HttpWebResponse)
                 {
-                    Assert.AreNotSame(response.StatusCode, HttpStatusCode.OK);
+                    Assert.AreEqual(response.StatusCode, HttpStatusCode.OK);
+                    var stream = response.GetResponseStream();
+                    var reader = new StreamReader(stream);
+                    string str = reader.ReadToEnd();
+                    Assert.AreEqual(str, "false");
                 }
             }
 
@@ -248,22 +252,23 @@ namespace HomeAutomationTest
 
             // ADDING A VALID USER TO THE SERVER 
 
-            username = "test_delete_user_username";
+            string username = "test_delete_user_username";
             string password = "password";
 
             // First create a user ...
             // POST api/storage/user	
             // Posts the users information provided by JSON object data.
 
-            request = WebRequest.Create(URI + "/api/storage/user/" + username);
+            request = WebRequest.Create(URI + "/api/storage/user/" + username + "/" + password);
             request.ContentType = "application/json";
             request.Method = "POST";
 
             JObject jobject = new JObject();
-            jobject["UserID"] = username;
-            jobject["Password"] = password;
+            jobject["username"] = username;
+            jobject["password"] = password;
 
             json = jobject.ToString();
+            userid = "";
 
             using (var streamWriter = new StreamWriter(request.GetRequestStream()))
             {
@@ -278,6 +283,33 @@ namespace HomeAutomationTest
                     Assert.AreEqual(response.StatusCode, HttpStatusCode.OK);
                     var stream = response.GetResponseStream();
                     var reader = new StreamReader(stream);
+                    userid = reader.ReadToEnd();
+                }
+            }
+
+            catch (WebException we)
+            {
+                Console.WriteLine("TestDeleteUser failed. Couldn't post a user");
+                Assert.Fail();
+            }
+
+            request = WebRequest.Create(URI + "/api/app/user/delete/" + userid);
+            request.ContentType = "application/json";
+            request.Method = "DELETE";
+            
+            using (var streamWriter = new StreamWriter(request.GetRequestStream()))
+            {
+                streamWriter.Write("");
+                streamWriter.Close();
+            }
+            
+            try
+            {
+                using (HttpWebResponse response = request.GetResponse() as HttpWebResponse)
+                {
+                    Assert.AreEqual(response.StatusCode, HttpStatusCode.OK); 
+                    var stream = response.GetResponseStream();
+                    var reader = new StreamReader(stream);
                     string str = reader.ReadToEnd();
                     Assert.AreEqual(str, "true");
                 }
@@ -285,63 +317,25 @@ namespace HomeAutomationTest
 
             catch (WebException we)
             {
-                Console.WriteLine("TestDeleteUser failed. Couldn't post a user");
-                Assert.Fail();
-            }
-
-            // DELETEING THE USER NOW
-            request = WebRequest.Create(URI + "/api/storage/user/" + username);
-            request.ContentType = "application/json";
-            request.Method = "DELETE";
-
-
-            jobjects = new JObject();
-            json = jobjects.ToString();
-
-            using (var streamWriter = new StreamWriter(request.GetRequestStream()))
-            {
-                streamWriter.Write(json);
-                streamWriter.Close();
-            }
-
-            try
-            {
-                using (HttpWebResponse response = request.GetResponse() as HttpWebResponse)
-                {
-                    Assert.AreNotSame(response.StatusCode, HttpStatusCode.OK);
-                }
-            }
-
-            catch (WebException we)
-            {
-                Console.WriteLine("TestDeleteUser failed.");
-                Console.Write(we.Message);
             }
 
             //Now Trying to get that user
 
-            request = WebRequest.Create(URI + "/api/storage/user/" + username);
-            request.ContentType = "application/json";
+            request = WebRequest.Create(URI + "/api/app/user/userid/" + username + "/" + password);
+            //request.ContentType = "application/json";
             request.Method = "GET";
-
-            using (var streamWriter = new StreamWriter(request.GetRequestStream()))
-            {
-                streamWriter.Write(json);
-                streamWriter.Close();
-            }
 
             try
             {
                 using (HttpWebResponse response = request.GetResponse() as HttpWebResponse)
                 {
-                    Assert.AreEqual(response.StatusCode, HttpStatusCode.OK); 
+                    Assert.AreNotEqual(response.StatusCode, HttpStatusCode.OK);
                 }
             }
 
             catch (WebException we)
             {
-                Console.WriteLine("TestDeleteUser failed. Couldn't post a user");
-                Assert.Fail();
+                Console.WriteLine("TestPostUser failed. Couldn't get the user");
             }
         }
 
@@ -361,10 +355,11 @@ namespace HomeAutomationTest
             request.Method = "POST";
 
             JObject jobject = new JObject();
-            jobject["UserID"] = username;
-            jobject["Password"] = password;
+            jobject["username"] = username;
+            jobject["password"] = password;
 
             string json = jobject.ToString();
+            string userid = "";
 
             using (var streamWriter = new StreamWriter(request.GetRequestStream()))
             {
@@ -380,8 +375,9 @@ namespace HomeAutomationTest
                     Assert.AreEqual(response.StatusCode, HttpStatusCode.OK);
                     var stream = response.GetResponseStream();
                     var reader = new StreamReader(stream);
-                    string str = reader.ReadToEnd();
-                    Assert.AreEqual(str, "true");
+                    userid = reader.ReadToEnd();
+                    Assert.AreNotEqual(userid, "false");
+                    //Assert.Inconclusive(userid);
                 }
             }
 
@@ -393,7 +389,7 @@ namespace HomeAutomationTest
 
             //Now Trying to get that user
 
-            request = WebRequest.Create(URI + "/api/storage/user/" + username);
+            request = WebRequest.Create(URI + "/api/app/user/userid/" + username + "/" + password);
             //request.ContentType = "application/json";
             request.Method = "GET";
 
@@ -402,6 +398,13 @@ namespace HomeAutomationTest
                 using (HttpWebResponse response = request.GetResponse() as HttpWebResponse)
                 {
                     Assert.AreEqual(response.StatusCode, HttpStatusCode.OK);
+                    Assert.AreEqual(response.StatusCode, HttpStatusCode.OK);
+                    var stream = response.GetResponseStream();
+                    var reader = new StreamReader(stream);
+                    string id = reader.ReadToEnd();
+                    Assert.AreNotEqual(id, "false");
+                    //Assert.Inconclusive(userid);
+                    Assert.AreEqual(Convert.ToInt32(userid), userid);
                 }
             }
 
@@ -409,6 +412,29 @@ namespace HomeAutomationTest
             {
                 Console.WriteLine("TestPostUser failed. Couldn't get the user");
                 Assert.Fail("WebException Occurred");
+            }
+            
+            //DELETE dummy user
+            
+            request = WebRequest.Create(URI + "/api/app/user/delete/" + userid);
+            request.ContentType = "application/json";
+            request.Method = "DELETE";
+            
+            using (var streamWriter = new StreamWriter(request.GetRequestStream()))
+            {
+                streamWriter.Write("");
+                streamWriter.Close();
+            }
+            
+            try
+            {
+                using (HttpWebResponse response = request.GetResponse() as HttpWebResponse)
+                {
+                }
+            }
+
+            catch (WebException we)
+            {
             }
         }
 
@@ -420,7 +446,7 @@ namespace HomeAutomationTest
             string username = "test_get_user_username";
             string password = "password";
 
-            WebRequest request = WebRequest.Create(URI + "/api/storage/user/" + username);
+            WebRequest request = WebRequest.Create(URI + "/api/app/user/userid/" + username + "/" + password);
             request.ContentType = "application/json";
             request.Method = "GET";
 
@@ -432,31 +458,26 @@ namespace HomeAutomationTest
             {
                 using (HttpWebResponse response = request.GetResponse() as HttpWebResponse)
                 {
-                    Assert.AreEqual(response.StatusCode, HttpStatusCode.OK);
-                    var stream = response.GetResponseStream();
-                    var reader = new StreamReader(stream);
-                    string str = reader.ReadToEnd();
-                    Assert.AreEqual(str, null);
+                    Assert.AreNotEqual(response.StatusCode, HttpStatusCode.OK);
                 }
             }
 
             catch (WebException we)
             {
                 Console.WriteLine("TestGetUser failed. Couldn't post a user");
-                Assert.Fail();
             }
 
 
-            // Posting a user on the server
-            request = WebRequest.Create(URI + "/api/storage/user/" + username);
+            request = WebRequest.Create(URI + "/api/storage/user");
             request.ContentType = "application/json";
             request.Method = "POST";
 
             jobject = new JObject();
-            jobject["UserID"] = username;
-            jobject["Password"] = password;
+            jobject["username"] = username;
+            jobject["password"] = password;
 
             json = jobject.ToString();
+            string userid = "";
 
             using (var streamWriter = new StreamWriter(request.GetRequestStream()))
             {
@@ -472,47 +493,61 @@ namespace HomeAutomationTest
                     Assert.AreEqual(response.StatusCode, HttpStatusCode.OK);
                     var stream = response.GetResponseStream();
                     var reader = new StreamReader(stream);
-                    string str = reader.ReadToEnd();
-                    Assert.AreEqual(str, "true");
+                    userid = reader.ReadToEnd();
                 }
             }
 
             catch (WebException we)
             {
                 Console.WriteLine("TestPostUser failed. Couldn't post a user");
-                Assert.Fail();
+                Assert.Fail("Webexception Occurred. TestPostUser failed. Couldn't post a user");
             }
 
+            //Now Trying to get that user
 
-            request = WebRequest.Create(URI + "/api/storage/user/" + username);
-            request.ContentType = "application/json";
+            request = WebRequest.Create(URI + "/api/app/user/userid/" + username + "/" + password);
+            //request.ContentType = "application/json";
             request.Method = "GET";
-
-            jobject = new JObject();
-            json = jobject.ToString();
-
-            using (var streamWriter = new StreamWriter(request.GetRequestStream()))
-            {
-                streamWriter.Write(json);
-                streamWriter.Close();
-            }
 
             try
             {
                 using (HttpWebResponse response = request.GetResponse() as HttpWebResponse)
                 {
                     Assert.AreEqual(response.StatusCode, HttpStatusCode.OK);
+                    Assert.AreEqual(response.StatusCode, HttpStatusCode.OK);
                     var stream = response.GetResponseStream();
                     var reader = new StreamReader(stream);
-                    string str = reader.ReadToEnd();
-                    Assert.AreEqual(str, "true");
+                    Assert.AreEqual(userid, reader.ReadToEnd());
                 }
             }
 
             catch (WebException we)
             {
-                Console.WriteLine("TestGetUser failed. Couldn't post a user");
-                Assert.Fail();
+                Console.WriteLine("TestPostUser failed. Couldn't get the user");
+                Assert.Fail("WebException Occurred");
+            }
+            
+            //DELETE dummy user
+            
+            request = WebRequest.Create(URI + "/api/app/user/delete/" + userid);
+            request.ContentType = "application/json";
+            request.Method = "DELETE";
+            
+            using (var streamWriter = new StreamWriter(request.GetRequestStream()))
+            {
+                streamWriter.Write("");
+                streamWriter.Close();
+            }
+            
+            try
+            {
+                using (HttpWebResponse response = request.GetResponse() as HttpWebResponse)
+                {
+                }
+            }
+
+            catch (WebException we)
+            {
             }
 
         }
@@ -817,18 +852,99 @@ namespace HomeAutomationTest
         public void TestPostDevice()
         {
 
-            WebRequest request = WebRequest.Create(URI + "/api/storage/device");
+            int houseid = 0;
+
+            WebRequest request = WebRequest.Create(URI + "/api/storage/house");
+            request.ContentType = "application/json";
+            request.Method = "POST";
+
+            JObject jobject = new JObject();
+            jobject["houseId"] = houseid;
+            jobject["name"] = "myhouse";
+            string json = jobject.ToString();
+
+            using (var streamWriter = new StreamWriter(request.GetRequestStream()))
+            {
+                streamWriter.Write(json);
+                streamWriter.Close();
+            }
+
+            try
+            {
+                using (HttpWebResponse response = request.GetResponse() as HttpWebResponse)
+                {
+                    Assert.AreEqual(response.StatusCode, HttpStatusCode.OK);
+                    var stream = response.GetResponseStream();
+                    var reader = new StreamReader(stream);
+                    string str = reader.ReadToEnd();
+                    houseid = Convert.ToInt32(str);
+                }
+            }
+
+            catch (WebException we)
+            {
+                Console.WriteLine("TestPostHouse failed. Couldn't post a house");
+                Assert.Fail("WebException occurred. TestPostHouse failed. Couldn't post a house");
+            }
+
+            // Posting a ROOM
+
+            request = WebRequest.Create(URI + "/api/storage/space/");
             request.ContentType = "application/json";
             request.Method = "POST";
 
             JObject jobjects = new JObject();
+            jobjects["houseID"] = houseid;
+            jobjects["roomid"] = "1234";
+            jobjects["type"] = "Light";
+            jobjects["name"] = "BedroomLight";
+            jobjects["x"] = "100";
+            jobjects["y"] = "300";
+
+            json = jobjects.ToString();
+
+            int roomId = 0;
+
+            using (var streamWriter = new StreamWriter(request.GetRequestStream()))
+            {
+                streamWriter.Write(json);
+                streamWriter.Close();
+            }
+
+            try
+            {
+                using (HttpWebResponse response = request.GetResponse() as HttpWebResponse)
+                {
+
+                    Assert.AreEqual(response.StatusCode, HttpStatusCode.OK);
+                    var stream = response.GetResponseStream();
+                    var reader = new StreamReader(stream);
+                    string str = reader.ReadToEnd();
+                    roomId = Convert.ToInt32(str);
+                }
+            }
+
+            catch (WebException we)
+            {
+                Console.WriteLine("TestStoragePostSpace failed, Didnt Post.");
+                Assert.Fail();
+            }
+
+            // Posting a device
+
+            request = WebRequest.Create(URI + "/api/storage/device");
+            request.ContentType = "application/json";
+            request.Method = "POST";
+
+            jobjects = new JObject();
             //jobjects["ID"] = "1234";
-            jobjects["houseID"] = "17";
-            jobjects["roomID"] = "890";
+            jobjects["houseID"] = houseid;
+            jobjects["roomID"] = roomId;
             //jobjects["deviceID"] = "5";
             jobjects["Type"] = "Light";
             //jobjects["Name"] = "BedroomLight";
-            string json = jobjects.ToString();
+            json = jobjects.ToString();
+
             int deviceId = 0;
 
             using (var streamWriter = new StreamWriter(request.GetRequestStream()))
@@ -846,7 +962,6 @@ namespace HomeAutomationTest
                     var reader = new StreamReader(stream);
                     string str = reader.ReadToEnd();
                     deviceId = Convert.ToInt32(str);
-                    //Assert.AreEqual(str, "true");
                 }
             }
 
@@ -855,7 +970,6 @@ namespace HomeAutomationTest
                 Console.WriteLine("TestStorageDevicePost failed. Couldn't post the device");
                 Assert.Fail("WebException occurred.\n");
             }
-
 
             //Now Trying to get a Device inside a house
             request = WebRequest.Create(URI + "/api/storage/device/" + deviceId);
