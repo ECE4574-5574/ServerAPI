@@ -41,7 +41,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="AWSSDK">
-      <HintPath>..\..\..\..\VTCourses\ECE-5574\Automation_System\ServerAPI\AwsEmptyApp1\AwsEmptyApp1\bin\Debug\AWSSDK.dll</HintPath>
+      <HintPath>..\..\..\..\..\..\Visual Studio 2013\Projects\AwsEmptyApp3\AwsEmptyApp3\bin\Debug\AWSSDK.dll</HintPath>
     </Reference>
     <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
