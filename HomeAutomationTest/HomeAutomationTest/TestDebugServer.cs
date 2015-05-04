@@ -333,6 +333,50 @@ namespace HomeAutomationTest
             }
         }
 
+        [TestMethod]
+        public void TestPostCommand_DebugServer()
+        {
+            string userid = "1";
+
+            WebRequest request = WebRequest.Create(URI + "/api/app/user/command");
+            request.ContentType = "application/json";
+            request.Method = "POST";
+
+            JObject jobject = new JObject();
+            jobject["userID"] = userid;
+            jobject["command-string"] = "password";
+            jobject["time"] = "ISO8601";
+            jobject["device-blob"] = "this blob doesn't matter";
+
+            string json = jobject.ToString();
+
+            using (var streamWriter = new StreamWriter(request.GetRequestStream()))
+            {
+                streamWriter.Write(json);
+                streamWriter.Close();
+            }
+
+            try
+            {
+                using (HttpWebResponse response = request.GetResponse() as HttpWebResponse)
+                {
+
+                    Assert.AreEqual(response.StatusCode, HttpStatusCode.OK);
+                    var stream = response.GetResponseStream();
+                    var reader = new StreamReader(stream);
+                    string str = reader.ReadToEnd();
+                    Assert.AreEqual(str, "true");
+                }
+            }
+
+            catch (WebException we)
+            {
+                Console.WriteLine("TestPostUser failed. Couldn't post a user");
+                Assert.Fail("Webexception Occurred. TestPostUser failed. Couldn't post a user");
+            }
+
+        }
+        
         // Testing POST USER on 
         [TestMethod]
         public void TestPostUser_DebugServer()
