@@ -23,8 +23,8 @@ namespace HomeAutomationTest
     [TestClass]
     public class TestSimController
     {
-        private string URI = "http://serverapi1.azurewebsites.net";
-        //private string URI = "http://localhost:8080/";
+        //private string URI = "http://serverapi1.azurewebsites.net";
+        private string URI = "http://localhost:8080/";
 
         [TestMethod]
         public void TestPostTimeFrame()
@@ -337,8 +337,32 @@ namespace HomeAutomationTest
 
             catch (WebException we)
             {
-                Console.WriteLine("TestPostUser failed. Couldn't get the user");
+
             }
+
+            string[] lines = System.IO.File.ReadAllLines(@"C:\keys.txt");
+            string accK = lines[0];
+            string secK = lines[1];
+
+            AmazonSimpleNotificationServiceClient snsClient = new AmazonSimpleNotificationServiceClient(accK, secK, Amazon.RegionEndpoint.USEast1);
+
+            var appsResponse = snsClient.ListPlatformApplications();
+            int i = 0;
+
+            foreach (var app in appsResponse.PlatformApplications)
+            {
+                var appAttrsRequest = new GetPlatformApplicationAttributesRequest
+                {
+                    PlatformApplicationArn = app.PlatformApplicationArn
+                };
+
+                i++;
+                var appAttrsResponse = snsClient.GetPlatformApplicationAttributes(appAttrsRequest);
+                System.Diagnostics.Trace.WriteLine(app.PlatformApplicationArn);
+
+            }
+
+            //Assert.AreEqual(0, i);
         }
         
         [TestMethod]
@@ -482,9 +506,115 @@ namespace HomeAutomationTest
         }
         
         [TestMethod]
-        public void TestGetUserID()
+        public void TestPostCommand()
         {
             string username = "example_username";
+            string password = "password";
+
+            // First create a user ...
+            // POST api/storage/user	
+            // Posts the users information provided by JSON object data.
+
+            WebRequest request = WebRequest.Create(URI + "/api/storage/user");
+            request.ContentType = "application/json";
+            request.Method = "POST";
+
+            JObject jobject = new JObject();
+            jobject["username"] = username;
+            jobject["password"] = password;
+
+            string json = jobject.ToString();
+            string userid = "";
+
+            using (var streamWriter = new StreamWriter(request.GetRequestStream()))
+            {
+                streamWriter.Write(json);
+                streamWriter.Close();
+            }
+
+            try
+            {
+                using (HttpWebResponse response = request.GetResponse() as HttpWebResponse)
+                {
+
+                    Assert.AreEqual(response.StatusCode, HttpStatusCode.OK);
+                    var stream = response.GetResponseStream();
+                    var reader = new StreamReader(stream);
+                    userid = reader.ReadToEnd();
+                    Assert.AreNotEqual(userid, "false");
+                    //Assert.Inconclusive(userid);
+                }
+            }
+
+            catch (WebException we)
+            {
+                Console.WriteLine("TestPostUser failed. Couldn't post a user");
+                Assert.Fail("Webexception Occurred. TestPostUser failed. Couldn't post a user");
+            }
+            
+            request = WebRequest.Create(URI + "/api/app/user/command");
+            request.ContentType = "application/json";
+            request.Method = "POST";
+            
+            jobject = new JObject();
+            jobject["userID"] = userid;
+            jobject["command-string"] = password;
+            jobject["time"] = "ISO8601";
+            jobject["device-blob"] = "this blob doesn't matter";
+
+            json = jobject.ToString();
+
+            using (var streamWriter = new StreamWriter(request.GetRequestStream()))
+            {
+                streamWriter.Write(json);
+                streamWriter.Close();
+            }
+            
+            try
+            {
+                using (HttpWebResponse response = request.GetResponse() as HttpWebResponse)
+                {
+
+                    Assert.AreEqual(response.StatusCode, HttpStatusCode.OK);
+                    var stream = response.GetResponseStream();
+                    var reader = new StreamReader(stream);
+                    string str = reader.ReadToEnd();
+                    Assert.AreEqual(str, "true");
+                }
+            }
+
+            catch (WebException we)
+            {
+                Console.WriteLine("TestPostUser failed. Couldn't post a user");
+                Assert.Fail("Webexception Occurred. TestPostUser failed. Couldn't post a user");
+            }
+            
+            request = WebRequest.Create(URI + "/api/app/user/delete/" + userid);
+            request.ContentType = "application/json";
+            request.Method = "DELETE";
+            
+            using (var streamWriter = new StreamWriter(request.GetRequestStream()))
+            {
+                streamWriter.Write("");
+                streamWriter.Close();
+            }
+            
+            try
+            {
+                using (HttpWebResponse response = request.GetResponse() as HttpWebResponse)
+                {
+                }
+            }
+
+            catch (WebException we)
+            {
+            }
+        }
+        
+        [TestMethod]
+        public void TestGetUserID()
+        {
+            string username = "test_getuserid";
             string password = "password";
 
             // First create a user ...
