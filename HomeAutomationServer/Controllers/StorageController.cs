@@ -156,7 +156,7 @@ namespace HomeAutomationServer.Controllers
         [Route("space/{houseid}/{spaceid}")]
         public bool DeleteSpace(string houseid, string spaceid)                // HTTP DELETE - deletes a space
         {
-			return spaceRepository.DeleteSpace(houseid, spaceid); 
+		return spaceRepository.DeleteSpace(houseid, spaceid); 
         }
 
 
