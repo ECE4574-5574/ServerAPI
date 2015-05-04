@@ -213,9 +213,9 @@ namespace HomeAutomationTest
             // DELETE api/storage/api/stroage/user/{username}	
             // Deletes the user specified by the username.
 
-            string username = "idontexist";
+            string userid = "1";
 
-            WebRequest request = WebRequest.Create(URI + "/api/storage/user/" + username);
+            WebRequest request = WebRequest.Create(URI + "/api/app/user/delete/" + userid);
             request.ContentType = "application/json";
             request.Method = "DELETE";
 
@@ -233,7 +233,7 @@ namespace HomeAutomationTest
             {
                 using (HttpWebResponse response = request.GetResponse() as HttpWebResponse)
                 {
-                    Assert.AreNotSame(response.StatusCode, HttpStatusCode.OK);
+                    Assert.AreEqual(response.StatusCode, HttpStatusCode.OK);
                 }
             }
 
@@ -242,94 +242,6 @@ namespace HomeAutomationTest
                 Console.WriteLine("TestDeleteUser failed.");
                 Console.Write(we.Message);
                 Assert.Fail("Web Exception occurred");
-            }
-
-            // ADDING A VALID USER TO THE SERVER 
-
-            username = "test_delete_user_username";
-            string password = "password";
-
-            // First create a user ...
-            // POST api/storage/user	
-            // Posts the users information provided by JSON object data.
-
-            request = WebRequest.Create(URI + "/api/storage/user/" + username);
-            request.ContentType = "application/json";
-            request.Method = "POST";
-
-            JObject jobject = new JObject();
-            jobject["UserID"] = username;
-            jobject["Password"] = password;
-
-            json = jobject.ToString();
-
-            using (var streamWriter = new StreamWriter(request.GetRequestStream()))
-            {
-                streamWriter.Write(json);
-                streamWriter.Close();
-            }
-
-            try
-            {
-                using (HttpWebResponse response = request.GetResponse() as HttpWebResponse)
-                {
-                    Assert.AreEqual(response.StatusCode, HttpStatusCode.OK);
-                }
-            }
-
-            catch (WebException we)
-            {
-                Console.WriteLine("TestDeleteUser failed. Couldn't post a user");
-                Assert.Fail();
-            }
-
-            // DELETEING THE USER NOW
-            request = WebRequest.Create(URI + "/api/storage/user/" + username);
-            request.ContentType = "application/json";
-            request.Method = "DELETE";
-
-
-            jobjects = new JObject();
-            json = jobjects.ToString();
-
-            using (var streamWriter = new StreamWriter(request.GetRequestStream()))
-            {
-                streamWriter.Write(json);
-                streamWriter.Close();
-            }
-
-            try
-            {
-                using (HttpWebResponse response = request.GetResponse() as HttpWebResponse)
-                {
-                    Assert.AreNotSame(response.StatusCode, HttpStatusCode.OK);
-                }
-            }
-
-            catch (WebException we)
-            {
-                Console.WriteLine("TestDeleteUser failed.");
-                Console.Write(we.Message);
-            }
-
-            //Now Trying to get that user
-
-            request = WebRequest.Create(URI + "/api/storage/user/" + username);
-            request.ContentType = "application/json";
-            request.Method = "GET";
-
-            try
-            {
-                using (HttpWebResponse response = request.GetResponse() as HttpWebResponse)
-                {
-                    Assert.AreEqual(response.StatusCode, HttpStatusCode.OK);
-                }
-            }
-
-            catch (WebException we)
-            {
-                Console.WriteLine("TestDeleteUser failed. Couldn't post a user");
-                Assert.Fail();
             }
         }
 
