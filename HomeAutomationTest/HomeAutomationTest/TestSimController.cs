@@ -1966,7 +1966,7 @@ namespace HomeAutomationTest
 			request.Method = "POST";
 
 			JObject jobject = new JObject();
-			jobject["blob"] = houseid;
+			jobject["blob"] = houseID;
 			jobject["name"] = "myhouse";
 			string json = jobject.ToString();
 
@@ -1984,7 +1984,7 @@ namespace HomeAutomationTest
 					var stream = response.GetResponseStream();
 					var reader = new StreamReader(stream);
 					string str = reader.ReadToEnd();
-					houseid = Convert.ToInt32(str);
+					houseID = Convert.ToInt32(str);
 					//Assert.AreEqual(str, "true");
 				}
 			}
@@ -2000,7 +2000,7 @@ namespace HomeAutomationTest
 			request.Method = "POST";
 
 			JObject jobjects = new JObject();
-			jobjects["houseID"] = houseid;
+			jobjects["houseID"] = houseID;
 			jobjects["roomid"] = "1234";
 			jobjects["type"] = "Light";
 			jobjects["name"] = "BedroomLight";
