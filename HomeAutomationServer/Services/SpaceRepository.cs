@@ -115,7 +115,7 @@ namespace HomeAutomationServer.Services
 #endif
 		}
 
-		public JObject DeleteSpace (string houseid, string spaceid)
+		public bool DeleteSpace (string houseid, string spaceid)
 		{
 #if DEBUG
 #else
