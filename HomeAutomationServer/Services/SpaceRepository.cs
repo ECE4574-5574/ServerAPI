@@ -122,15 +122,22 @@ namespace HomeAutomationServer.Services
 			WebRequest request = WebRequest.Create (DeviceRepository.storageURL + "R/" + houseid + "/" + spaceid);
 			request.Method = "DELETE";
 
-			using (HttpWebResponse response = request.GetResponse() as HttpWebResponse)
+			try
 			{
-				if (response.StatusCode != HttpStatusCode.OK)
+				using (HttpWebResponse response = request.GetResponse() as HttpWebResponse)
 				{
-					throw new Exception(String.Format(
-					"Server error (HTTP {0}: {1}).",
-					response.StatusCode,
-					response.StatusDescription));
+					if (response.StatusCode != HttpStatusCode.OK)
+					{
+						throw new Exception(String.Format(
+						"Server error (HTTP {0}: {1}).",
+						response.StatusCode,
+						response.StatusDescription));
+					}
 				}
+			}
+			catch(WebException e)
+			{
+				return false;
 			}
 #endif
 			return true;		
