@@ -1930,98 +1930,98 @@ namespace HomeAutomationTest
                 Assert.Fail();
             }
         }
+			
+		//DELETE api/storage/space/{houseid}/{spaceid}	
+		//Deletes the space specified by the houseid and spaceid
+		public void TestDeleteRoom()
+		{
+			//FIRST TRY DELETING A ROOM BEFORE POSTING ONE
+			WebRequest request = WebRequest.Create(URI + "/api/storage/space/" + 60 + "/" + 20 );
+			request.ContentType = "application/json";
+			request.Method = "DELETE";
 
-        //DELETE api/storage/space/{houseid}/{spaceid}	
-        //Deletes the space specified by the houseid and spaceid
-        public void TestDeleteRoom()
-        {
-            //FIRST TRY DELETING A ROOM BEFORE POSTING ONE
-            WebRequest request = WebRequest.Create(URI + "/api/storage/space/" + 60 + "/" + 20 );
-            request.ContentType = "application/json";
-            request.Method = "DELETE";
+			try
+			{
+				using (HttpWebResponse response = request.GetResponse() as HttpWebResponse)
+				{
+					Assert.AreEqual(response.StatusCode, HttpStatusCode.OK);
+					var stream = response.GetResponseStream();
+					var reader = new StreamReader(stream);
+					string str = reader.ReadToEnd();
+					Assert.AreEqual(str, "false");
+				}
+			}
 
-            try
-            {
-                using (HttpWebResponse response = request.GetResponse() as HttpWebResponse)
-                {
-                    Assert.AreEqual(response.StatusCode, HttpStatusCode.OK);
-                    var stream = response.GetResponseStream();
-                    var reader = new StreamReader(stream);
-                    string str = reader.ReadToEnd();
-                    Assert.AreEqual(str, "false");
-                }
-            }
+			catch (WebException we)
+			{
+				Console.WriteLine("TestDeleteRoom failed. ");
+				Assert.Fail();
+			}
+			//POST A ROOM TO BE DELETED 
+			request = WebRequest.Create(URI + "/api/storage/space");
+			request.ContentType = "application/json";
+			request.Method = "POST";
 
-            catch (WebException we)
-            {
-                Console.WriteLine("TestDeleteRoom failed. ");
-                Assert.Fail();
-            }
-            //POST A ROOM TO BE DELETED 
-            request = WebRequest.Create(URI + "/api/storage/space");
-            request.ContentType = "application/json";
-            request.Method = "POST";
+			JObject jobjects = new JObject();
+			jobjects["houseid"] = "1";
+			jobjects["roomid"] = "1234";
+			jobjects["type"] = "Light";
+			jobjects["name"] = "BedroomLight";
+			jobjects["x"] = "100";
+			jobjects["y"] = "300";
 
-            JObject jobjects = new JObject();
-            jobjects["houseid"] = "1";
-            jobjects["roomid"] = "1234";
-            jobjects["type"] = "Light";
-            jobjects["name"] = "BedroomLight";
-            jobjects["x"] = "100";
-            jobjects["y"] = "300";
+			string json = jobjects.ToString();
 
-            string json = jobjects.ToString();
+			using (var streamWriter = new StreamWriter(request.GetRequestStream()))
+			{
+				streamWriter.Write(json);
+				streamWriter.Close();
+			}
 
-            using (var streamWriter = new StreamWriter(request.GetRequestStream()))
-            {
-                streamWriter.Write(json);
-                streamWriter.Close();
-            }
+			try
+			{
+				using (HttpWebResponse response = request.GetResponse() as HttpWebResponse)
+				{
 
-            try
-            {
-                using (HttpWebResponse response = request.GetResponse() as HttpWebResponse)
-                {
+					Assert.AreEqual(response.StatusCode, HttpStatusCode.OK);
+					var stream = response.GetResponseStream();
+					var reader = new StreamReader(stream);
+					string str = reader.ReadToEnd();
+					Assert.AreEqual(str, "true");
+				}
+			}
 
-                    Assert.AreEqual(response.StatusCode, HttpStatusCode.OK);
-                    var stream = response.GetResponseStream();
-                    var reader = new StreamReader(stream);
-                    string str = reader.ReadToEnd();
-                    Assert.AreEqual(str, "true");
-                }
-            }
+			catch (WebException we)
+			{
+				Console.WriteLine("TestStoragePostSpace failed, Didnt Post.");
+				Assert.Fail();
+			}
 
-            catch (WebException we)
-            {
-                Console.WriteLine("TestStoragePostSpace failed, Didnt Post.");
-                Assert.Fail();
-            }
+			//DELETE THE Room
 
-            //DELETE THE Room
+			request = WebRequest.Create(URI + "/api/storage/space/?{houseid=" + 1 + "/&{roomid=" + 1234 + "}");
+			request.ContentType = "application/json";
+			request.Method = "DELETE";
 
-            request = WebRequest.Create(URI + "/api/storage/space/?{houseid=" + 1 + "/&{roomid=" + 1234 + "}");
-            request.ContentType = "application/json";
-            request.Method = "DELETE";
+			try
+			{
+				using (HttpWebResponse response = request.GetResponse() as HttpWebResponse)
+				{
+					Assert.AreEqual(response.StatusCode, HttpStatusCode.OK);
+					var stream = response.GetResponseStream();
+					var reader = new StreamReader(stream);
+					string str = reader.ReadToEnd();
+					Assert.AreEqual(str, "true");
+				}
+			}
 
-            try
-            {
-                using (HttpWebResponse response = request.GetResponse() as HttpWebResponse)
-                {
-                    Assert.AreEqual(response.StatusCode, HttpStatusCode.OK);
-                    var stream = response.GetResponseStream();
-                    var reader = new StreamReader(stream);
-                    string str = reader.ReadToEnd();
-                    Assert.AreEqual(str, "true");
-                }
-            }
+			catch (WebException we)
+			{
+				Console.WriteLine("TestDeleteRoom failed.");
+				Assert.Fail();
+			}
 
-            catch (WebException we)
-            {
-                Console.WriteLine("TestDeleteRoom failed.");
-                Assert.Fail();
-            }
-
-        }
+		}
 
         //Testing Logs
         [TestMethod]
