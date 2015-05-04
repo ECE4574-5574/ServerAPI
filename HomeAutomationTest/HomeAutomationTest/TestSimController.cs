@@ -1930,98 +1930,104 @@ namespace HomeAutomationTest
                 Assert.Fail();
             }
         }
-			
-		//DELETE api/storage/space/{houseid}/{spaceid}	
-		//Deletes the space specified by the houseid and spaceid
-		public void TestDeleteRoom()
-		{
-			//FIRST TRY DELETING A ROOM BEFORE POSTING ONE
-			WebRequest request = WebRequest.Create(URI + "/api/storage/space/" + 60 + "/" + 20 );
-			request.ContentType = "application/json";
-			request.Method = "DELETE";
 
-			try
-			{
-				using (HttpWebResponse response = request.GetResponse() as HttpWebResponse)
-				{
-					Assert.AreEqual(response.StatusCode, HttpStatusCode.OK);
-					var stream = response.GetResponseStream();
-					var reader = new StreamReader(stream);
-					string str = reader.ReadToEnd();
-					Assert.AreEqual(str, "false");
-				}
-			}
+        //DELETE api/storage/space/{houseid}/{spaceid}	
+        //Deletes the space specified by the houseid and spaceid
+        public void TestDeleteRoom()
+        {
+            //FIRST TRY DELETING A ROOM BEFORE POSTING ONE
 
-			catch (WebException we)
-			{
-				Console.WriteLine("TestDeleteRoom failed. ");
-				Assert.Fail();
-			}
-			//POST A ROOM TO BE DELETED 
-			request = WebRequest.Create(URI + "/api/storage/space");
-			request.ContentType = "application/json";
-			request.Method = "POST";
+			int houseID = 60;
+			int roomID = 20;
 
-			JObject jobjects = new JObject();
-			jobjects["houseid"] = "1";
-			jobjects["roomid"] = "1234";
-			jobjects["type"] = "Light";
-			jobjects["name"] = "BedroomLight";
-			jobjects["x"] = "100";
-			jobjects["y"] = "300";
+            WebRequest request = WebRequest.Create(URI + "/api/storage/space/" + houseID + "/" + roomID );
+            request.ContentType = "application/json";
+            request.Method = "DELETE";
 
-			string json = jobjects.ToString();
+            try
+            {
+                using (HttpWebResponse response = request.GetResponse() as HttpWebResponse)
+                {
+                    Assert.AreEqual(response.StatusCode, HttpStatusCode.OK);
+                    var stream = response.GetResponseStream();
+                    var reader = new StreamReader(stream);
+                    string str = reader.ReadToEnd();
+                    Assert.AreEqual(str, "false");
+                }
+            }
+            catch (WebException we)
+            {
+                Console.WriteLine("TestDeleteRoom failed. ");
+                Assert.Fail();
+            }
 
-			using (var streamWriter = new StreamWriter(request.GetRequestStream()))
-			{
-				streamWriter.Write(json);
-				streamWriter.Close();
-			}
+            //POST A ROOM TO BE DELETED 
+            request = WebRequest.Create(URI + "/api/storage/space");
+            request.ContentType = "application/json";
+            request.Method = "POST";
 
-			try
-			{
-				using (HttpWebResponse response = request.GetResponse() as HttpWebResponse)
-				{
+            JObject jobjects = new JObject();
+			// is all of this information really necessary?
+            jobjects["houseid"] = "1";
+            jobjects["roomid"] = "1234";
+            jobjects["type"] = "Light";
+            jobjects["name"] = "BedroomLight";
+            jobjects["x"] = "100";
+            jobjects["y"] = "300";
 
-					Assert.AreEqual(response.StatusCode, HttpStatusCode.OK);
-					var stream = response.GetResponseStream();
-					var reader = new StreamReader(stream);
-					string str = reader.ReadToEnd();
-					Assert.AreEqual(str, "true");
-				}
-			}
+            string json = jobjects.ToString();
 
-			catch (WebException we)
-			{
-				Console.WriteLine("TestStoragePostSpace failed, Didnt Post.");
-				Assert.Fail();
-			}
+            using (var streamWriter = new StreamWriter(request.GetRequestStream()))
+            {
+                streamWriter.Write(json);
+                streamWriter.Close();
+            }
 
-			//DELETE THE Room
+            try
+            {
+                using (HttpWebResponse response = request.GetResponse() as HttpWebResponse)
+                {
 
-			request = WebRequest.Create(URI + "/api/storage/space/?{houseid=" + 1 + "/&{roomid=" + 1234 + "}");
-			request.ContentType = "application/json";
-			request.Method = "DELETE";
+                    Assert.AreEqual(response.StatusCode, HttpStatusCode.OK);
+                    var stream = response.GetResponseStream();
+                    var reader = new StreamReader(stream);
+                    string str = reader.ReadToEnd();
+                    Assert.AreEqual(str, "true");
+                }
+            }
 
-			try
-			{
-				using (HttpWebResponse response = request.GetResponse() as HttpWebResponse)
-				{
-					Assert.AreEqual(response.StatusCode, HttpStatusCode.OK);
-					var stream = response.GetResponseStream();
-					var reader = new StreamReader(stream);
-					string str = reader.ReadToEnd();
-					Assert.AreEqual(str, "true");
-				}
-			}
+            catch (WebException we)
+            {
+                Console.WriteLine("TestStoragePostSpace failed, Didnt Post.");
+                Assert.Fail();
+            }
 
-			catch (WebException we)
-			{
-				Console.WriteLine("TestDeleteRoom failed.");
-				Assert.Fail();
-			}
+            //DELETE THE Room
 
-		}
+			// is this correct format?
+			request = WebRequest.Create(URI + "/api/storage/space/" + houseID + "/" + roomID );
+            request.ContentType = "application/json";
+            request.Method = "DELETE";
+
+            try
+            {
+                using (HttpWebResponse response = request.GetResponse() as HttpWebResponse)
+                {
+                    Assert.AreEqual(response.StatusCode, HttpStatusCode.OK);
+                    var stream = response.GetResponseStream();
+                    var reader = new StreamReader(stream);
+                    string str = reader.ReadToEnd();
+                    Assert.AreEqual(str, "true");
+                }
+            }
+
+            catch (WebException we)
+            {
+                Console.WriteLine("TestDeleteRoom failed.");
+                Assert.Fail();
+            }
+
+        }
 
         //Testing Logs
         [TestMethod]
