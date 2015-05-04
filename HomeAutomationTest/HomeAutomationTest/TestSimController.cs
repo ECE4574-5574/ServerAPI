@@ -2066,7 +2066,11 @@ namespace HomeAutomationTest
         public void TestDeleteRoom()
         {
             //FIRST TRY DELETING A ROOM BEFORE POSTING ONE
-            WebRequest request = WebRequest.Create(URI + "/api/storage/space/" + 60 + "/" + 20 );
+
+			int houseID = 60;
+			int roomID = 20;
+
+            WebRequest request = WebRequest.Create(URI + "/api/storage/space/" + houseID + "/" + roomID );
             request.ContentType = "application/json";
             request.Method = "DELETE";
 
@@ -2081,55 +2085,91 @@ namespace HomeAutomationTest
                     Assert.AreEqual(str, "false");
                 }
             }
-
             catch (WebException we)
             {
                 Console.WriteLine("TestDeleteRoom failed. ");
                 Assert.Fail();
             }
-            //POST A ROOM TO BE DELETED 
-            request = WebRequest.Create(URI + "/api/storage/space");
-            request.ContentType = "application/json";
-            request.Method = "POST";
 
-            JObject jobjects = new JObject();
-            jobjects["houseid"] = "1";
-            jobjects["roomid"] = "1234";
-            jobjects["type"] = "Light";
-            jobjects["name"] = "BedroomLight";
-            jobjects["x"] = "100";
-            jobjects["y"] = "300";
+			request = WebRequest.Create(URI + "/api/storage/house");
+			request.ContentType = "application/json";
+			request.Method = "POST";
 
-            string json = jobjects.ToString();
+			JObject jobject = new JObject();
+			jobject["blob"] = houseID;
+			jobject["name"] = "myhouse";
+			string json = jobject.ToString();
 
-            using (var streamWriter = new StreamWriter(request.GetRequestStream()))
-            {
-                streamWriter.Write(json);
-                streamWriter.Close();
-            }
+			using (var streamWriter = new StreamWriter(request.GetRequestStream()))
+			{
+				streamWriter.Write(json);
+				streamWriter.Close();
+			}
 
-            try
-            {
-                using (HttpWebResponse response = request.GetResponse() as HttpWebResponse)
-                {
+			try
+			{
+				using (HttpWebResponse response = request.GetResponse() as HttpWebResponse)
+				{
+					Assert.AreEqual(response.StatusCode, HttpStatusCode.OK);
+					var stream = response.GetResponseStream();
+					var reader = new StreamReader(stream);
+					string str = reader.ReadToEnd();
+					houseID = Convert.ToInt32(str);
+					//Assert.AreEqual(str, "true");
+				}
+			}
 
-                    Assert.AreEqual(response.StatusCode, HttpStatusCode.OK);
-                    var stream = response.GetResponseStream();
-                    var reader = new StreamReader(stream);
-                    string str = reader.ReadToEnd();
-                    Assert.AreEqual(str, "true");
-                }
-            }
+			catch (WebException we)
+			{
+				Console.WriteLine("TestPostHouse failed. Couldn't post a house");
+				Assert.Fail("WebException occurred. TestPostHouse failed. Couldn't post a house");
+			}
 
-            catch (WebException we)
-            {
-                Console.WriteLine("TestStoragePostSpace failed, Didnt Post.");
-                Assert.Fail();
-            }
+			request = WebRequest.Create(URI + "/api/storage/space");
+			request.ContentType = "application/json";
+			request.Method = "POST";
 
-            //DELETE THE Room
+			JObject jobjects = new JObject();
+			jobjects["houseID"] = houseID;
+			jobjects["roomid"] = "1234";
+			jobjects["type"] = "Light";
+			jobjects["name"] = "BedroomLight";
+			jobjects["x"] = "100";
+			jobjects["y"] = "300";
 
-            request = WebRequest.Create(URI + "/api/storage/space/?{houseid=" + 1 + "/&{roomid=" + 1234 + "}");
+			int spaceID = 0;
+
+			json = jobjects.ToString();
+
+			using (var streamWriter = new StreamWriter(request.GetRequestStream()))
+			{
+				streamWriter.Write(json);
+				streamWriter.Close();
+			}
+
+			try
+			{
+				using (HttpWebResponse response = request.GetResponse() as HttpWebResponse)
+				{
+
+					Assert.AreEqual(response.StatusCode, HttpStatusCode.OK);
+					var stream = response.GetResponseStream();
+					var reader = new StreamReader(stream);
+					string str = reader.ReadToEnd();
+					spaceID = Convert.ToInt32(str);
+					//Assert.AreEqual(str, "true");
+				}
+			}
+
+			catch (WebException we)
+			{
+				Console.WriteLine("TestStoragePostSpace failed, Didnt Post.");
+				Assert.Fail();
+			}
+	        //DELETE THE Room
+
+			// is this correct format?
+			request = WebRequest.Create(URI + "/api/storage/space/" + houseID + "/" + roomID );
             request.ContentType = "application/json";
             request.Method = "DELETE";
 
