@@ -117,30 +117,44 @@ namespace HomeAutomationServer.Services
 
 		public bool DeleteSpace (string houseid, string spaceid)
 		{
-#if DEBUG
-#else
-			WebRequest request = WebRequest.Create (DeviceRepository.storageURL + "R/" + houseid + "/" + spaceid);
-			request.Method = "DELETE";
+			/*WebRequest request = WebRequest.Create("http://54.152.190.217:8081/HI/" + houseid);
+            request.Method = "GET";
 
-			try
-			{
-				using (HttpWebResponse response = request.GetResponse() as HttpWebResponse)
-				{
-					if (response.StatusCode != HttpStatusCode.OK)
-					{
-						throw new Exception(String.Format(
-						"Server error (HTTP {0}: {1}).",
-						response.StatusCode,
-						response.StatusDescription));
-					}
-				}
-			}
-			catch(WebException e)
-			{
-				return false;
-			}
-#endif
-			return true;		
+            using (HttpWebResponse response = request.GetResponse() as HttpWebResponse)
+            {
+                if (response.StatusCode != HttpStatusCode.OK)
+                    throw new Exception(String.Format(
+                    "Server error (HTTP {0}: {1}).",
+                    response.StatusCode,
+                    response.StatusDescription));
+                var stream = response.GetResponseStream();
+                var reader = new StreamReader(stream);
+
+                string houseString = reader.ReadToEnd();
+                JObject houseObject = JObject.Parse(spaceString);
+            }
+              
+            int version;
+            // Get version from JObject
+              
+            request = WebRequest.Create("http://54.152.190.217:8081/R/" + houseid + "/" + version + "/" + spaceid);
+            request.Method = "DELETE";
+
+            using (HttpWebResponse response = request.GetResponse() as HttpWebResponse)
+            {
+                if (response.StatusCode != HttpStatusCode.OK)
+                    throw new Exception(String.Format(
+                    "Server error (HTTP {0}: {1}).",
+                    response.StatusCode,
+                    response.StatusDescription));
+                var stream = response.GetResponseStream();
+                var reader = new StreamReader(stream);
+
+                string spaceString = reader.ReadToEnd();
+                return JObject.Parse(spaceString);
+            }*/
+			return null;
+
 		}
 
 		/*public Exception UpdateSpace(int id, string name, int type, int houseId)
