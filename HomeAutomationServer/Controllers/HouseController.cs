@@ -34,5 +34,11 @@ namespace HomeAutomationServer.Controllers
 	    return house.PostState(deviceBlob);
 	}
 
+	[Route("update/state")]
+	public bool postUpdateState(JObject deviceBlob)
+	{
+		return house.PostState(deviceBlob);
+	}
+
     }
 }
