@@ -102,6 +102,9 @@ POST api/app/user/brighten
 A request from the App system to make something brighter near their location. Information provided in a JSON.
 Returns a bool that is true if the information was posted, false if not.
 
+GET api/user/userid/{username}/{pass}
+Gets the userid of the user provided username and password.
+
 
 ---Device---
 
@@ -118,6 +121,24 @@ GET api/app/device/enumeratedevices/{houseid}
 A request from the App to get list of all the devices that are not registered to the house.
 Requires a houseID as an input in the uri.
 Returns all the elements which don’t match any devices registered to a given house.
+
+---Notification---
+POST api/app/user/devicetoken/{username}/{pass}
+Posts a device token related to the user. Need to call this to sign up users for notifications. JSon blob should be
+
+{
+	"deviceToken" : <device-token>
+}
+
+POST api/app/user/notify/{username}/{pass}
+Posts a notification to the desired user. JSon blob should be 
+{
+	"message" : <message>
+}
+
+---Commands---
+POST api/app/user/command
+Posts a command to the decision making team. JSon blob specified by decision making team.
 
 -------------------------------------------------------------------------------------------------------------------------
 
