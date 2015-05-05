@@ -27,6 +27,8 @@ namespace HomeAutomationServer.Models
     {
         // information request.
 
+        private static List<JObject> /*JArray might work instead*/ deviceInfo = new List<JObject>();
+		private static List<JObject> userInfo = new List<JObject>();
         // A JSON array of device blobs
         private static Dictionary<FullID, Device> deviceBlobs = new Dictionary<FullID, Device>();
         // add any other JArrays containing blobs here
@@ -165,6 +167,36 @@ namespace HomeAutomationServer.Models
         {
             return deviceBlobs.Count;
         }
+        
+        static public JObject GetDeviceInfo()
+		{
+			if (deviceInfo.Count > 0) {
+				JObject obj = deviceInfo[0];
+				deviceInfo.RemoveAt(0);
+				return obj;
+			}
+			else return null;
+		}
+		
+		static public JObject GetUserInfo()
+		{
+			if (userInfo.Count > 0) {
+				JObject obj =  userInfo[0];
+				userInfo.RemoveAt(0);
+				return obj;
+			}
+			else return null;
+		}
+		
+		static public int GetDeviceInfoCount()
+		{
+			return deviceInfo.Count;
+		}
+		
+		static public int GetUserInfoCount()
+		{
+			return userInfo.Count;
+		}
 
     }
 }
