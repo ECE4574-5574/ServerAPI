@@ -151,7 +151,10 @@ namespace HomeAutomationServer.Controllers
             #else
             
                 string deviceToken = (string) model["deviceToken"];
-                string retVal = userRepository.PostDeviceToken(username, pass, deviceToken);
+                string platform = (string) model["platform"];
+                if (platform == null)
+                    platform = "GCM";
+                string retVal = userRepository.PostDeviceToken(username, pass, deviceToken, platform);
                 
                 if (retVal == "true")
                     return true;

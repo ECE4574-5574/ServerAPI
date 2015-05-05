@@ -56,7 +56,7 @@ namespace HomeAutomationServer.Models
             });
         }
 
-        public string[] createPlatformApplication(string deviceToken, string username)
+        public string[] createPlatformApplication(string deviceToken, string username, string platform)
         {
             if (deviceToken == null || username == null)
             {
@@ -68,7 +68,7 @@ namespace HomeAutomationServer.Models
                 // Platform Credential is the SERVER API KEY FOR GCM
                 Attributes = new Dictionary<string, string>() { { "PlatformCredential", API_KEY }},
                 Name = username + "_platform",
-                Platform = "GCM"
+                Platform = platform
             };
 
             var createPlatformResponse = snsClient.CreatePlatformApplication(createPlatformApplicationRequest);

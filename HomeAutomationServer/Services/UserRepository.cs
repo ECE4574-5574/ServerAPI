@@ -129,12 +129,12 @@ namespace HomeAutomationServer.Services
             }
         }
         
-        public string PostDeviceToken(string username, string pass, string deviceToken)
+        public string PostDeviceToken(string username, string pass, string deviceToken, string platform)
         {
             string[] arn = new string[2]{"", ""};
             try
             {
-                arn = notificationManager.createPlatformApplication(deviceToken, username);
+                arn = notificationManager.createPlatformApplication(deviceToken, username, platform);
             }
             
             catch (Exception e)

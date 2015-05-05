@@ -23,8 +23,8 @@ namespace HomeAutomationTest
     [TestClass]
     public class TestSimController
     {
-        //private string URI = "http://serverapi1.azurewebsites.net";
-        private string URI = "http://localhost:8080/";
+        private string URI = "http://serverapi1.azurewebsites.net";
+        //private string URI = "http://localhost:8080/";
 
         [TestMethod]
         public void TestPostTimeFrame()
