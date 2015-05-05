@@ -230,5 +230,52 @@ namespace HomeAutomationServer.Controllers
             
             #endif
         }
+        
+        ///////////////////////////////////////////////////////////////////////////////////////////////
+		//
+		// Decision
+		
+		// Get api/app/decision/device
+		/// <summary>
+		/// Get pending information regarding changes to a device.
+		/// </summary>
+		/// <returns>Returns information regarding changes to a device.</returns>
+		[Route("decision/device")]
+		public JObject GetDeviceInfo()
+		{
+			return AppCache.GetDeviceInfo();
+		}
+		
+		// Get api/app/notification
+		/// <summary>
+		/// Get pending information regarding changes to a device.
+		/// </summary>
+		/// <returns>Returns information regarding changes to a device.</returns>
+		[Route("notification")]
+		public JObject GetNotification()
+		{
+			return AppCache.GetUserInfo();
+		}
+		
+		
+		// Get api/app/decision/device/count
+		/// <summary>
+		/// Gets the count of the pending device info.
+		/// </summary>
+		[Route("decision/device/count")]
+		public int GetDeviceInfoCount()
+		{
+			return AppCache.GetDeviceInfoCount();
+		}
+		
+		// Get api/app/notification/count
+		/// <summary>
+		/// Get the count of the pending user notifications.
+		/// </summary>
+		[Route("notification/count")]
+		public int GetNotificationCount()
+		{
+			return AppCache.GetUserInfoCount();
+		}
     }
 }
