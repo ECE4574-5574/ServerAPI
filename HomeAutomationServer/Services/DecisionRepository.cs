@@ -8,6 +8,8 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Web;
+using Hats.Time;
+using api;
 
 //using HomeAutomationServer.Models;
 
@@ -199,4 +201,5 @@ namespace HomeAutomationServer.Services
 
 #endif
 		}
+    	}
 }
