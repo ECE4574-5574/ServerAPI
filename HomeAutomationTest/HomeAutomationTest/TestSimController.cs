@@ -2063,37 +2063,18 @@ namespace HomeAutomationTest
 
         //DELETE api/storage/space/{houseid}/{spaceid}	
         //Deletes the space specified by the houseid and spaceid
+        [TestMethod]
         public void TestDeleteRoom()
         {
             //FIRST TRY DELETING A ROOM BEFORE POSTING ONE
-
-			int houseID = 60;
-			int roomID = 20;
-
-            WebRequest request = WebRequest.Create(URI + "/api/storage/space/" + houseID + "/" + roomID );
-            request.ContentType = "application/json";
-            request.Method = "DELETE";
-
-            try
-            {
-                using (HttpWebResponse response = request.GetResponse() as HttpWebResponse)
-                {
-                    Assert.AreEqual(response.StatusCode, HttpStatusCode.OK);
-                    var stream = response.GetResponseStream();
-                    var reader = new StreamReader(stream);
-                    string str = reader.ReadToEnd();
-                    Assert.AreEqual(str, "false");
-                }
-            }
-            catch (WebException we)
-            {
-                Console.WriteLine("TestDeleteRoom failed. ");
-                Assert.Fail();
-            }
-
-			request = WebRequest.Create(URI + "/api/storage/house");
+         
+			WebRequest request = WebRequest.Create(URI + "/api/storage/house");
 			request.ContentType = "application/json";
 			request.Method = "POST";
+
+            // postable IDs
+            int houseID = 1010;
+            int roomID = 1011;
 
 			JObject jobject = new JObject();
 			jobject["blob"] = houseID;
