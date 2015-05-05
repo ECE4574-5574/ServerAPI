@@ -156,49 +156,45 @@ namespace HomeAutomationServer.Services
             return true;
         }
 
-        public bool GetState(JObject model)
-        {
-            JObject device = new JObject();
+		public bool GetState(JObject model)
+		{
 #if DEBUG
-            return true;
+			return true;
 #else
-            try
-            {
-                WebRequest request = WebRequest.Create(houseApiHost + (UInt64)model["HouseID"] + (UInt64)model["RoomID"] + (UInt64)model["DeviceID"]);
-                request.Method = "GET";
+			// parse the JSON
+			UInt64 houseID = (UInt64)model["houseID"];
+			UInt64 roomID = (UInt64)model["roomID"];
+			UInt64 deviceID = (UInt64)model["deviceID"];
+			string deviceClass = (string)model["deviceClass"];
+			string houseURL = (string)model["houseURL"];
+			// done parsing JSON
 
+			TimeFrame frame = new TimeFrame();
 
-                try
-                {
-                    using (HttpWebResponse response = request.GetResponse() as HttpWebResponse)
-                    {
-                        if (response.StatusCode != HttpStatusCode.OK)
-                            throw new Exception(String.Format(
-                               "Server error (HTTP {0}: {1}).",
-                               response.StatusCode,
-                               response.StatusDescription));
-                        var stream = response.GetResponseStream();
-                        var reader = new StreamReader(stream);
+			var id = new FullID();
+			id.HouseID = houseID;
+			id.RoomID = roomID;
+			id.DeviceID = deviceID;
 
-                        string deviceString = reader.ReadToEnd();
-                        device = JObject.Parse(deviceString);
-                        return (bool)device["Enabled"];
-                    }
-                }
+			JObject jHouseString = new JObject();
+			jHouseString["houseURL"] = houseURL;
+			string HouseString = jHouseString.ToString();
 
-                catch (Exception ex)
-                {
-                    LogFile.AddLog("Decision -- Could not Get the data from the House System: " + ex.Message + "\n");
-                    return (bool)model["Enabled"];
-                }
-            }
+			JObject jDeviceString = new JObject();
+			jDeviceString["ID"] = Convert.ToString(deviceID);
+			jDeviceString["Class"] = deviceClass;
+			string DeviceString = jDeviceString.ToString();
 
-            catch (SystemException ex)
-            {
-                LogFile.AddLog("Decision -- Could not create the specified url with the data provided: " + ex.Message + "\n");
-                return (bool)model["Enabled"];
-            }
+			if(dev_out != null) //Good to go
+			{
+			//state changed means some value was changed, e.g. the command was not idempotent
+			var ok = dev_out.update();
+			var json = JsonConvert.SerializeObject(dev_out); //this JSON blob should be sent to whomever wants updates
+			AppCache.AddDeviceBlob(JObject.Parse(json));
+			}
+
+			return true; 
+
 #endif
-        }
-    }
+		}
 }
