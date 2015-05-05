@@ -206,7 +206,7 @@ namespace HomeAutomationServer.Controllers
 		/// Gets the count of the pending device info.
 		/// </summary>
 		[Route("decision/device/count")]
-		public int GetDeviceCount()
+		public int GetDeviceInfoCount()
 		{
 			return AppCache.GetDeviceInfoCount();
 		}
