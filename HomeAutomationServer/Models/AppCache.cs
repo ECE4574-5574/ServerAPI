@@ -123,14 +123,16 @@ namespace HomeAutomationServer.Models
 
 		static public JObject GetDeviceInfo()
 		{
+			JObject obj = new JObject();
 			if (deviceInfo.Count > 0) return deviceInfo.RemoveAt(0);
-			else return null;
+			else return obj;
 		}
 		
 		static public JObject GetUserInfo()
 		{
+			JObject obj = new JObject();
 			if (userInfo.Count > 0) return userInfo.RemoveAt(0);
-			else return null;
+			else return obj;
 		}
 		
         static public int GetBlobCount()
