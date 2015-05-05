@@ -51,10 +51,11 @@ namespace HomeAutomationServer.Controllers
         /// </summary>
         /// <param name="model"></param>
         /// <returns>Return the state of the device. True if enabled, false if not.</returns>
-        [Route("state")]
-        public bool GetDeviceState([FromBody] JObject model)
-        {
-            return decisionRepo.GetState(model);
-        }
+		[Route("state")]
+		[HttpGet]
+		public bool GetDeviceState([FromBody] JObject model)
+		{
+			return decisionRepo.GetState(model);
+		}
     }
 }
