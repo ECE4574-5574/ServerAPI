@@ -122,6 +122,16 @@ A request from the App to get list of all the devices that are not registered to
 Requires a houseID as an input in the uri.
 Returns all the elements which don’t match any devices registered to a given house.
 
+POST api/app/device/viaSimulation/{houseid}/{roomid}/{deviceid}
+A request from app to update the Device state. This call assumes that the device state is being changed as an action of the user (ex. physically switching the ligh on/off). 
+Information regarding state, device-ID and all other things are provided as a JSON blob which will be stored in Persistent Storage, and sent to the House. This will not be sent to Decision Systems.
+Returns true if successful
+
+POST api/app/device/viaActual/{houseid}/{roomid}/{deviceid}
+A request from app to update the Device state. This call assumes that the device state is being changed from the application itself. Information regarding state, device-ID and all other things are provided as a JSON blob which will be stored in Persistent Storage, sent to the House and to the Decision Systems.
+Returns true if successful
+
+
 ---Notification---
 POST api/app/user/devicetoken/{username}/{pass}
 Posts a device token related to the user. Need to call this to sign up users for notifications. JSon blob should be
