@@ -32,7 +32,7 @@ namespace HomeAutomationServer.Controllers
         // Device
 
 
-        // Patch api/decision/state
+       // Patch api/decision/state
         /// <summary>
         /// Updates a devices state with the given device JSON data. The new device state should be reflected in the data. 
         /// </summary>
