@@ -158,10 +158,10 @@ namespace HomeAutomationServer.Services
             return true;
         }
 
-		public bool GetState(JObject model)
-		{
+        public bool GetState(JObject model)
+        {
 #if DEBUG
-			return true;
+            return true;
 #else
 			// parse the JSON
 			UInt64 houseID = (UInt64)model["houseID"];
@@ -200,6 +200,6 @@ namespace HomeAutomationServer.Services
 			return true; 
 
 #endif
-		}
-    	}
+        }
+    }
 }

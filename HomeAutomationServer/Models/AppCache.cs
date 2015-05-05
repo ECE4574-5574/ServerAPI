@@ -78,11 +78,66 @@ namespace HomeAutomationServer.Models
             fullID.RoomID = roomID;
             fullID.HouseID = houseID;
 
+            bool notify = false;
             deviceBlobs.Add(fullID, dev);
             //if (deviceBlobs.Contains(fullID, dev))
             //{
-            //    push notification
+            //    notify = true;
             //}
+
+            if (!notify)
+                return true;
+
+            WebRequest request = WebRequest.Create(DeviceRepository.decisionURL + "BH/" + houseID);
+            request.Method = "GET";
+            string userid = "";
+
+            try
+            {
+                using (HttpWebResponse response = request.GetResponse() as HttpWebResponse)
+                {
+                    var stream = response.GetResponseStream();
+                    var reader = new StreamReader(stream);
+                    string str = reader.ReadToEnd();
+                    JObject jobject = JObject.Parse(str);
+                    userid = (string) jobject["userID"];
+                }
+            }
+
+            catch (WebException we)
+            {
+                return true;
+            }
+
+            request = WebRequest.Create(DeviceRepository.decisionURL + "BU/" + userid);
+            request.Method = "GET";
+            string endpoint = "";
+
+            try
+            {
+                using (HttpWebResponse response = request.GetResponse() as HttpWebResponse)
+                {
+                    var stream = response.GetResponseStream();
+                    var reader = new StreamReader(stream);
+                    string str = reader.ReadToEnd();
+                    JObject jobject = JObject.Parse(str);
+                    endpoint = (string)jobject["endPointArn"];
+
+                    // of the array is one line of the file. 
+                    //string[] lines = System.IO.File.ReadAllLines(@"C:\keys.txt");
+                    string accK = "";
+                    string secK = "";
+                    NotificationManager notificationManager = new NotificationManager(accK, secK, Amazon.RegionEndpoint.USEast1);
+                    notificationManager.init();
+                    notificationManager.PublishNotification(endpoint, "Device Updated");
+                }
+            }
+
+            catch (WebException we)
+            {
+                return true;
+            }
+
 
             return true;
         }
