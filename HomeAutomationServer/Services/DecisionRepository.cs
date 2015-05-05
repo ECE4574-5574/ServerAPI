@@ -184,6 +184,8 @@ namespace HomeAutomationServer.Services
 			jDeviceString["ID"] = Convert.ToString(deviceID);
 			jDeviceString["Class"] = deviceClass;
 			string DeviceString = jDeviceString.ToString();
+			
+			var dev_out = ServerSideAPI.CreateDevice(id, HouseString, DeviceString, frame);
 
 			if(dev_out != null) //Good to go
 			{
