@@ -9,7 +9,7 @@ PATCH api/decision/state
 Updates a devices state with the given device JSON data. The new device state should be reflected in the data. 
 Returns true if the devices state has been updated.
 
-GET api/decision/state
+POST api/decision/device/state
 <Param = JSON blob>
 Get the state of the device from the JSON data provided, which is either true or false.
 Returns the state of the device. True if enabled, false if not.
