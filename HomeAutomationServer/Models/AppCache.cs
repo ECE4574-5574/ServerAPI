@@ -27,6 +27,8 @@ namespace HomeAutomationServer.Models
     {
         // information request.
 
+        private static List<JObject> /*JArray might work instead*/ deviceInfo = new List<JObject>();
+		private static List<JObject> userInfo = new List<JObject>();
         // A JSON array of device blobs
         private static Dictionary<FullID, Device> deviceBlobs = new Dictionary<FullID, Device>();
         // add any other JArrays containing blobs here
@@ -78,11 +80,66 @@ namespace HomeAutomationServer.Models
             fullID.RoomID = roomID;
             fullID.HouseID = houseID;
 
+            bool notify = false;
             deviceBlobs.Add(fullID, dev);
             //if (deviceBlobs.Contains(fullID, dev))
             //{
-            //    push notification
+            //    notify = true;
             //}
+
+            if (!notify)
+                return true;
+
+            WebRequest request = WebRequest.Create(DeviceRepository.decisionURL + "BH/" + houseID);
+            request.Method = "GET";
+            string userid = "";
+
+            try
+            {
+                using (HttpWebResponse response = request.GetResponse() as HttpWebResponse)
+                {
+                    var stream = response.GetResponseStream();
+                    var reader = new StreamReader(stream);
+                    string str = reader.ReadToEnd();
+                    JObject jobject = JObject.Parse(str);
+                    userid = (string) jobject["userID"];
+                }
+            }
+
+            catch (WebException we)
+            {
+                return true;
+            }
+
+            request = WebRequest.Create(DeviceRepository.decisionURL + "BU/" + userid);
+            request.Method = "GET";
+            string endpoint = "";
+
+            try
+            {
+                using (HttpWebResponse response = request.GetResponse() as HttpWebResponse)
+                {
+                    var stream = response.GetResponseStream();
+                    var reader = new StreamReader(stream);
+                    string str = reader.ReadToEnd();
+                    JObject jobject = JObject.Parse(str);
+                    endpoint = (string)jobject["endPointArn"];
+
+                    // of the array is one line of the file. 
+                    //string[] lines = System.IO.File.ReadAllLines(@"C:\keys.txt");
+                    string accK = "";
+                    string secK = "";
+                    NotificationManager notificationManager = new NotificationManager(accK, secK, Amazon.RegionEndpoint.USEast1);
+                    notificationManager.init();
+                    notificationManager.PublishNotification(endpoint, "Device Updated");
+                }
+            }
+
+            catch (WebException we)
+            {
+                return true;
+            }
+
 
             return true;
         }
@@ -105,11 +162,54 @@ namespace HomeAutomationServer.Models
             deviceBlobs.Clear();
             return JArray.Parse(blobs.ToString());
         }
+        
+        
++      static public bool AddUserInfo(JObject info)
++	{
++	    userInfo.Add(info);
++	    return true;
++	}
++		
++	static public bool AddDeviceInfo(JObject info)
++	{
++	    deviceInfo.Add(info);
++	    return true;
++	}
 
         static public int GetBlobCount()
         {
             return deviceBlobs.Count;
         }
+        
+        static public JObject GetDeviceInfo()
+	{
+	    if (deviceInfo.Count > 0) {
+	       JObject obj = deviceInfo[0];
+	       deviceInfo.RemoveAt(0);
+	       return obj;
+	    }
+	    else return null;
+       }
+		
+	static public JObject GetUserInfo()
+	{
+	    if (userInfo.Count > 0) {
+		JObject obj =  userInfo[0];
+		userInfo.RemoveAt(0);
+		return obj;
+	    }
+	    else return null;
+	}
+		
+	static public int GetDeviceInfoCount()
+	{
+	    return deviceInfo.Count;
+	}
+		
+	static public int GetUserInfoCount()
+	{
+	    return userInfo.Count;
+	}
 
     }
 }
