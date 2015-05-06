@@ -5,7 +5,8 @@ using System.IO;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System.Diagnostics;
-
+using HomeAutomationServer.Services;
+using HomeAutomationServer.Models;
 
 using Amazon;
 using Amazon.EC2;
@@ -19,13 +20,15 @@ using Amazon.SimpleNotificationService.Model;
 
 namespace HomeAutomationTest
 {
-
     [TestClass]
     public class TestSimController
     {
-        //private string URI = "http://serverapi1.azurewebsites.net";
-        private string URI = "http://localhost:8080/";
+        DeviceRepository deviceRepo = new DeviceRepository();
+        HouseRepository houseRepo = new HouseRepository();
 
+        private string URI = "http://serverapi1.azurewebsites.net";
+        //private string URI = "http://localhost:8080/";
+        
         [TestMethod]
         public void TestPostTimeFrame()
         {
@@ -1282,6 +1285,81 @@ namespace HomeAutomationTest
             }
         }
 
+
+        [TestMethod]
+        public void TestEnumerateDevices()
+        {
+            //initially in the "house" there are 3 devices
+            /* run the house with this command:
+             * .\House.exe -i house1 -t '{ \"storageLocation\": \"54.152.190.217\", \"serverLocation\": \"http://5574serverapi.azurewebsites.net/\", \"users\": [ { \"Username\":\"User1\", \"UserID\": \"12345\", \"Password\": \"thePassword\", \"Coordinates\": { \"x\":\"1234\", \"y\":\"4321\", \"z\":\"6789\" } }, { \"Username\": \"User2\", \"UserID\": \"67890\", \"Password\": \"secondPassword\", \"Coordinates\": { \"x\":\"1234\", \"y\":\"4321\", \"z\":\"6789\" } } ], \"houses\": [ { \"name\": \"house1\", \"port\": 8081, \"id\": 0, \"devices\": [ { \"name\": \"light1\", \"class\": \"LightSwitch\", \"type\": \"Simulated\", \"startState\": false }, { \"name\": \"Kitchen Ceiling Fan\", \"class\": \"CeilingFan\", \"type\": \"Simulated\", \"Enabled\": false, \"State\": 0 }, { \"name\": \"HVAC\", \"class\": \"Thermostat\", \"Enabled\": false, \"SetPoint\": 26.6 } ], \"rooms\": [ { \"name\": \"Kitchen\", \"dimensions\": { \"x\": 100, \"y\": 200 }, \"roomLevel\": 1, \"doors\": [ { \"x\": 20, \"y\": 200, \"connectingRoom\": 1 } ], \"devices\": [ 1 ] }, { \"name\": \"Family Room\", \"dimensions\": { \"x\": 300, \"y\": 200 }, \"roomLevel\": 1, \"doors\": [ { \"x\": 20, \"y\": 0, \"connectingRoom\": 0 } ], \"devices\": [ 0 ] } ], \"weather\": [ { \"Time\": \"2015-04-08T13:25:21.803833-04:00\", \"Temp\": 50 }, { \"Time\": \"2015-04-08T13:28:24.803833-04:00\", \"Temp\": 30 } ] } ]}' -f '{\"SimEpoch\": \"2015-04-08T13:25:20.0-04:00\"}'*/
+            
+            JArray unregDevices;
+            JArray retVal = new JArray();
+            UInt64 houseID;
+            UInt64 deviceID;
+            JObject house = new JObject();
+            JObject device = new JObject();
+            //provide the house with its url
+            house["house_url"] = "http://localhost:8081";
+            house["name"] = "myhouse";
+            houseID = houseRepo.SaveHouse(house);
+
+            //save one device to persistent storage with ID -0
+            device["houseID"] = houseID;
+            device["roomID"] = 0;
+            device["Type"] = 1;
+            device["Enabled"] = false;
+            device["Value"] = 0;
+            device["ID"] = 0;
+            device["Class"] = "LightSwitch";
+            device["Name"] = "light1";
+            deviceID = deviceRepo.SaveDevice(device);
+            String houseid = houseID.ToString();
+
+            //get unregistered devices from the house. it should return 2 devices with ID-1 and ID-2
+            unregDevices = deviceRepo.SendUnregisteredDevice(houseid);
+
+            Assert.ReferenceEquals(unregDevices[0]["ID"], 1);
+            Assert.ReferenceEquals(unregDevices[1]["ID"], 2);
+
+        }
+
+        [TestMethod]
+        public void TestSimulatedPost()
+        {
+            JArray unregDevices;
+            JArray retVal = new JArray();
+            UInt64 houseID;
+            UInt64 deviceID;
+            JObject house = new JObject();
+            JObject device = new JObject();
+            //provide the house with its url
+            house["house_url"] = "http://localhost:8081";
+            house["name"] = "myhouse";
+            houseID = houseRepo.SaveHouse(house);
+
+            //save one device to persistent storage with ID -0
+            device["houseID"] = houseID;
+            device["roomID"] = 0;
+            device["Type"] = 1;
+            device["Enabled"] = false;
+            device["Value"] = 0;
+            device["ID"] = 0;
+            device["Class"] = "LightSwitch";
+            device["Name"] = "light1";
+            deviceID = deviceRepo.SaveDevice(device);
+            String houseid = houseID.ToString();
+            device["Enabled"] = true;
+            bool ret;
+            //get unregistered devices from the house. it should return 2 devices with ID-1 and ID-2
+            ret = deviceRepo.updateSimulation(houseID, 0, deviceID, device);
+            Assert.IsTrue(ret);
+
+          
+
+        }
+
+
         //////////////////////////BEGINS STORAGE TESTS/////////////////////////
         //Tests Posts a device with the JSON object data given.
         //Also Tests GET devices in specific houseID
@@ -1378,7 +1456,7 @@ namespace HomeAutomationTest
             jobjects["houseID"] = houseid;
             jobjects["roomID"] = roomId;
             //jobjects["deviceID"] = "5";
-            jobjects["Type"] = "Light";
+            jobjects["Type"] = 0;
             //jobjects["Name"] = "BedroomLight";
             json = jobjects.ToString();
 
@@ -1434,7 +1512,6 @@ namespace HomeAutomationTest
             }
 
         }
-
 
         //Storage Device GET api/storage/device/{houseid}/{spaceid}/{deviceid}
         [TestMethod]
@@ -1847,82 +1924,51 @@ namespace HomeAutomationTest
         [TestMethod]
         public void TestDeleteDevice()
         {
+            bool retVal;
+            UInt64 houseId, deviceId;
+            JToken compare;
+            JArray getDev;
+            JObject house = new JObject();
+            JObject device = new JObject();
+            house["house_url"] = "http://localhost:8081";
+            house["name"] = "myhouse";
+            houseId = houseRepo.SaveHouse(house);
 
-            //Test Deleting invalid Data		
-            WebRequest request = WebRequest.Create(URI + "/api/storage/device/" + 111 + "/" + 222 + "/" + 5 ); 
-            request.ContentType = "application/json";
-            request.Method = "DELETE";
 
-            try
-            {
-                using (HttpWebResponse response = request.GetResponse() as HttpWebResponse)
-                {
-                    Assert.AreEqual(response.StatusCode, HttpStatusCode.OK);
-                }
-            }
+            //JToken blobVal;
+            //String blob = (string)devicesInStorage[j]["blob"];
+            ////if (blob.Contains("I"))
+            ////{
+            ////    int h;
+            ////    h = 1;
+            ////}
 
-            catch (WebException we)
-            {
-                Console.WriteLine("TestStorageDeviceDelete failed.");
-                Assert.Fail();
-            }
+            //blobVal = JToken.Parse(blob);
+            //UInt64 id2 = (UInt64)(blobVal[j]["ID"]);
 
-            //Now Actually Post a Device
-            request = WebRequest.Create(URI + "/api/storage/device");
-            request.ContentType = "application/json";
-            request.Method = "POST";
+            device["houseID"] = houseId;
+            device["roomID"] = 0;
+            device["Type"] = 1;
+            device["Enabled"] = false;
+            device["Value"] = 0;
+            device["ID"] = 0;
+            device["Class"] = "LightSwitch";
+            device["Name"] = "light1";
+            deviceId = deviceRepo.SaveDevice(device);
 
-            JObject jobjects = new JObject();
-            jobjects["ID"] = "1234";
-            jobjects["houseid"] = "567";
-            jobjects["roomid"] = "890";
-            jobjects["deviceid"] = "5";
-            jobjects["type"] = "Light";
-            jobjects["Name"] = "BedroomLight";
-            string json = jobjects.ToString();
-
-            using (var streamWriter = new StreamWriter(request.GetRequestStream()))
-            {
-                streamWriter.Write(json);
-                streamWriter.Close();
-            }
-
-            try
-            {
-                using (HttpWebResponse response = request.GetResponse() as HttpWebResponse)
-                {
-                    Assert.AreEqual(response.StatusCode, HttpStatusCode.OK);
-                    var stream = response.GetResponseStream();
-                    var reader = new StreamReader(stream);
-                    string str = reader.ReadToEnd();
-                    Assert.AreEqual(str, "true");
-                }
-            }
-
-            catch (WebException we)
-            {
-                Console.WriteLine("TestStorageDeviceDelete failed.");
-                Assert.Fail();
-            }
-            //Now Try to Delete the Device Given Correct Data
-            request = WebRequest.Create(URI + "/api/storage/device/" + 567 + "/" + 890 + "/" + 5); 
-            request.ContentType = "application/json";
-            request.Method = "DELETE";
-
-            try
-            {
-                using (HttpWebResponse response = request.GetResponse() as HttpWebResponse)
-                {
-                    Assert.AreEqual(response.StatusCode, HttpStatusCode.OK);
-                }
-            }
-
-            catch (WebException we)
-            {
-                Console.WriteLine("TestStorageDeviceDelete failed.");
-                Assert.Fail();
-            }
-        }
+            compare = (JToken)device;
+            //Test Deleting invalid Data	
+            deviceRepo.DeleteDevice("0", "0", "0");
+            JToken test;
+            getDev = deviceRepo.GetDevice(houseId.ToString());
+            String blob = (string)getDev[0]["blob"];
+            test = JToken.Parse(blob);
+            Assert.AreEqual(compare["ID"], test["ID"]);
+            //Test Deleting actual Device
+            deviceRepo.DeleteDevice(houseId.ToString(), "0", deviceId.ToString());
+            getDev = deviceRepo.GetDevice(houseId.ToString());
+            Assert.AreEqual(getDev.Count, 0);
+           }
 
         /////////////ENDS TEST FROM STORAGE API///////////////////////////////////////
 

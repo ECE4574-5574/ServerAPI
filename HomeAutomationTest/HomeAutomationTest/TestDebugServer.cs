@@ -7,6 +7,9 @@ using System.IO;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System.Diagnostics;
+using HomeAutomationServer.Services;
+using HomeAutomationServer.Models;
+
 
 namespace HomeAutomationTest
 {
@@ -14,6 +17,8 @@ namespace HomeAutomationTest
     public class TestDebugServer
     {
         private string URI = "http://serverapi1d.azurewebsites.net";
+        DeviceRepository deviceRepo = new DeviceRepository();
+        HouseRepository houseRepo = new HouseRepository();
 
         [TestMethod]
         public void TestPostTimeFrame_DebugServer()
@@ -388,92 +393,10 @@ namespace HomeAutomationTest
         public void TestDeleteHouse_DebugServer()
         {
             // DELETE api/storage/house/{houseid}	
-            // Deletes the house with the specified houseid.
-
-            int houseid = 100;
-
-            WebRequest request = WebRequest.Create(URI + "/storage/house/" + houseid);
-            //request.ContentType = "application/json";
-            request.Method = "DELETE";
-
-            JObject jobject = new JObject();
-            string json = jobject.ToString();
-
-            try
-            {
-                using (HttpWebResponse response = request.GetResponse() as HttpWebResponse)
-                {
-                    Assert.AreEqual(response.StatusCode, HttpStatusCode.OK);
-                }
-            }
-
-            catch (WebException we)
-            {
-                Console.WriteLine("TestDeleteHouse failed. Couldn't delete a house");
-                Assert.Fail("Got a web exception when deleting a house. Possibly can't communicate with Persistent Storage.");
-            }
-
-            // Posting a house
-            // POST api/storage/house	
-            // Posts the house with the JSON object information provided.
-
-            request = WebRequest.Create(URI + "/storage/house/" + houseid);
-            request.ContentType = "application/json";
-            request.Method = "POST";
-
-            jobject = new JObject();
-            jobject["houseId"] = houseid;
-            jobject["name"] = "myhouse";
-            json = jobject.ToString();
-
-            using (var streamWriter = new StreamWriter(request.GetRequestStream()))
-            {
-                streamWriter.Write(json);
-                streamWriter.Close();
-            }
-
-            try
-            {
-                using (HttpWebResponse response = request.GetResponse() as HttpWebResponse)
-                {
-                    Assert.AreEqual(response.StatusCode, HttpStatusCode.OK);
-                }
-            }
-
-            catch (WebException we)
-            {
-                Console.WriteLine("TestDeleteHouse failed. Couldn't delete a house");
-                Assert.Fail();
-            }
-
-            // Try deleteing that house again
-
-            request = WebRequest.Create(URI + "/storage/house/" + houseid);
-            request.ContentType = "application/json";
-            request.Method = "DELETE";
-
-            jobject = new JObject();
-            json = jobject.ToString();
-
-            using (var streamWriter = new StreamWriter(request.GetRequestStream()))
-            {
-                streamWriter.Write(json);
-                streamWriter.Close();
-            }
-
-            try
-            {
-                using (HttpWebResponse response = request.GetResponse() as HttpWebResponse)
-                {
-                    Assert.AreEqual(response.StatusCode, HttpStatusCode.OK);
-                }
-            }
-
-            catch (WebException we)
-            {
-                Console.WriteLine("TestDeleteHouse failed. Couldn't delete a house");
-                Assert.Fail();
-            }
+            // Deletes the house with the specified houseid.     
+            bool retVal;
+            retVal = houseRepo.DeleteHouse("12");
+            Assert.IsTrue(retVal);
         }
 
 
