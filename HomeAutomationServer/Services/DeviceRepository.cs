@@ -8,7 +8,8 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Web;
-
+using api;
+using Hats.Time;
 //This class serves as the data storage space. It is just a list of Device items that are regenerated from the cache
 
 namespace HomeAutomationServer.Services
@@ -26,7 +27,7 @@ namespace HomeAutomationServer.Services
         {
             try
             {
-                WebRequest request = WebRequest.Create(storageURL + "/DD" + houseid + "/" + spaceid + "/" + deviceid);
+                WebRequest request = WebRequest.Create(storageURL + "DD/" + houseid + "/" + spaceid + "/" + deviceid);
                 request.Method = "GET";
 
                 try
@@ -260,7 +261,7 @@ namespace HomeAutomationServer.Services
                     //}
                     
                     blobVal = JToken.Parse(blob);
-                    UInt64 id2 = (UInt64)(blobVal[j]["ID"]);
+                    UInt64 id2 = (UInt64)(blobVal["ID"]);
                     if (id != id2)
                     {
                         unregisteredDevices.Add(allDevices[i]);
@@ -273,6 +274,97 @@ namespace HomeAutomationServer.Services
             return unregisteredDevices;
         }
 
+
+        public bool updateSimulation(UInt64 houseID, UInt64 roomID, UInt64 deviceID, JObject sendData) 
+        { 
+           // UInt64 test = fullId.HouseID;
+#if DEBUG
+#else
+            HouseRepository houseRepo = new HouseRepository();
+            JObject houseObj = new JObject();
+            JObject deviceObj = new JObject();
+            String HouseString, DeviceString, commands;
+            var id = new FullID();
+            id.HouseID = houseID;
+            id.DeviceID = deviceID;
+            id.RoomID = roomID;
+    
+            WebRequest request = WebRequest.Create(storageURL + "UD/" + houseID + "/" + roomID +  "/"  + deviceID);
+            request.ContentType = "application/json"; 
+            request.Method = "POST";
+
+            using (var streamWriter = new StreamWriter(request.GetRequestStream()))
+            {
+                streamWriter.Write(sendData.ToString());
+                streamWriter.Flush();
+                streamWriter.Close();
+            }
+            using (HttpWebResponse response = request.GetResponse() as HttpWebResponse)
+            {
+                if (response.StatusCode != HttpStatusCode.OK)
+                    throw new Exception(String.Format(
+                    "Server error (HTTP {0}: {1}).",
+                    response.StatusCode,
+                    response.StatusDescription));
+            }
+
+            houseObj = houseRepo.GetHouse(houseID); // queries PS for information
+            deviceObj = GetDevice(houseID.ToString(), roomID.ToString(), deviceID.ToString());
+            JToken blobVal;
+            //String blob = (string)deviceArr["blob"];
+            //blobVal = JToken.Parse(blob);
+            String house_url = (string)(houseObj["house_url"]);
+            UInt64 ID = (UInt64)(deviceObj["ID"]);
+            String clas = (string)(deviceObj["Class"]);
+            JObject send = new JObject();
+            JObject send1 = new JObject();
+            send["house_url"] = house_url;
+            send1["ID"] = ID;
+            send1["Class"] = clas;
+            TimeFrame frame = new TimeFrame();
+            HouseString = JsonConvert.SerializeObject(send);
+            DeviceString = JsonConvert.SerializeObject(send1);
+            commands = JsonConvert.SerializeObject(sendData);
+
+            var dev_out = ServerSideAPI.CreateDevice(id, HouseString, DeviceString, frame);
+            if (dev_out != null) //Good to go
+            {
+                //state changed means some value was changed, e.g. the command was not idempotent
+                var state_changed = Interfaces.UpdateDevice(dev_out, commands);
+            }
+#endif
+            return true;    
+        }
+
+        public bool updateActual(UInt64 houseID, UInt64 roomID, UInt64 deviceID, JObject sendData)
+        {
+
+#if DEBUG
+#else
+            updateSimulation(houseID,roomID,deviceID,sendData);
+
+            WebRequest request = WebRequest.Create(decisionURL + "DeviceState/");
+            request.Method = "POST";
+            request.ContentType = "application/json";
+
+            using (var streamWriter = new StreamWriter(request.GetRequestStream()))
+            {
+                streamWriter.Write(sendData.ToString());
+                streamWriter.Flush();
+                streamWriter.Close();
+            }
+            using (HttpWebResponse response = request.GetResponse() as HttpWebResponse)
+            {
+                if (response.StatusCode != HttpStatusCode.OK)
+                    throw new Exception(String.Format(
+                    "Server error (HTTP {0}: {1}).",
+                    response.StatusCode,
+                    response.StatusDescription));
+            }
+#endif
+            return true;
+        
+        }
 
         public UInt64 SaveDevice(JObject model)     // Returns the device ID from the Storage which is type UInt64
         {

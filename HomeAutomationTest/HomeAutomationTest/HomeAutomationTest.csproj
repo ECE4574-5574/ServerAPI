@@ -71,6 +71,12 @@
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\HomeAutomationServer\HomeAutomationServer.csproj">
+      <Project>{7334e120-5cfb-43e3-9dd3-b86a6910ccca}</Project>
+      <Name>HomeAutomationServer</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">
       <ItemGroup>

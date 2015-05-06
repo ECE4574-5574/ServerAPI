@@ -45,6 +45,25 @@ namespace HomeAutomationServer.Controllers
         //
         // Device
 
+        // POST api/app/device/
+        /// <summary>
+        /// Get pending JSON device data with the device ID provided.
+        /// </summary>
+        /// <param name="deviceid"></param>
+        /// <returns>Returns pending JSON device data with the device ID provided.</returns>
+        [Route("device/viaSimulation/{houseid}/{roomid}/{deviceid}")]
+        public bool UpdateDeviceSim(UInt64 houseID, UInt64 roomID, UInt64 deviceID, [FromBody] JObject sendData)
+        {
+            return deviceRepo.updateSimulation(houseID, roomID, deviceID, sendData);
+        }
+
+        [Route("device/viaActual/{houseid}/{roomid}/{deviceid}")]
+        public bool UpdateDeviceActual(UInt64 houseID, UInt64 roomID, UInt64 deviceID, [FromBody] JObject sendData)
+        {
+            return deviceRepo.updateActual(houseID, roomID, deviceID, sendData);
+        }
+
+
         // GET api/app/device/{deviceid}
 		/// <summary>
 		/// Get pending JSON device data with the device ID provided.
@@ -56,6 +75,8 @@ namespace HomeAutomationServer.Controllers
 		{
 			return AppCache.GetDeviceBlob (fullID);
 		}
+
+
 
         // GET api/app/device
         /// <summary>
