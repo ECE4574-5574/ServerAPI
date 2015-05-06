@@ -162,6 +162,19 @@ namespace HomeAutomationServer.Models
             deviceBlobs.Clear();
             return JArray.Parse(blobs.ToString());
         }
+        
+        
++      static public bool AddUserInfo(JObject info)
++	{
++	    userInfo.Add(info);
++	    return true;
++	}
++		
++	static public bool AddDeviceInfo(JObject info)
++	{
++	    deviceInfo.Add(info);
++	    return true;
++	}
 
         static public int GetBlobCount()
         {
@@ -169,34 +182,34 @@ namespace HomeAutomationServer.Models
         }
         
         static public JObject GetDeviceInfo()
-		{
-			if (deviceInfo.Count > 0) {
-				JObject obj = deviceInfo[0];
-				deviceInfo.RemoveAt(0);
-				return obj;
-			}
-			else return null;
-		}
+	{
+	    if (deviceInfo.Count > 0) {
+	       JObject obj = deviceInfo[0];
+	       deviceInfo.RemoveAt(0);
+	       return obj;
+	    }
+	    else return null;
+       }
 		
-		static public JObject GetUserInfo()
-		{
-			if (userInfo.Count > 0) {
-				JObject obj =  userInfo[0];
-				userInfo.RemoveAt(0);
-				return obj;
-			}
-			else return null;
-		}
+	static public JObject GetUserInfo()
+	{
+	    if (userInfo.Count > 0) {
+		JObject obj =  userInfo[0];
+		userInfo.RemoveAt(0);
+		return obj;
+	    }
+	    else return null;
+	}
 		
-		static public int GetDeviceInfoCount()
-		{
-			return deviceInfo.Count;
-		}
+	static public int GetDeviceInfoCount()
+	{
+	    return deviceInfo.Count;
+	}
 		
-		static public int GetUserInfoCount()
-		{
-			return userInfo.Count;
-		}
+	static public int GetUserInfoCount()
+	{
+	    return userInfo.Count;
+	}
 
     }
 }
