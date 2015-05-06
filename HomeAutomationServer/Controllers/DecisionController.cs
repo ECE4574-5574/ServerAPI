@@ -38,8 +38,7 @@ namespace HomeAutomationServer.Controllers
         [HttpPost]
         public bool SendDevDecision([FromBody] JObject model)
         {
-            //return AppCache.AddDeviceInfo(model);
-			return true;
+            return AppCache.AddDeviceInfo(model);
         }
 
         /*// Get api/decision/state
@@ -67,8 +66,7 @@ namespace HomeAutomationServer.Controllers
 		[Route("app"), HttpPost]
 		public bool Information([FromBody] JObject model)
 		{
-			//return AppCache.AddUserInfo(model);
-			return true;
+			return AppCache.AddUserInfo(model);
 		}
 
 		// Patch api/decision/state
