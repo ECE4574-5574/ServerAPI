@@ -2427,7 +2427,7 @@ namespace HomeAutomationTest
             jobjects["houseID"] = houseid;
             jobjects["roomID"] = roomId;
             //jobjects["deviceID"] = "5";
-            jobjects["Type"] = "Light";
+            jobjects["Type"] = "1";
             //jobjects["Name"] = "BedroomLight";
             json = jobjects.ToString();
 
@@ -2457,7 +2457,7 @@ namespace HomeAutomationTest
                 Console.WriteLine("TestStorageDevicePost failed. Couldn't post the device");
                 Assert.Fail("WebException occurred.\n");
             }
-
+            /*
             request = WebRequest.Create(URI + "/api/house/device/state");
             request.ContentType = "application/json";
             request.Method = "POST";
@@ -2466,9 +2466,8 @@ namespace HomeAutomationTest
             jobjects["houseID"] = houseid;
             jobjects["roomID"] = roomId;
             jobjects["deviceID"] = deviceId;
-            jobjects["Type"] = "Light";
-            jobjects["Name"] = "BedroomLight";
-            jobjects["state"] = "changed";
+            jobjects["deviceClass"] = "Light";
+            jobjects["houseURL"] = "www.houseurl.com";
             json = jobjects.ToString();
 
             using (var streamWriter = new StreamWriter(request.GetRequestStream()))
@@ -2494,12 +2493,26 @@ namespace HomeAutomationTest
             {
                 Console.WriteLine("TestStorageDeviceDelete failed.");
                 Assert.Fail(houseid + " " + deviceId + " " + roomId);
-            }
+            } */
 
             //Now Try to Get the State Given Correct Data
-            request = WebRequest.Create(URI + "/api/storage/device/" + houseid + "/" + roomId + "/" + deviceId + "/" + "changed");
+            request = WebRequest.Create(URI + "/api/decision/state");
             request.ContentType = "application/json";
-            request.Method = "GET";
+            request.Method = "POST";
+
+            jobjects = new JObject();
+            jobjects["houseID"] = houseid;
+            jobjects["roomID"] = roomId;
+            jobjects["deviceID"] = deviceId;
+            jobjects["deviceClass"] = "Light";
+            jobjects["houseURL"] = "www.houseurl.com";
+            json = jobjects.ToString();
+
+            using (var streamWriter = new StreamWriter(request.GetRequestStream()))
+            {
+                streamWriter.Write(json);
+                streamWriter.Close();
+            }
 
             try
             {
@@ -2516,9 +2529,8 @@ namespace HomeAutomationTest
             catch (WebException we)
             {
                 Console.WriteLine("TestStorageDeviceDelete failed.");
-                Assert.Fail();
+                Assert.Fail(we.ToString());
             }
         } 
-    }
 
 }
