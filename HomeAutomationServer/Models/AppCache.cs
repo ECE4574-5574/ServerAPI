@@ -164,17 +164,17 @@ namespace HomeAutomationServer.Models
         }
         
         
-+      static public bool AddUserInfo(JObject info)
-+	{
-+	    userInfo.Add(info);
-+	    return true;
-+	}
-+		
-+	static public bool AddDeviceInfo(JObject info)
-+	{
-+	    deviceInfo.Add(info);
-+	    return true;
-+	}
+    static public bool AddUserInfo(JObject info)
+	{
+	    userInfo.Add(info);
+	    return true;
+	}
+		
+	static public bool AddDeviceInfo(JObject info)
+	{
+	    deviceInfo.Add(info);
+	    return true;
+	}
 
         static public int GetBlobCount()
         {
