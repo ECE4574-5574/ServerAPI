@@ -1338,6 +1338,18 @@ namespace HomeAutomationTest
             house["name"] = "myhouse";
             houseID = houseRepo.SaveHouse(house);
 
+            WebRequest request = WebRequest.Create("http://localhost:8081/api/device"); // this is local house uri
+            request.Method = "GET";
+            using (HttpWebResponse response = request.GetResponse() as HttpWebResponse)
+            {
+                if (response.StatusCode != HttpStatusCode.OK)
+                    throw new Exception(String.Format(
+                    "Server error (HTTP {0}: {1}).",
+                    response.StatusCode,
+                    response.StatusDescription));
+            }
+
+
             //save one device to persistent storage with ID -0
             device["houseID"] = houseID;
             device["roomID"] = 0;
@@ -1411,7 +1423,7 @@ namespace HomeAutomationTest
             JObject jobjects = new JObject();
             jobjects["houseID"] = houseid;
             jobjects["roomid"] = "1234";
-            jobjects["type"] = "Light";
+            jobjects["type"] = 1;
             jobjects["name"] = "BedroomLight";
             jobjects["x"] = "100";
             jobjects["y"] = "300";
@@ -1487,7 +1499,7 @@ namespace HomeAutomationTest
             }
 
             //Now Trying to get a Device inside a house
-            request = WebRequest.Create(URI + "/api/storage/device/" + deviceId);
+            request = WebRequest.Create(URI + "/api/storage/device/" + houseid);
             //request.ContentType = "application/json";
             request.Method = "GET";
 
@@ -1499,8 +1511,9 @@ namespace HomeAutomationTest
                     var stream = response.GetResponseStream();
                     var reader = new StreamReader(stream);
                     string str = reader.ReadToEnd();
-                    JObject j = new JObject();
-                    Assert.AreEqual(str, "[]");
+                    JArray j;
+                    j = JArray.Parse(str);
+                    Assert.AreEqual((int)j[0]["device-id"], deviceId);
                    // Assert.Fail(str + Convert.ToString(deviceId));
                 }
             }
